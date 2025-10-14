@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onboarding - Diagnóstico Santa Lucía</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #E6F1F7;
+      color: #1a1a1a;
+      margin: 0;
+      text-align: center;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 2rem;
+      background: #003366;
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      font-size: 1rem;
+    }
+    .navbar .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+    .navbar .logo img {
+      height: 80px;
+      margin-right: 1rem;
+    }
+    .navbar a {
+      margin-left: 2rem;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      transition: 0.3s;
+      font-size: 1rem;
+    }
+    .navbar a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -3px;
+      width: 0;
+      height: 3px;
+      background: #FFDD57;
+      transition: width 0.3s ease, transform 0.3s ease;
+      transform-origin: right;
+    }
+    .navbar a:hover::after {
+      width: 100%;
+      transform: scaleX(1.1);
+      transform-origin: left;
+    }
+
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .dna {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+    .dna span {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #003366;
+      top: 0;
+      left: 40px;
+      animation: pulse 1.2s infinite ease-in-out;
+    }
+    .dna span:nth-child(2) { animation-delay: .2s; left: 60px; }
+    .dna span:nth-child(3) { animation-delay: .4s; left: 20px; }
+    .dna span:nth-child(4) { animation-delay: .6s; left: 80px; }
+    @keyframes pulse {
+      0%,100% { transform: scale(0.5); opacity: 0.3; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    header {
+      padding: 6rem 2rem;
+      background: #E6F1F7;
+      color: #003366;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 3rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 600px;
+    }
+    header div {
+      flex: 1 1 45%;
+      z-index: 2;
+    }
+    header h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      color: #003366;
+    }
+    header h1::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0.8) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: shine 2s infinite;
+      pointer-events: none;
+    }
+    header p {
+      font-size: 1.7rem;
+      opacity: .95;
+      max-width: 600px;
+      text-transform: uppercase;
+      color: #40B4E5;
+      font-weight: bold;
+      display: inline-block;
+      position: relative;
+    }
+    header p::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
+      animation: shine 2s infinite;
+      pointer-events: none;
+    }
+    @keyframes shine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background-color: #25D366;
+      border-radius: 50px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      color: white;
+      font-size: 1rem;
+    }
+    .whatsapp-float svg {
+      flex-shrink: 0;
+    }
+    .whatsapp-float:hover {
+      background-color: #1ebe57;
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+    .whatsapp-text {
+      white-space: nowrap;
+    }
+    @media (max-width: 480px) {
+      .whatsapp-float {
+        width: 60px;
+        height: 60px;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+        font-size: 0;
+      }
+      .whatsapp-text {
+        display: none;
+      }
+    }
+
+    .search-bar { margin-top: 2rem; }
+    .search-button {
+      background: #003366;
+      color: white;
+      border: none;
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      text-transform: uppercase;
+    }
+    .search-button:hover {
+      background: #0055aa;
+      transform: scale(1.05);
+    }
+
+    .header-image {
+      flex: 1 1 45%;
+      text-align: center;
+      position: relative;
+      height: 600px;
+      overflow: hidden;
+      border-radius: 25px;
+    }
+    .header-image img {
+      width: 100%;
+      max-width: 1200px;
+      height: 100%;
+      max-height: 600px;
+      object-fit: cover;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 1s ease-in-out, transform 6s ease-in-out;
+    }
+    .header-image img.active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    section {
+      padding: 4rem 1rem;
+    }
+    .section-title {
+      font-size: 2rem;
+      color: #003366;
+      margin-bottom: 1rem;
+    }
+    .section-description {
+      font-size: 1rem;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .quienes-somos-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .quienes-somos-container img {
+      max-width: 400px;
+      width: 100%;
+      border-radius: 15px;
+    }
+    .quienes-somos-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      flex: 1;
+      max-width: 450px;
+      padding: 2rem;
+      border: 1px solid #e4eaff;
+      border-radius: 15px;
+      min-height: 250px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .quienes-somos-text::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+      transform: skewX(-25deg);
+      transition: 0.5s;
+    }
+    .quienes-somos-text:hover::after {
+      left: 125%;
+    }
+    .quienes-somos-text:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+
+    /* ——————————————————————————————
+       Estilos nuevos para sección Análisis clínicos (tarjetas)
+       —————————————————————————————— */
+    #analisis_clinicos .card-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2rem;
+      padding: 2rem 0;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card-item {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .card-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    }
+
+    .card-item img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-bottom: 1px solid #eaeaea;
+    }
+
+    .card-caption {
+      padding: 1rem;
+      font-weight: 600;
+      color: #003366;
+      font-size: 1rem;
+    }
+
+    /* Animación de entrada para secciones visibles */
+    @keyframes slideInLeft {
+      0% {
+        opacity: 0;
+        transform: translateX(-100px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    .section-observable {
+      opacity: 0;
+      transform: translateX(-100px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .section-observable.animate-slide-in {
+       animation: slideInLeft 3.5s ease forwards;
+    }
+
+    /* Estilo para la imagen del modal */
+    #img-modal img {
+      animation: zoomIn 0.3s ease;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="loader" id="loader">
+    <div class="dna"><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="navbar">
+    <div class="logo">
+      <img src="log.png" alt="Logo Diagnóstico Santa Lucía" style="height: 80px; width: auto; margin-right: 1rem;">
+      LABORATORIO DSL
+    </div>
+    <div class="nav-buttons">
+      <a href="#quienes_somos">Quiénes somos</a>
+      <a href="#analisis_clinicos">Análisis clínicos</a>
+      <a href="#sucursales">Sucursales</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+  </div>
+
+  <header>
+    <div>
+      <h1>Diagnóstico Santa Lucía</h1>
+      <p>Tu salud comienza con un buen diagnóstico, y nosotros lo hacemos posible</p>
+      <div class="search-bar">
+        <button class="search-button" onclick="document.getElementById('analisis_clinicos').scrollIntoView({ behavior: 'smooth' })">
+          Conoce nuestros paquetes
+        </button>
+      </div>
+    </div>
+    <div class="header-image" id="header-slider-container"></div>
+  </header>
+
+  <section id="quienes_somos" class="section-observable" style="margin-top: 1rem;">
+    <h2 style="color:#003366; font-weight:900; font-size:2rem; margin-bottom:1rem;">Quiénes somos</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2rem; max-width:1100px; margin: 0 auto;">
+      <img
+        src="logo.png"
+        alt="Logo Diagnóstico Santa Lucía"
+        style="max-width: 400px; width: 100%; border-radius: 20px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); transition: transform 0.3s ease, box-shadow 0.3s ease;"
+        onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 25px rgba(0, 0, 0, 0.25)';"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 20px rgba(0, 0, 0, 0.12)';"
+      />
+      <p
+        style="flex: 1 1 450px; text-align: justify; font-weight: 600; font-size: 1.15rem; line-height: 1.6; color: #003366; background: #f9fbfc; padding: 2rem 2.5rem; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); transition: box-shadow 0.3s ease, transform 0.3s ease; position: relative; overflow: hidden;"
+        onmouseover="this.style.transform='translateY(-7px)'; this.style.boxShadow='0 14px 35px rgba(0,0,0,0.15)';"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';"
+      >
+        Somos una empresa dedicada a ofrecer servicios de laboratorio clínico con alta calidad y confiabilidad. Contamos con personal altamente calificado en toma de muestras, análisis clínicos y entrega de resultados. Nuestros laboratorios están ubicados en hospitales de prestigio, equipados con tecnología de última generación. Además, nuestras salas de toma de muestras están diseñadas para garantizar comodidad, rapidez y seguridad. Estamos comprometidos con brindar un servicio cercano, confiable y accesible, contribuyendo al bienestar y salud de los colaboradores y las empresas que confían en nosotros.
+      </p>
+    </div>
+  </section>
+
+<section id="analisis_clinicos" class="section-observable">
+  <h2 class="section-title">Análisis clínicos</h2>
+  
+  <p class="section-description" style="
+      max-width:800px; 
+      margin:0 auto 2.5rem auto; 
+      font-size:1.3rem; 
+      line-height:1.9; 
+      color:#003366; 
+      background: linear-gradient(145deg, #f0f7fb, #d9edf6);
+      padding:2.5rem 3rem; 
+      border-radius:28px; 
+      box-shadow:0 12px 28px rgba(0,0,0,0.12); 
+      text-align:center;
+      font-weight:500;
+  ">
+    Ofrecemos una amplia gama de estudios clínicos diseñados para cuidar tu salud con precisión y confiabilidad. 
+    Desde <strong style="color:#0055aa;">biometrías</strong>, <strong style="color:#0055aa;">química sanguínea</strong> y <strong style="color:#0055aa;">paneles hormonales</strong>, hasta <strong style="color:#0055aa;">pruebas especializadas</strong>, cada análisis se realiza con tecnología de última generación y personal altamente calificado. 
+    <br><br>
+    Nuestra prioridad es brindarte resultados confiables en un entorno seguro, rápido y cómodo, para que tengas la tranquilidad de estar recibiendo un diagnóstico profesional y accesible.
+  </p>
+
+  <div class="card-gallery">
+    <div class="card-item">
+      <img src="QUIR.png" alt="Estudio Quirúrgico">
+      <div class="card-caption">Perfil Quirúrgico</div>
+    </div>
+    <div class="card-item">
+      <img src="PRE.png" alt="Perfil Prenatal 1">
+      <div class="card-caption">Perfil Prenatal 1</div>
+    </div>
+    <div class="card-item">
+        <img src="PER.png" alt="Perfil Diabético">
+      <div class="card-caption">Perfiles Hormonales</div>
+    </div>
+    <div class="card-item">
+      <img src="GRAL.png" alt="Perfil General">
+      <div class="card-caption">Estudios Generales</div>
+    </div>
+    <div class="card-item">
+      <img src="PRENATAL2.png" alt="Perfil Prenatal I">
+      <div class="card-caption">Perfil Prenatal 2</div>
+    </div>
+    <div class="card-item">
+      <img src="PRENATAL3.png" alt="Perfil Prenatal II">
+      <div class="card-caption">Perfil Prenatal 3</div>
+    </div>
+    <div class="card-item">
+      <img src="FACTOREU.jpg" alt="Factores Europeos">
+      <div class="card-caption">Perfil Reumático</div>
+    </div>
+    <div class="card-item">
+      <img src="QUIMICA45.jpeg" alt="Química de 45 elementos">
+      <div class="card-caption">Química 45 Elementos</div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section id="sucursales" class="section-observable" style="padding:4rem 1rem; max-width:1100px; margin: 0 auto;">
+  <h2 class="section-title" style="text-align:center; margin-bottom:2.5rem;">Sucursales</h2>
+  <div style="display:flex; flex-wrap:wrap; gap:2rem; align-items:center; justify-content:center;">
+    
+    <!-- Columna de descripción -->
+    <div style="flex:1 1 350px; min-width:300px; display:flex; align-items:center; justify-content:center;">
+      <p class="section-description" style="font-size:1.4rem; color:#003366; line-height:1.8; padding:2rem 2.5rem; border-radius:20px; background:#f9fbfc; box-shadow:0 8px 20px rgba(0,0,0,0.1); text-align:center; margin:0;">
+        Contamos con dos ubicaciones estratégicas para ofrecerte mayor comodidad y facilidad de acceso a nuestros servicios de laboratorio. 
+        <br><br>
+        Cada sucursal está dentro de hospitales, garantizando un entorno seguro y atención profesional en todo momento. 
+        <br><br>
+        Usa los mapas para localizar la sucursal más cercana y planifica tu visita de manera rápida y eficiente. Nuestro equipo está siempre listo para brindarte atención confiable y resultados precisos, cuidando tu salud y bienestar en cada estudio.
+      </p>
+    </div>
+
+    <!-- Columna de mapas -->
+    <div style="flex:1 1 500px; min-width:300px; display:flex; flex-direction:column; gap:2rem;">
+      <div class="map-box" style="border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1);">
+        <h3 style="padding:1rem; margin:0; color:#003366; font-weight:600;">📍 Sucursal Circunvalación Dr. Atl</h3>
+        <iframe src="https://www.google.com/maps?q=Av.%20Cvln.%20Dr.%20Atl%20487,%20Monumental,%2044320%20Guadalajara,%20Jal.&hl=es&z=17&output=embed" 
+                allowfullscreen="" loading="lazy" style="width:100%; height:300px; border:0; border-radius:0;"></iframe>
+      </div>
+      <div class="map-box" style="border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1);">
+        <h3 style="padding:1rem; margin:0; color:#003366; font-weight:600;">📍 Sucursal Niños Héroes, Tlaquepaque</h3>
+        <iframe src="https://www.google.com/maps?q=Av.%20Ni%C3%B1os%20H%C3%A9roes%2029,%20Hidalgo,%2045500%20San%20Pedro%20Tlaquepaque,%20Jal.&hl=es&z=17&output=embed" 
+                allowfullscreen="" loading="lazy" style="width:100%; height:300px; border:0; border-radius:0;"></iframe>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section id="contacto" class="section-observable" style="padding:4rem 1rem; max-width:760px; margin: 4rem auto; background: #fff; border-radius: 28px; box-shadow: 0 8px 28px rgba(0,0,0,0.06); font-family: 'Inter', sans-serif; color: #003366; text-align: center;">
+  <div class="title-small" style="font-weight:600; letter-spacing:1px; color:#003366; margin-bottom:6px;">EN QUÉ PODEMOS</div>
+  <h2 class="title-large" style="font-size:3rem; line-height:1; margin:0 0 18px 0; color:#FF9900; font-weight:800; text-transform: uppercase;">¿AYUDARTE?</h2>
+  <div class="title-underline" style="width:110px; height:6px; background:#003366; margin:10px auto 28px auto; border-radius:4px;"></div>
+
+  <form id="contactForm" novalidate style="max-width:650px; margin: 0 auto; text-align:left;">
+    <div class="field" style="margin-bottom:18px;">
+      <label for="name" class="sr-only">Tu Nombre</label>
+      <input
+        class="input-pill"
+        id="name"
+        name="name"
+        type="text"
+        placeholder="Tu Nombre"
+        required
+        style="width:100%; padding:14px 18px; border-radius:24px; border:1px solid rgba(0,0,0,0.12); background:#f6f7f8; font-size:1rem; outline:none; transition: box-shadow 0.2s, border-color 0.2s;"
+        onfocus="this.style.boxShadow='0 6px 18px rgba(15,20,30,0.06)'; this.style.borderColor='rgba(0,0,0,0.3)';"
+        onblur="this.style.boxShadow='none'; this.style.borderColor='rgba(0,0,0,0.12)';"
+      >
+    </div>
+
+    <div class="field" style="margin-bottom:18px;">
+      <label for="email" class="sr-only">E-Mail</label>
+      <input
+        class="input-pill"
+        id="email"
+        name="email"
+        type="email"
+        placeholder="E-Mail"
+        required
+        style="width:100%; padding:14px 18px; border-radius:24px; border:1px solid rgba(0,0,0,0.12); background:#f6f7f8; font-size:1rem; outline:none; transition: box-shadow 0.2s, border-color 0.2s;"
+        onfocus="this.style.boxShadow='0 6px 18px rgba(15,20,30,0.06)'; this.style.borderColor='rgba(0,0,0,0.3)';"
+        onblur="this.style.boxShadow='none'; this.style.borderColor='rgba(0,0,0,0.12)';"
+      >
+    </div>
+
+    <div class="field" style="margin-bottom:18px;">
+      <div class="label-center" style="text-align:center; font-weight:600; color:#6b7579; margin-bottom:8px;">¿En qué podemos ayudarte?</div>
+      <label for="message" class="sr-only">Mensaje</label>
+      <textarea
+        id="message"
+        name="message"
+        placeholder="Describe aquí tu consulta..."
+        aria-label="¿En qué podemos ayudarte?"
+        style="width:100%; min-height:120px; padding:18px; border-radius:14px; border:1px solid rgba(0,0,0,0.12); background:#f6f7f8; font-size:1rem; outline:none; resize:vertical; transition: box-shadow 0.2s, border-color 0.2s;"
+        onfocus="this.style.boxShadow='0 6px 18px rgba(15,20,30,0.06)'; this.style.borderColor='rgba(0,0,0,0.3)';"
+        onblur="this.style.boxShadow='none'; this.style.borderColor='rgba(0,0,0,0.12)';"
+      ></textarea>
+    </div>
+
+    <div class="btn-wrap" style="display:flex; justify-content:center; margin-top:18px;">
+      <button
+        type="submit"
+        class="btn"
+        style="display:inline-block; padding:12px 28px; background:#FF9900; color:#fff; border-radius:8px; border:none; font-weight:700; cursor:pointer; box-shadow: 0 6px 18px rgba(255,153,0,0.3); transition: transform 0.12s ease, box-shadow 0.12s ease;"
+        onmousedown="this.style.transform='translateY(1px)';"
+        onmouseup="this.style.transform='translateY(0)';"
+        onmouseleave="this.style.transform='translateY(0)';"
+      >
+        Enviar
+      </button>
+    </div>
+  </form>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const msg = document.getElementById('message').value.trim();
+
+      if (!name || !email || !msg) {
+        alert('Por favor completa todos los campos.');
+        return;
+      }
+
+      const subject = encodeURIComponent(`Consulta de ${name}`);
+      const body = encodeURIComponent(`Nombre: ${name}\nCorreo: ${email}\n\nMensaje:\n${msg}`);
+      const mailtoLink = `mailto:laboratorios.dsl@gmail.com?subject=${subject}&body=${body}`;
+
+      window.location.href = mailtoLink;
+      this.reset();
+    });
+  </script>
+</section>
+
+  <!-- Modal para imágenes -->
+  <div id="img-modal" style="display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center;">
+    <img id="img-modal-content" src="" alt="Vista ampliada" style="max-width: 90vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+  </div>
+
+
+  <script>
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loader');
+      setTimeout(() => { loader.style.display = 'none'; }, 1500);
+
+      const sliderContainer = document.getElementById('header-slider-container');
+      const imagesSrc = ['1.jpeg','2.jpeg','3.jpeg','4.jpeg','5.jpeg','6.jpeg'];
+      let currentIndex = 0;
+      const imageElements = imagesSrc.map((src,i) => {
+        const img = document.createElement('img');
+        img.src = src;
+        if (i === 0) img.classList.add('active');
+        sliderContainer.appendChild(img);
+        return img;
+      });
+      setInterval(() => {
+        imageElements[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % imageElements.length;
+        imageElements[currentIndex].classList.add('active');
+      }, 3000);
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-slide-in");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      document.querySelectorAll(".section-observable").forEach(section => {
+        observer.observe(section);
+      });
+
+      // Modal para imágenes en sección análisis clínicos
+      const modal = document.getElementById("img-modal");
+      const modalImg = document.getElementById("img-modal-content");
+
+      document.querySelectorAll("#analisis_clinicos .card-item img").forEach(img => {
+        img.style.cursor = "pointer";
+        img.addEventListener("click", function () {
+          modal.style.display = "flex";
+          modalImg.src = this.src;
+          modalImg.alt = this.alt;
+        });
+      });
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal || e.target === modalImg) {
+          modal.style.display = "none";
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          modal.style.display = "none";
+        }
+      });
+    });
+  </script>
+
+  <a href="https://wa.me/523351286935?text=Hola%20quiero%20más%20información"
+     class="whatsapp-float" target="_blank" aria-label="Chat en WhatsApp" rel="noopener noreferrer">
+    <span class="whatsapp-text">AGENDA TU PRÓXIMA CITA</span>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="32px" height="32px">
+      <path d="M20.52 3.48A11.78 11.78 0 0012 0C5.373 0 0 5.373 0 12a11.9 11.9 0 001.68 6L0 24l6-1.68A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12a11.78 11.78 0 00-3.48-8.52zM12 21.75a9.63 9.63 0 01-5.156-1.52l-.37-.222-3.5 1 1-3.407-.242-.37A9.56 9.56 0 012.25 12 9.75 9.75 0 1121.75 12 9.7 9.7 0 0112 21.75zm5.14-7.46c-.27-.13-1.6-.79-1.84-.88s-.44-.13-.62.13-.71.88-.87 1.06-.32.2-.6.07a7.44 7.44 0 01-2.19-1.36 8.3 8.3 0 01-1.54-1.9c-.16-.27 0-.42.12-.56.13-.13.29-.32.44-.48a1.75 1.75 0 00.26-.43.39.39 0 000-.48c-.13-.13-.62-1.5-.85-2.06s-.44-.47-.61-.47-.42 0-.64 0a1.38 1.38 0 00-.5.24 2.06 2.06 0 00-.74.72 3.18 3.18 0 00-1 2.4 4.88 4.88 0 001.4 3.47 9.58 9.58 0 004.82 3.11 4.62 4.62 0 002.24.12 2.4 2.4 0 001.53-1.4 2.68 2.68 0 00.19-1.28c-.06-.12-.27-.18-.56-.31z"/>
+    </svg>
+  </a>
+
+  <footer style="background: #003366; color: #fff; padding: 1rem 2rem; font-size: .8rem; text-align: center;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <div style="display: flex; gap: 1.5rem; align-items: center;">
+        <a href="https://www.facebook.com/profile.php?id=61579381267385" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="color: white; text-decoration: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 32px; height: 32px; fill: currentColor;">
+            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.406.593 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.312h3.588l-.467 3.622h-3.121V24h6.116c.73 0 1.324-.593 1.324-1.324V1.325C24 .593 23.406 0 22.675 0z"/>
+          </svg>
+        </a>
+        <a href="https://www.instagram.com/dsl_lab?igsh=OXo4dDB1a29vazhk" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="color: white; text-decoration: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 32px; height: 32px; fill: currentColor;">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.206.056 2.007.248 2.48.415a4.92 4.92 0 011.675 1.045 4.92 4.92 0 011.045 1.675c.167.473.359 1.274.415 2.48.058 1.266.070 1.646.070 4.85s-.012 3.584-.070 4.85c-.056 1.206-.248 2.007-.415 2.48a4.918 4.918 0 01-1.045 1.675 4.918 4.918 0 01-1.675 1.045c-.473.167-1.274.359-2.48.415-1.266.058-1.646.070-4.85.070s-3.584-.012-4.85-.070c-1.206-.056-2.007-.248-2.48-.415a4.92 4.92 0 01-1.675-1.045 4.92 4.92 0 01-1.045-1.675c-.167-.473-.359-1.274-.415-2.48C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.070-4.85c.056-1.206.248-2.007.415-2.48a4.92 4.92 0 011.045-1.675 4.92 4.92 0 011.675-1.045c.473-.167 1.274-.359 2.48-.415C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.735 0 8.332.012 7.052.070 5.770.128 4.600.340 3.515.735a7.080 7.080 0 00-2.570 1.670A7.080 7.080 0 00.735 4.975C.340 6.060.128 7.230.070 8.512.012 9.792 0 10.195 0 12c0 1.805.012 2.208.070 3.488.058 1.282.270 2.452.665 3.537a7.086 7.086 0 001.670 2.570 7.086 7.086 0 002.570 1.670c1.085.395 2.255.607 3.537.665 1.280.058 1.683.070 3.488.070s2.208-.012 3.488-.070c1.282-.058 2.452-.270 3.537-.665a7.080 7.080 0 002.570-1.670 7.080 7.080 0 001.670-2.570c.395-1.085.607-2.255.665-3.537.058-1.280.070-1.683.070-3.488s-.012-2.208-.070-3.488c-.058-1.282-.270-2.452-.665-3.537a7.080 7.080 0 00-1.670-2.570 7.080 7.080 0 00-2.570-1.670C16.452.340 15.282.128 14 .070 12.720.012 12.317 0 12 0zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zm6.406-11.845a1.44 1.44 0 11-2.880 0 1.44 1.44 a 2.880 0z"/>
+          </svg>
+        </a>
+        <a href="tel:3351286935" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: currentColor;">
+            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.20-2.20a1.003 1.003 0 011.05-.24c1.12.37 2.33.57 3.54.57.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.29 21 3 13.71 3 4c0-.55.45-1 1-1H7.5c.55 0 1 .45 1 1 0 1.21.20 2.42.57 3.54.13.37.04.78-.24 1.05l-2.20 2.20z"/>
+          </svg>
+          <span style="font-size: 1rem;">33 5128 6935</span>
+        </a>
+      </div>
+      <div style="margin-top: 0.5rem;">
+        ©️ 2025 Diagnóstico Santa Lucía | Innovando el diagnóstico médico
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
