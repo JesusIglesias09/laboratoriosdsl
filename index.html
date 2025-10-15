@@ -388,7 +388,86 @@
       from { transform: scale(0.8); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
+/* 🔹 Ajustes responsive para móvil */
+@media (max-width: 768px) {
+  /* Navbar */
+  .navbar {
+    flex-wrap: wrap;
+    padding: 1rem;
+    text-align: center;
+  }
 
+  .navbar .logo {
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .nav-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.8rem;
+  }
+
+  .navbar a {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  /* Header */
+  header {
+    flex-direction: column;
+    padding: 4rem 1rem;
+    text-align: center;
+    min-height: auto;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+  }
+
+  header p {
+    font-size: 1.1rem;
+  }
+
+  .header-image {
+    height: 300px;
+  }
+
+  /* Sucursales */
+  #sucursales > div {
+    flex-direction: column;
+  }
+
+  #sucursales iframe {
+    height: 250px;
+  }
+
+  /* Formulario de contacto */
+  #contacto form {
+    padding: 1rem;
+  }
+
+  #contacto .title-large {
+    font-size: 2.2rem;
+  }
+}
+
+/* 🔹 Ajustes extra para pantallas muy pequeñas (menos de 480px) */
+@media (max-width: 480px) {
+  #analisis_clinicos .card-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .card-item img {
+    height: 180px;
+  }
+
+  .section-description {
+    font-size: 1rem;
+    padding: 1.5rem;
+  }
+}
   </style>
 </head>
 <body>
@@ -733,3 +812,4 @@
 
 </body>
 </html>
+
