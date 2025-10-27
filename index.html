@@ -6,6 +6,61 @@
   <title>Onboarding - Diagnóstico Santa Lucía</title>
   <style>
 
+/* ==========================
+   Ajustes para tablets y móviles
+========================== */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    padding: 3rem 1.5rem;
+    min-height: auto;
+  }
+  header div, .header-image {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+  header h1 {
+    font-size: 2.5rem;
+  }
+  header p {
+    font-size: 1.2rem;
+  }
+  .quienes-somos-container {
+    flex-direction: column;
+  }
+  .quienes-somos-text {
+    padding: 1.5rem;
+  }
+  .card-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+  #analisis_clinicos .section-description {
+    font-size: 1rem;
+    padding: 1.5rem 2rem;
+  }
+  section {
+    padding: 2rem 1rem;
+  }
+  .navbar {
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+  }
+  .navbar .nav-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+  }
+  .navbar a {
+    margin: 0.3rem 0;
+  }
+  footer {
+    font-size: 0.75rem;
+    text-align: center;
+  }
+}
+
+
     body {
       font-family: 'Inter', sans-serif;
       background: #E6F1F7;
