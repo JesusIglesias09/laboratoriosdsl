@@ -5,6 +5,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onboarding - Diagnóstico Santa Lucía</title>
   <style>
+.section-description {
+  max-width: 800px;
+  margin: 0 auto 2.5rem auto;
+  font-size: 1.3rem;
+  line-height: 1.9;
+  color: #003366;
+  background: linear-gradient(145deg, #f0f7fb, #d9edf6);
+  padding: 2.5rem 3rem;
+  border-radius: 28px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ==== GALERÍA ==== */
+.card-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.card-item {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+}
+
+.card-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-caption {
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.1rem;
+  color: #003366;
+  font-weight: 600;
+}
+
+/* ==== RESPONSIVIDAD ==== */
+@media (max-width: 768px) {
+  .section-description {
+    font-size: 1.1rem;
+    padding: 1.8rem 1.5rem;
+  }
+
+  .card-item img {
+    height: 180px;
+  }
+
+  .card-caption {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .card-item img {
+    height: 160px;
+  }
+
+  .card-caption {
+    font-size: 0.95rem;
+  }
+}
+
+    
     body {
       font-family: 'Inter', sans-serif;
       background: #E6F1F7;
@@ -540,21 +622,9 @@ body {
 <section id="analisis_clinicos" class="section-observable">
   <h2 class="section-title">Análisis clínicos</h2>
   
-  <p class="section-description" style="
-      max-width:800px; 
-      margin:0 auto 2.5rem auto; 
-      font-size:1.3rem; 
-      line-height:1.9; 
-      color:#003366; 
-      background: linear-gradient(145deg, #f0f7fb, #d9edf6);
-      padding:2.5rem 3rem; 
-      border-radius:28px; 
-      box-shadow:0 12px 28px rgba(0,0,0,0.12); 
-      text-align:center;
-      font-weight:500;
-  ">
+  <p class="section-description">
     Ofrecemos una amplia gama de estudios clínicos diseñados para cuidar tu salud con precisión y confiabilidad. 
-    Desde <strong style="color:#0055aa;">biometrías</strong>, <strong style="color:#0055aa;">química sanguínea</strong> y <strong style="color:#0055aa;">paneles hormonales</strong>, hasta <strong style="color:#0055aa;">pruebas especializadas</strong>, cada análisis se realiza con tecnología de última generación y personal altamente calificado. 
+    Desde <strong>biometrías</strong>, <strong>química sanguínea</strong> y <strong>paneles hormonales</strong>, hasta <strong>pruebas especializadas</strong>, cada análisis se realiza con tecnología de última generación y personal altamente calificado. 
     <br><br>
     Nuestra prioridad es brindarte resultados confiables en un entorno seguro, rápido y cómodo, para que tengas la tranquilidad de estar recibiendo un diagnóstico profesional y accesible.
   </p>
@@ -564,33 +634,56 @@ body {
       <img src="QUIR.png" alt="Estudio Quirúrgico">
       <div class="card-caption">Perfil Quirúrgico</div>
     </div>
+
     <div class="card-item">
       <img src="PRE.png" alt="Perfil Prenatal 1">
       <div class="card-caption">Perfil Prenatal 1</div>
     </div>
+
     <div class="card-item">
-        <img src="PER.png" alt="Perfil Diabético">
+      <img src="PER.png" alt="Perfil Diabético">
       <div class="card-caption">Perfiles Hormonales</div>
     </div>
+
     <div class="card-item">
       <img src="GRAL.png" alt="Perfil General">
       <div class="card-caption">Estudios Generales</div>
     </div>
+
     <div class="card-item">
       <img src="PRENATAL2.png" alt="Perfil Prenatal I">
       <div class="card-caption">Perfil Prenatal 2</div>
     </div>
+
     <div class="card-item">
       <img src="PRENATAL3.png" alt="Perfil Prenatal II">
       <div class="card-caption">Perfil Prenatal 3</div>
     </div>
+
     <div class="card-item">
       <img src="FACTOREU.jpg" alt="Factores Europeos">
       <div class="card-caption">Perfil Reumático</div>
     </div>
+
     <div class="card-item">
       <img src="QUIMICA45.jpeg" alt="Química de 45 elementos">
       <div class="card-caption">Química 45 Elementos</div>
+    </div>
+
+    <!-- NUEVAS IMÁGENES AGREGADAS -->
+    <div class="card-item">
+      <img src="cardiaca.jpeg" alt="Perfil Cardíaco">
+      <div class="card-caption">Perfil Cardíaco</div>
+    </div>
+
+    <div class="card-item">
+      <img src="colesterol.jpeg" alt="Perfil de Colesterol">
+      <div class="card-caption">Perfil de Colesterol</div>
+    </div>
+
+    <div class="card-item">
+      <img src="tiroideo.jpeg" alt="Perfil Tiroideo">
+      <div class="card-caption">Perfil Tiroideo</div>
     </div>
   </div>
 </section>
@@ -941,3 +1034,4 @@ body {
 
 </body>
 </html>
+
