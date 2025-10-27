@@ -595,40 +595,154 @@ body {
   </div>
 </section>
 
+<section id="sucursales" class="section-observable">
+  <h2 class="section-title">Sucursales</h2>
 
+  <div class="sucursales-contenedor">
 
-
-<section id="sucursales" class="section-observable" style="padding:4rem 1rem; max-width:1100px; margin: 0 auto;">
-  <h2 class="section-title" style="text-align:center; margin-bottom:2.5rem;">Sucursales</h2>
-  <div style="display:flex; flex-wrap:wrap; gap:2rem; align-items:center; justify-content:center;">
-    
-    <!-- Columna de descripción -->
-    <div style="flex:1 1 350px; min-width:300px; display:flex; align-items:center; justify-content:center;">
-      <p class="section-description" style="font-size:1.4rem; color:#003366; line-height:1.8; padding:2rem 2.5rem; border-radius:20px; background:#f9fbfc; box-shadow:0 8px 20px rgba(0,0,0,0.1); text-align:center; margin:0;">
-        Contamos con dos ubicaciones estratégicas para ofrecerte mayor comodidad y facilidad de acceso a nuestros servicios de laboratorio. 
-        <br><br>
-        Cada sucursal está dentro de hospitales, garantizando un entorno seguro y atención profesional en todo momento. 
-        <br><br>
-        Usa los mapas para localizar la sucursal más cercana y planifica tu visita de manera rápida y eficiente. Nuestro equipo está siempre listo para brindarte atención confiable y resultados precisos, cuidando tu salud y bienestar en cada estudio.
-      </p>
+    <div class="descripcion">
+      Contamos con dos ubicaciones estratégicas para ofrecerte mayor comodidad y facilidad de acceso a nuestros servicios de laboratorio.
+      <br><br>
+      Cada sucursal está dentro de hospitales, garantizando un entorno seguro y atención profesional en todo momento.
+      <br><br>
+      Usa los mapas para localizar la sucursal más cercana y planifica tu visita de manera rápida y eficiente. Nuestro equipo está siempre listo para brindarte atención confiable y resultados precisos, cuidando tu salud y bienestar en cada estudio.
     </div>
 
-    <!-- Columna de mapas -->
-    <div style="flex:1 1 500px; min-width:300px; display:flex; flex-direction:column; gap:2rem;">
-      <div class="map-box" style="border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1);">
-        <h3 style="padding:1rem; margin:0; color:#003366; font-weight:600;">📍 Sucursal Circunvalación Dr. Atl</h3>
-        <iframe src="https://www.google.com/maps?q=Av.%20Cvln.%20Dr.%20Atl%20487,%20Monumental,%2044320%20Guadalajara,%20Jal.&hl=es&z=17&output=embed" 
-                allowfullscreen="" loading="lazy" style="width:100%; height:300px; border:0; border-radius:0;"></iframe>
+    <!-- Sucursal Circunvalación Dr. Atl -->
+    <div class="sucursal-card">
+      <div class="mapa">
+        <h3>📍 Sucursal Circunvalación Dr. Atl</h3>
+        <iframe 
+          src="https://www.google.com/maps?q=Av.%20Cvln.%20Dr.%20Atl%20487,%20Monumental,%2044320%20Guadalajara,%20Jal.&hl=es&z=17&output=embed"
+          allowfullscreen="" loading="lazy">
+        </iframe>
       </div>
-      <div class="map-box" style="border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1);">
-        <h3 style="padding:1rem; margin:0; color:#003366; font-weight:600;">📍 Sucursal Niños Héroes, Tlaquepaque</h3>
-        <iframe src="https://www.google.com/maps?q=Av.%20Ni%C3%B1os%20H%C3%A9roes%2029,%20Hidalgo,%2045500%20San%20Pedro%20Tlaquepaque,%20Jal.&hl=es&z=17&output=embed" 
-                allowfullscreen="" loading="lazy" style="width:100%; height:300px; border:0; border-radius:0;"></iframe>
+      <div class="imagen">
+        <img src="ross.png" alt="Sucursal Circunvalación Dr. Atl">
+      </div>
+    </div>
+
+    <!-- Sucursal Niños Héroes -->
+    <div class="sucursal-card">
+      <div class="mapa">
+        <h3>📍 Sucursal Niños Héroes, Tlaquepaque</h3>
+        <iframe 
+          src="https://www.google.com/maps?q=Av.%20Ni%C3%B1os%20H%C3%A9roes%2029,%20Hidalgo,%2045500%20San%20Pedro%20Tlaquepaque,%20Jal.&hl=es&z=17&output=embed"
+          allowfullscreen="" loading="lazy">
+        </iframe>
+      </div>
+      <div class="imagen">
+        <img src="provi.png" alt="Sucursal Niños Héroes">
       </div>
     </div>
 
   </div>
 </section>
+
+<style>
+  /* --- CONTENEDOR GENERAL --- */
+  #sucursales {
+    padding: 3rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #003366;
+  }
+
+  .sucursales-contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  /* --- DESCRIPCIÓN --- */
+  .descripcion {
+    max-width: 850px;
+    text-align: justify;
+    background: #f9fbfc;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    color: #003366;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  /* --- TARJETAS DE SUCURSALES --- */
+  .sucursal-card {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .mapa, .imagen {
+    flex: 1 1 50%;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mapa h3 {
+    text-align: center;
+    color: #003366;
+    margin: 1rem 0 0.5rem;
+  }
+
+  .mapa iframe {
+    width: 100%;
+    height: 350px;
+    border: 0;
+    border-radius: 0;
+    flex-grow: 1;
+  }
+
+  .imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 768px) {
+    .sucursal-card {
+      flex-direction: column;
+    }
+
+    .mapa iframe {
+      height: 300px;
+    }
+
+    .descripcion {
+      font-size: 1rem;
+      padding: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .section-title {
+      font-size: 1.4rem;
+    }
+
+    .mapa h3 {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+
 
 
 <section id="contacto" class="section-observable" style="padding:4rem 1rem; max-width:760px; margin: 4rem auto; background: #fff; border-radius: 28px; box-shadow: 0 8px 28px rgba(0,0,0,0.06); font-family: 'Inter', sans-serif; color: #003366; text-align: center;">
@@ -827,9 +941,3 @@ body {
 
 </body>
 </html>
-
-
-
-
-
-
