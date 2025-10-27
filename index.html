@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onboarding - Diagnóstico Santa Lucía</title>
   <style>
+
     body {
       font-family: 'Inter', sans-serif;
       background: #E6F1F7;
@@ -169,7 +170,7 @@
 
     .whatsapp-float {
       position: fixed;
-      bottom: 80px;
+      bottom: 25px;
       right: 25px;
       background-color: #25D366;
       border-radius: 50px;
@@ -388,101 +389,7 @@
       from { transform: scale(0.8); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
-/* 🔹 Ajustes responsive para móvil */
-@media (max-width: 768px) {
-  /* Navbar */
-  .navbar {
-    flex-wrap: wrap;
-    padding: 1rem;
-    text-align: center;
-  }
 
-  .navbar .logo {
-    justify-content: center;
-    margin-bottom: 1rem;
-  }
-
-  .nav-buttons {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 0.8rem;
-  }
-
-  .navbar a {
-    margin: 0;
-    font-size: 1.1rem;
-  }
-
-  /* Header */
-  header {
-    flex-direction: column;
-    padding: 4rem 1rem;
-    text-align: center;
-    min-height: auto;
-  }
-
-  header h1 {
-    font-size: 2.2rem;
-  }
-
-  header p {
-    font-size: 1.1rem;
-  }
-
-  .header-image {
-    height: 300px;
-  }
-
-  /* Sucursales */
-  #sucursales > div {
-    flex-direction: column;
-  }
-
-  #sucursales iframe {
-    height: 250px;
-  }
-
-  /* Formulario de contacto */
-  #contacto form {
-    padding: 1rem;
-  }
-
-  #contacto .title-large {
-    font-size: 2.2rem;
-  }
-}
-
-/* 🔹 Ajustes extra para pantallas muy pequeñas (menos de 480px) */
-@media (max-width: 480px) {
-  #analisis_clinicos .card-gallery {
-    grid-template-columns: 1fr;
-  }
-
-  .card-item img {
-    height: 180px;
-  }
-
-  .section-description {
-    font-size: 1rem;
-    padding: 1.5rem;
-  }
-}
-    footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  background: #003366; /* color de la barra */
-  color: white;
-  text-align: center;
-  padding: 12px 0;
-  z-index: 1000;
-}
-
-body {
-  padding-bottom: 60px; /* evita que el footer tape contenido */
-}
   </style>
 </head>
 <body>
@@ -559,7 +466,7 @@ body {
     Nuestra prioridad es brindarte resultados confiables en un entorno seguro, rápido y cómodo, para que tengas la tranquilidad de estar recibiendo un diagnóstico profesional y accesible.
   </p>
 
- <div class="card-gallery">
+  <div class="card-gallery">
   <div class="card-item">
     <img src="QUIR.png" alt="Estudio Quirúrgico">
     <div class="card-caption">Perfil Quirúrgico</div>
@@ -611,7 +518,12 @@ body {
     <div class="card-caption">Perfil de Colesterol</div>
   </div>
 
+  <div class="card-item">
+    <img src="tiroideo.jpeg" alt="Perfil Tiroideo">
+    <div class="card-caption">Perfil Tiroido</div>
+  </div>
 
+</div>
 <section id="sucursales" class="section-observable" style="padding:3rem 1rem; max-width:1200px; margin:0 auto;">
   <h2 class="section-title" style="text-align:center; margin-bottom:1.5rem;">Sucursales</h2>
 
@@ -662,6 +574,10 @@ body {
 
   </div>
 </section>
+
+
+
+
 
 <section id="contacto" class="section-observable" style="padding:4rem 1rem; max-width:760px; margin: 4rem auto; background: #fff; border-radius: 28px; box-shadow: 0 8px 28px rgba(0,0,0,0.06); font-family: 'Inter', sans-serif; color: #003366; text-align: center;">
   <div class="title-small" style="font-weight:600; letter-spacing:1px; color:#003366; margin-bottom:6px;">EN QUÉ PODEMOS</div>
@@ -831,7 +747,7 @@ body {
     </svg>
   </a>
 
-  <footer style="background: #003366; color: #fff; padding: 1rem -0.3rem; font-size: .8rem; text-align: center;">
+  <footer style="background: #003366; color: #fff; padding: 1rem 2rem; font-size: .8rem; text-align: center;">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
       <div style="display: flex; gap: 1.5rem; align-items: center;">
         <a href="https://www.facebook.com/profile.php?id=61579381267385" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="color: white; text-decoration: none;">
@@ -857,7 +773,7 @@ body {
     </div>
   </footer>
 
-  <script>
+<script>
 document.querySelectorAll('.card-item img').forEach(img => {
   img.addEventListener('click', e => {
     e.preventDefault();
@@ -881,14 +797,8 @@ document.querySelectorAll('.card-item img').forEach(img => {
   });
 });
 </script>
-  
+
+
+
 </body>
 </html>
-
-
-
-
-
-
-
-
