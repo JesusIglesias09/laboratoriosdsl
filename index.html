@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onboarding - Diagnóstico Santa Lucía</title>
   <style>
+/* Fuerza mismo tamaño en mapas e imágenes de sucursales */
+.sucursal-card .mapa,
+.sucursal-card .imagen {
+  height: 350px;
+}
+
+.sucursal-card .mapa iframe,
+.sucursal-card .imagen img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
 .section-description {
   max-width: 800px;
   margin: 0 auto 2.5rem auto;
@@ -86,7 +99,6 @@
   }
 }
 
-    
     body {
       font-family: 'Inter', sans-serif;
       background: #E6F1F7;
@@ -694,9 +706,9 @@ body {
   <div class="sucursales-contenedor">
 
     <div class="descripcion">
-      Contamos con dos ubicaciones estratégicas para ofrecerte mayor comodidad y facilidad de acceso a nuestros servicios de laboratorio.
+      Contamos con tres ubicaciones estratégicas para ofrecerte mayor comodidad y facilidad de acceso a nuestros servicios de laboratorio.
       <br><br>
-      Cada sucursal está dentro de hospitales, garantizando un entorno seguro y atención profesional en todo momento.
+      Cada sucursal está dentro de hospitales y clinicas, garantizando un entorno seguro y atención profesional en todo momento.
       <br><br>
       Usa los mapas para localizar la sucursal más cercana y planifica tu visita de manera rápida y eficiente. Nuestro equipo está siempre listo para brindarte atención confiable y resultados precisos, cuidando tu salud y bienestar en cada estudio.
     </div>
@@ -728,6 +740,20 @@ body {
         <img src="provi.png" alt="Sucursal Niños Héroes">
       </div>
     </div>
+<!-- Sucursal Reforma, Tlaquepaque -->
+<div class="sucursal-card">
+  <div class="mapa">
+    <h3>📍 Sucursal Reforma, Tlaquepaque</h3>
+    <iframe 
+      src="https://www.google.com/maps?q=C.%20Reforma%20279,%2045500%20San%20Pedro%20Tlaquepaque,%20Jalisco&hl=es&z=17&output=embed"
+      allowfullscreen="" loading="lazy">
+    </iframe>
+  </div>
+  <div class="imagen">
+    <img src="vidafem.jpeg" alt="Sucursal Reforma Tlaquepaque">
+  </div>
+</div>
+
 
   </div>
 </section>
@@ -1034,4 +1060,3 @@ body {
 
 </body>
 </html>
-
