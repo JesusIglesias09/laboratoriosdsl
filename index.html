@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Onboarding - Diagnóstico Santa Lucía</title>
+
+  <title>LABORATORIO DSL</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+
   <style>
 /* Fuerza mismo tamaño en mapas e imágenes de sucursales */
 .sucursal-card .mapa,
@@ -594,7 +600,7 @@ body {
       <a href="#quienes_somos">Quiénes somos</a>
       <a href="#analisis_clinicos">Análisis clínicos</a>
       <a href="#sucursales">Sucursales</a>
-      <a href="#contacto">Contacto</a>
+      <a href="#contacto">Empresas</a>
     </div>
   </div>
 
@@ -714,7 +720,12 @@ body {
     </div>
 
     <!-- Sucursal Circunvalación Dr. Atl -->
-    <div class="sucursal-card">
+    <div class="sucursal-card sucursal-layout">
+<div class="horario-box">
+  <h3>Hospital Rosette</h3>
+  <p> Lunes a Sábado: 08:00 – 21:00</p>
+  <p> Domingo: 08:00 – 14:00</p>
+</div>
       <div class="mapa">
         <h3>📍 Sucursal Circunvalación Dr. Atl</h3>
         <iframe 
@@ -728,7 +739,13 @@ body {
     </div>
 
     <!-- Sucursal Niños Héroes -->
-    <div class="sucursal-card">
+    <div class="sucursal-card sucursal-layout">
+<div class="horario-box">
+  <h3>Sanatorio Providencia</h3>
+  <p> Lunes a Sábado: 08:00 – 21:00</p>
+  <p> Domingo: 08:00 – 14:00</p>
+</div>
+
       <div class="mapa">
         <h3>📍 Sucursal Niños Héroes, Tlaquepaque</h3>
         <iframe 
@@ -741,7 +758,11 @@ body {
       </div>
     </div>
 <!-- Sucursal Reforma, Tlaquepaque -->
-<div class="sucursal-card">
+<div class="sucursal-card sucursal-layout">
+<div class="horario-box">
+  <h3>Clínica Vidafem</h3>
+  <p> Lunes a Sábado: 08:00 – 16:00</p>
+</div>
   <div class="mapa">
     <h3>📍 Sucursal Reforma, Tlaquepaque</h3>
     <iframe 
@@ -819,6 +840,47 @@ body {
     color: #003366;
     margin: 1rem 0 0.5rem;
   }
+/* 🔹 Layout sucursal con horario sin romper imagen */
+.sucursal-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 1fr;
+  width: 100%;
+}
+
+.horario-box {
+  background: #f4f8fb;
+  padding: 1.2rem;
+  color: #003366;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid #e0e6ed;
+}
+
+.horario-box h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 0.6rem;
+}
+
+.horario-box p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sucursal-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .horario-box {
+    text-align: center;
+    border-right: none;
+    border-bottom: 1px solid #e0e6ed;
+  }
+}
 
   .mapa iframe {
     width: 100%;
@@ -865,8 +927,8 @@ body {
 
 
 <section id="contacto" class="section-observable" style="padding:4rem 1rem; max-width:760px; margin: 4rem auto; background: #fff; border-radius: 28px; box-shadow: 0 8px 28px rgba(0,0,0,0.06); font-family: 'Inter', sans-serif; color: #003366; text-align: center;">
-  <div class="title-small" style="font-weight:600; letter-spacing:1px; color:#003366; margin-bottom:6px;">EN QUÉ PODEMOS</div>
-  <h2 class="title-large" style="font-size:3rem; line-height:1; margin:0 0 18px 0; color:#FF9900; font-weight:800; text-transform: uppercase;">¿AYUDARTE?</h2>
+  <div class="title-small" style="font-weight:600; letter-spacing:1px; color:#003366; margin-bottom:6px;">¿Te gustaría realizar análisis clínicos a tus empleados?</div>
+  <h2 class="title-large" style="font-size:3rem; line-height:1; margin:0 0 18px 0; color:#FF9900; font-weight:800; text-transform: uppercase;">CONTACTANOS</h2>
   <div class="title-underline" style="width:110px; height:6px; background:#003366; margin:10px auto 28px auto; border-radius:4px;"></div>
 
   <form id="contactForm" novalidate style="max-width:650px; margin: 0 auto; text-align:left;">
