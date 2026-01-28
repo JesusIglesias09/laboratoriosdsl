@@ -222,6 +222,15 @@
     word-break: break-word;
   }
 }
+.menu-toggle {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.menu-toggle.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
 @media (max-width: 480px) {
   .card-gallery {
     grid-template-columns: 1fr;
@@ -903,7 +912,7 @@ body {
     <img src="log.png" alt="Logo Diagnóstico Santa Lucía" style="height: 80px; width: auto; margin-right: 1rem;">
     LABORATORIO DSL
   </div>
-
+<div class="menu-overlay"></div>
   <!-- BOTÓN HAMBURGUESA (solo móvil) -->
   <div class="menu-toggle" id="menuToggle">☰</div>
 
@@ -1245,6 +1254,20 @@ body {
     color: #003366;
     margin: 1rem 0 0.5rem;
   }
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
 /* 🔹 Layout sucursal con horario sin romper imagen */
 .sucursal-layout {
   display: grid;
@@ -1548,5 +1571,33 @@ body {
   });
 </script>
 <div class="menu-overlay"></div>
+<script>
+  const menuToggle = document.getElementById("menuToggle");
+  const navMenu = document.getElementById("navMenu");
+  const overlay = document.querySelector(".menu-overlay");
+
+  menuToggle.addEventListener("click", function (e) {
+    e.stopPropagation();
+    navMenu.classList.toggle("active");
+    overlay.classList.toggle("active");
+
+    // 👇 AQUÍ SE OCULTA EL BOTÓN
+    menuToggle.classList.toggle("hide");
+  });
+
+  overlay.addEventListener("click", function () {
+    navMenu.classList.remove("active");
+    overlay.classList.remove("active");
+    menuToggle.classList.remove("hide");
+  });
+
+  document.querySelectorAll(".nav-buttons a").forEach(link => {
+    link.addEventListener("click", () => {
+      navMenu.classList.remove("active");
+      overlay.classList.remove("active");
+      menuToggle.classList.remove("hide");
+    });
+  });
+</script>
 </body>
 </html>
