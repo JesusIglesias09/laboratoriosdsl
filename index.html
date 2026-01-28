@@ -818,7 +818,39 @@
     display: block;
   }
 }
+/* ===== MENÚ HAMBURGUESA PRO ===== */
+.menu-toggle {
+  display: none;
+  font-size: 2.2rem;
+  cursor: pointer;
+  color: white;
+}
 
+/* MÓVIL */
+@media (max-width: 768px) {
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-buttons {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: #003366;
+    padding: 1rem 0;
+  }
+
+  .nav-buttons a {
+    padding: 0.8rem 0;
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .nav-buttons.active {
+    display: flex;
+  }
+}
 /* 🔹 Ajustes extra para pantallas muy pequeñas (menos de 480px) */
 @media (max-width: 480px) {
   #analisis_clinicos .card-gallery {
@@ -857,19 +889,23 @@ body {
     <div class="dna"><span></span><span></span><span></span><span></span></div>
   </div>
 
-  <div class="navbar">
-    <div class="logo">
-      <img src="log.png" alt="Logo Diagnóstico Santa Lucía" style="height: 80px; width: auto; margin-right: 1rem;">
-      LABORATORIO DSL
-    </div>
-    <div class="nav-buttons">
-      <a href="#quienes_somos">Quiénes somos</a>
-      <a href="#analisis_clinicos">Análisis clínicos</a>
-      <a href="#domicilio">Servicio a domicilio</a>
-      <a href="#sucursales">Sucursales</a>
-      <a href="#contacto">Empresas</a>
-    </div>
+<div class="navbar">
+  <div class="logo">
+    <img src="log.png" alt="Logo Diagnóstico Santa Lucía" style="height: 80px; width: auto; margin-right: 1rem;">
+    LABORATORIO DSL
   </div>
+
+  <!-- BOTÓN HAMBURGUESA (solo móvil) -->
+  <div class="menu-toggle" id="menuToggle">☰</div>
+
+  <div class="nav-buttons" id="navMenu">
+    <a href="#quienes_somos">Quiénes somos</a>
+    <a href="#analisis_clinicos">Análisis clínicos</a>
+    <a href="#domicilio">Servicio a domicilio</a>
+    <a href="#sucursales">Sucursales</a>
+    <a href="#contacto">Empresas</a>
+  </div>
+</div>
 
   <header>
     <div>
@@ -1479,6 +1515,10 @@ body {
       </div>
     </div>
   </footer>
+<script>
+  document.getElementById("menuToggle").addEventListener("click", function () {
+    document.getElementById("navMenu").classList.toggle("active");
+  });
+</script>
 </body>
 </html>
-
