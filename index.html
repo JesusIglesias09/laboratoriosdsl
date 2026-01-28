@@ -788,6 +788,15 @@
     font-size: 2.2rem;
   }
 }
+.mobile-break {
+  display: inline;
+}
+
+@media (max-width: 480px) {
+  .mobile-break {
+    display: block;
+  }
+}
 
 /* 🔹 Ajustes extra para pantallas muy pequeñas (menos de 480px) */
 @media (max-width: 480px) {
@@ -982,7 +991,7 @@ body {
 </div>
       <h4>Contáctanos</h4>
       <p>
-        Da clic en el botón <strong> “AGENDA TU TOMA<br>A DOMICILIO” </strong> y proporciónanos los datos básicos del paciente: nombre, teléfono, dirección y estudios a realizar.
+        Da clic en el botón <strong> “Agenda tu toma a domicilio” </strong> y proporciónanos los datos básicos del paciente: nombre, teléfono, dirección y estudios a realizar.
       </p>
     </div>
 
@@ -1031,7 +1040,7 @@ body {
 <div class="cta-domicilio">
   <a href="https://wa.me/523351286935?text=Hola%20quiero%20agendar%20mi%20toma%20a%20domicilio"
      target="_blank" rel="noopener noreferrer">
-    AGENDA TU TOMA A DOMICILIO
+    AGENDA TU TOMA <span class="mobile-break">A DOMICILIO</span>
   </a>
 </div>
 
@@ -1451,4 +1460,3 @@ body {
   </footer>
 </body>
 </html>
-
