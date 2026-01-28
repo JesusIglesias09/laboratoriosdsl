@@ -15,6 +15,54 @@
   <link rel="apple-touch-icon" href="logo.png">
 
   <style>
+/* Animación leve al cargar tarjetas */
+.proceso-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardFadeIn 0.8s ease forwards;
+}
+
+/* Delay escalonado */
+.proceso-card:nth-child(1) { animation-delay: 0.1s; }
+.proceso-card:nth-child(2) { animation-delay: 0.25s; }
+.proceso-card:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes cardFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Brillo sutil al pasar el mouse */
+.proceso-card {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.proceso-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.35),
+    transparent 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.proceso-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.18);
+}
+
+.proceso-card:hover::after {
+  opacity: 1;
+}
 /* Fuerza mismo tamaño en mapas e imágenes de sucursales */
 .sucursal-card .mapa,
 .sucursal-card .imagen {
@@ -41,6 +89,64 @@
   text-align: center;
   font-weight: 500;
 }
+/* ===== Servicio a domicilio – diseño elegante ===== */
+
+.domicilio-section {
+  padding: 5rem 1rem;
+}
+
+.domicilio-linea {
+  max-width: 1200px;
+  margin: 3rem auto 0;
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+}
+
+/* Imagen izquierda */
+.domicilio-linea img {
+  width: 45%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 26px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* Tarjeta de texto derecha */
+.domicilio-card p {
+  font-size: 1.08rem;      /* un poco más chico */
+  line-height: 1.7;       /* menos espacio entre líneas */
+  color: #003366;
+  margin: 0;
+  text-align: justify;    /* JUSTIFICADO */
+}
+
+.domicilio-card {
+  width: 55%;
+  background: linear-gradient(145deg, #f4f9fc, #e2f1f8);
+  padding: 2.2rem 2.5rem; /* más compacto */
+  border-radius: 26px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .domicilio-linea {
+    flex-direction: column;
+  }
+
+  .domicilio-linea img {
+    width: 100%;
+    height: 320px;
+  }
+
+  .domicilio-card {
+    width: 100%;
+    padding: 2.2rem;
+    text-align: center;
+  }
+}
+
 
 /* ==== GALERÍA ==== */
 .card-gallery {
@@ -421,6 +527,79 @@
       transform: translateY(-5px);
       box-shadow: 0 12px 25px rgba(0,0,0,0.15);
     }
+/* ===== Proceso servicio a domicilio ===== */
+
+.domicilio-proceso {
+  padding: 5rem 1rem;
+  background: #f6fbfe;
+}
+
+.proceso-title {
+  max-width: 1200px;
+  margin: 0 auto 3.5rem;
+  font-size: 2rem;
+  color: #003366;
+  position: relative;
+}
+
+.proceso-title::after {
+  content: "";
+  display: block;
+  width: 120px;
+  height: 4px;
+  background: #0a8cb8;
+  margin-top: 0.8rem;
+  border-radius: 2px;
+}
+
+.proceso-cards {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.proceso-card {
+  background: #ffffff;
+  border-radius: 26px;
+  padding: 1.7rem 2rem;   /* ↓ menos altura */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+
+.proceso-icon {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.proceso-card h4 {
+  margin: 0 0 1rem;
+  color: #003366;
+  font-size: 1.2rem;
+}
+
+.proceso-card p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #444;
+  text-align: justify;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .proceso-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .proceso-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
 
     /* ——————————————————————————————
        Estilos nuevos para sección Análisis clínicos (tarjetas)
@@ -463,6 +642,59 @@
       color: #003366;
       font-size: 1rem;
     }
+.proceso-icon {
+  color: #003366; /* azul de tu marca */
+}
+/* ===== Animación servicio a domicilio ===== */
+.domicilio-anim {
+  opacity: 0;
+  transition: all 1s ease;
+}
+
+.domicilio-img {
+  transform: translateX(-80px);
+}
+
+.domicilio-text {
+  transform: translateX(80px);
+}
+
+/* Cuando entra en pantalla */
+.section-observable.animate-slide-in .domicilio-img,
+.section-observable.animate-slide-in .domicilio-text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ===== CTA servicio a domicilio (SEGURA) ===== */
+.cta-domicilio {
+  max-width: 1200px;
+  margin: 2.5rem auto;
+  padding: 0 1rem;
+}
+
+.cta-domicilio a {
+  display: block;
+  width: 100%;
+  background: #003366;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 800;
+  padding: 1.3rem 2rem;
+  border-radius: 60px;
+  text-align: center;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.cta-domicilio a:hover {
+  background: #0055aa;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.25);
+}
+
 
     /* Animación de entrada para secciones visibles */
     @keyframes slideInLeft {
@@ -603,6 +835,7 @@ body {
     <div class="nav-buttons">
       <a href="#quienes_somos">Quiénes somos</a>
       <a href="#analisis_clinicos">Análisis clínicos</a>
+      <a href="#domicilio">Servicio a domicilio</a>
       <a href="#sucursales">Sucursales</a>
       <a href="#contacto">Empresas</a>
     </div>
@@ -710,6 +943,99 @@ body {
   </div>
 </section>
 
+<section id="domicilio" class="section-observable domicilio-section">
+  <h2 class="section-title">Servicio de análisis clínicos a domicilio</h2>
+
+  <div class="domicilio-linea">
+    <img src="toma.png" alt="Toma de análisis clínicos a domicilio"
+     class="domicilio-anim domicilio-img">
+
+
+ <div class="domicilio-card domicilio-anim domicilio-text">
+
+      <p>
+        En <strong>Laboratorio DSL</strong>, tu salud y bienestar son nuestra prioridad.
+        Por ello, ponemos a tu disposición el <strong>servicio de análisis clínicos a domicilio</strong>,
+        diseñado para brindarte comodidad, seguridad y atención profesional sin que tengas
+        que salir de casa.
+        <br><br>
+        Nuestro personal capacitado acude hasta tu domicilio con el equipo necesario y bajo
+        estrictos protocolos de higiene y calidad, garantizando resultados confiables y el
+        mismo nivel de atención que en nuestras sucursales.
+        <br><br>
+        Este servicio es ideal para adultos mayores, pacientes con movilidad reducida,
+        personas con agendas ocupadas o para quienes prefieren realizar sus estudios clínicos
+        desde la tranquilidad de su hogar.
+      </p>
+    </div>
+  </div>
+</section>
+<section class="domicilio-proceso">
+  <h3 class="proceso-title">¿Cómo solicitar tu servicio de estudios a domicilio?</h3>
+  <div class="proceso-cards">
+    <div class="proceso-card">
+      <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round">
+  <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+</svg>
+</div>
+      <h4>Contáctanos</h4>
+      <p>
+        Da clic en el botón <strong> “Agenda tu toma a domicilio” </strong> y proporciónanos los datos básicos del paciente: nombre, teléfono, dirección y estudios a realizar.
+      </p>
+    </div>
+
+    <div class="proceso-card">
+      <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"
+     stroke="#003366" stroke-width="2">
+  <rect x="3" y="4" width="18" height="18" rx="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+</svg>
+</div>
+      <h4>Agenda tu cita</h4>
+      <p>
+        Indícanos qué día y hora te gustaría agendar y te enviaremos tu cotización detallada junto con la confirmación de tu cita. Aceptamos pago en efectivo, tarjeta o transferencia bancaria.
+      </p>
+    </div>
+
+    <div class="proceso-card">
+      <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"
+     stroke="#003366" stroke-width="2">
+  <path d="M6 2h12"/>
+  <path d="M10 2v7l-4 9a3 3 0 0 0 3 4h6a3 3 0 0 0 3-4l-4-9V2"/>
+</svg>
+</div>
+      <h4>Toma de muestra</h4>
+      <p>
+        Uno de nuestros técnicos especializados acudirá puntualmente a tu domicilio con el equipo necesario para realizar la toma de muestras bajo estrictos protocolos de seguridad.
+      </p>
+    </div>
+
+    <div class="proceso-card">
+      <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"
+     stroke="#003366" stroke-width="2">
+  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+  <path d="M14 2v6h6"/>
+</svg>
+</div>
+      <h4>Entrega de resultados</h4>
+      <p>
+        Te enviamos tus resultados en formato PDF por correo electrónico o WhatsApp.
+        Si lo prefieres, también puedes recogerlos en sucursal.
+      </p>
+    </div>
+  </div>
+<div class="cta-domicilio">
+  <a href="https://wa.me/523351286935?text=Hola%20quiero%20agendar%20mi%20toma%20a%20domicilio"
+     target="_blank" rel="noopener noreferrer">
+    AGENDA TU TOMA A DOMICILIO
+  </a>
+</div>
+
+</section>
 <section id="sucursales" class="section-observable">
   <h2 class="section-title">Sucursales</h2>
 
@@ -1123,6 +1449,5 @@ body {
       </div>
     </div>
   </footer>
-
 </body>
 </html>
