@@ -3,1568 +3,970 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Laboratorio DSL | Análisis Clínicos</title>
-<meta name="description" content="Laboratorio Diagnóstico Santa Lucía. Estudios clínicos confiables: biometría hemática, química sanguínea, perfiles hormonales y más. Atención profesional en Guadalajara.">
-<meta name="robots" content="index, follow">
-<meta name="author" content="Laboratorio DSL">
-
-
-  <!-- Favicon -->
+  <meta name="description" content="Laboratorio Diagnóstico Santa Lucía. Estudios clínicos confiables: biometría hemática, química sanguínea, perfiles hormonales y más. Atención profesional en Guadalajara.">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Laboratorio DSL">
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <style>
-/* Animación leve al cargar tarjetas */
-.proceso-card {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: cardFadeIn 0.8s ease forwards;
-}
-
-/* Delay escalonado */
-.proceso-card:nth-child(1) { animation-delay: 0.1s; }
-.proceso-card:nth-child(2) { animation-delay: 0.25s; }
-.proceso-card:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes cardFadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Brillo sutil al pasar el mouse */
-.proceso-card {
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.proceso-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    120deg,
-    transparent 30%,
-    rgba(255,255,255,0.35),
-    transparent 70%
-  );
-  opacity: 0;
-  pointer-events: none;
-}
-
-.proceso-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 32px rgba(0,0,0,0.18);
-}
-
-.proceso-card:hover::after {
-  opacity: 1;
-}
-/* Fuerza mismo tamaño en mapas e imágenes de sucursales */
-.sucursal-card .mapa,
-.sucursal-card .imagen {
-  height: 350px;
-}
-
-.sucursal-card .mapa iframe,
-.sucursal-card .imagen img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
-.section-description {
-  max-width: 800px;
-  margin: 0 auto 2.5rem auto;
-  font-size: 1.3rem;
-  line-height: 1.9;
-  color: #003366;
-  background: linear-gradient(145deg, #f0f7fb, #d9edf6);
-  padding: 2.5rem 3rem;
-  border-radius: 28px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-  text-align: center;
-  font-weight: 500;
-}
-/* ===== Servicio a domicilio – diseño elegante ===== */
-
-.domicilio-section {
-  padding: 5rem 1rem;
-}
-
-.domicilio-linea {
-  max-width: 1200px;
-  margin: 3rem auto 0;
-  display: flex;
-  align-items: center;
-  gap: 3.5rem;
-}
-
-/* Imagen izquierda */
-.domicilio-linea img {
-  width: 45%;
-  height: 420px;
-  object-fit: cover;
-  border-radius: 26px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
-}
-
-/* Tarjeta de texto derecha */
-.domicilio-card p {
-  font-size: 1.08rem;      /* un poco más chico */
-  line-height: 1.7;       /* menos espacio entre líneas */
-  color: #003366;
-  margin: 0;
-  text-align: justify;    /* JUSTIFICADO */
-}
-
-.domicilio-card {
-  width: 55%;
-  background: linear-gradient(145deg, #f4f9fc, #e2f1f8);
-  padding: 2.2rem 2.5rem; /* más compacto */
-  border-radius: 26px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-}
-@media (max-width: 768px) {
-  .navbar {
-    height: 56px;
-    padding: 0 14px;
-    flex-wrap: nowrap;
-  }
-
-  .navbar .logo {
-    font-size: 1rem;
-    line-height: 1;
-  }
-
-  .navbar .logo img {
-    height: 38px;
-  }
-
-  .menu-toggle {
-    font-size: 1.6rem;
-  }
-}
-
-
-/* Responsive */
-@media (max-width: 900px) {
-  .domicilio-linea {
-    flex-direction: column;
-  }
-
-  .domicilio-linea img {
-    width: 100%;
-    height: 320px;
-  }
-
-  .domicilio-card {
-    width: 100%;
-    padding: 2.2rem;
-    text-align: center;
-  }
-}
-
-
-/* ==== GALERÍA ==== */
-.card-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-.card-item {
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 22px rgba(0,0,0,0.15);
-}
-
-.card-item img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.card-caption {
-  text-align: center;
-  padding: 1rem;
-  font-size: 1.1rem;
-  color: #003366;
-  font-weight: 600;
-}
-
-/* ==== RESPONSIVIDAD ==== */
-@media (max-width: 768px) {
-  .section-description {
-    font-size: 1.1rem;
-    padding: 1.8rem 1.5rem;
-  }
-
-  .card-item img {
-    height: 180px;
-  }
-
-  .card-caption {
-    font-size: 1rem;
-  }
-}
-/* 🔒 FIX DEFINITIVO CTA MÓVIL */
-@media (max-width: 480px) {
-
-  .cta-domicilio {
-    padding: 0 1rem;
-  }
-
-  .cta-domicilio a {
-    box-sizing: border-box;   /* 🔥 CLAVE */
-    max-width: 100%;
-    width: 100%;
-    margin: 0 auto;
-
-    font-size: 1rem;
-    padding: 1rem 1.2rem;
-    border-radius: 16px;      /* más seguro en móvil */
-    line-height: 1.3;
-
-    white-space: normal;
-    word-break: break-word;
-  }
-}
-@media (max-width: 480px) {
-  .card-gallery {
-    grid-template-columns: 1fr;
-  }
-
-  .card-item img {
-    height: 160px;
-  }
-
-  .card-caption {
-    font-size: 0.95rem;
-  }
-}
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #E6F1F7;
-      color: #1a1a1a;
-      margin: 0;
-      text-align: center;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
+    :root {
+      --azul: #003366; --azul-claro: #0055aa; --celeste: #40B4E5;
+      --fondo: #E6F1F7; --naranja: #FF9900; --blanco: #ffffff; --gris-suave: #f4f9fc;
     }
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 2rem;
-      background: #003366;
-      color: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      font-size: 1rem;
-    }
-    .navbar .logo {
-      font-size: 1.6rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-    }
-    .navbar .logo img {
-      height: 80px;
-      margin-right: 1rem;
-    }
-    .navbar a {
-      margin-left: 2rem;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 700;
-      cursor: pointer;
-      position: relative;
-      transition: 0.3s;
-      font-size: 1rem;
-    }
-    .navbar a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -3px;
-      width: 0;
-      height: 3px;
-      background: #FFDD57;
-      transition: width 0.3s ease, transform 0.3s ease;
-      transform-origin: right;
-    }
-    .navbar a:hover::after {
-      width: 100%;
-      transform: scaleX(1.1);
-      transform-origin: left;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--fondo); color: #1a1a1a; overflow-x: hidden; padding-bottom: 60px; text-align: center; }
+    a { text-decoration: none; }
+    img { display: block; max-width: 100%; }
 
-    .loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-    .dna {
-      position: relative;
-      width: 100px;
-      height: 100px;
-    }
-    .dna span {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #003366;
-      top: 0;
-      left: 40px;
-      animation: pulse 1.2s infinite ease-in-out;
-    }
+    /* LOADER */
+    #loader { position: fixed; inset: 0; background: var(--blanco); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+    .dna { position: relative; width: 100px; height: 100px; }
+    .dna span { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: var(--azul); top: 0; left: 40px; animation: pulse 1.2s infinite ease-in-out; }
     .dna span:nth-child(2) { animation-delay: .2s; left: 60px; }
     .dna span:nth-child(3) { animation-delay: .4s; left: 20px; }
     .dna span:nth-child(4) { animation-delay: .6s; left: 80px; }
-    @keyframes pulse {
-      0%,100% { transform: scale(0.5); opacity: 0.3; }
-      50% { transform: scale(1.2); opacity: 1; }
-    }
+    @keyframes pulse { 0%,100%{transform:scale(0.5);opacity:0.3} 50%{transform:scale(1.2);opacity:1} }
 
+    /* NAVBAR */
+    .navbar { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 2rem; background:var(--azul); position:sticky; top:0; z-index:1000; }
+    .logo { font-size:1.6rem; font-weight:700; display:flex; align-items:center; color:var(--blanco); }
+    .logo img { height:80px; margin-right:1rem; }
+    .nav-buttons a { margin-left:2rem; color:var(--blanco); font-weight:700; font-size:1rem; position:relative; transition:0.3s; }
+    .nav-buttons a::after { content:''; position:absolute; left:0; bottom:-3px; width:0; height:3px; background:#FFDD57; transition:width 0.3s ease; }
+    .nav-buttons a:hover::after { width:100%; }
+    .menu-toggle { display:none; font-size:2.2rem; cursor:pointer; color:var(--blanco); }
+
+    /* HEADER */
     header {
-      padding: 6rem 2rem;
-      background: #E6F1F7;
-      color: #003366;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 3rem;
       position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
-      min-height: 600px;
+      background: linear-gradient(135deg, #001a33 0%, #002f5c 50%, #003d7a 100%);
+      padding: 0;
     }
-    header div {
-      flex: 1 1 45%;
+
+    /* Slider de fondo */
+    .header-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .header-bg img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.8s ease-in-out;
+      filter: brightness(0.25) saturate(0.8);
+    }
+    .header-bg img.active { opacity: 1; }
+
+    /* Overlay con gradiente elegante encima del slider */
+    .header-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,20,50,0.6) 0%, rgba(0,30,70,0.3) 50%, rgba(0,20,50,0.7) 100%),
+        radial-gradient(ellipse at 30% 50%, rgba(64,180,229,0.08) 0%, transparent 60%);
+      z-index: 1;
+    }
+
+    /* Partículas flotantes */
+    .header-particles {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(64,180,229,0.15);
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh) scale(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* Contenido central */
+    .header-content {
+      position: relative;
       z-index: 2;
-    }
-    header h1 {
-      font-size: 4rem;
-      font-weight: 900;
-      margin-bottom: 1.2rem;
-      text-transform: uppercase;
-      position: relative;
-      display: inline-block;
-      overflow: hidden;
-      color: #003366;
-    }
-    header h1::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(
-        120deg,
-        rgba(255, 255, 255, 0.5) 0%,
-        rgba(255, 255, 255, 0.8) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      animation: shine 2s infinite;
-      pointer-events: none;
-    }
-    header p {
-      font-size: 1.7rem;
-      opacity: .95;
-      max-width: 600px;
-      text-transform: uppercase;
-      color: #40B4E5;
-      font-weight: bold;
-      display: inline-block;
-      position: relative;
-    }
-    header p::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
-      animation: shine 2s infinite;
-      pointer-events: none;
-    }
-    @keyframes shine {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
-
-    .whatsapp-float {
-      position: fixed;
-      bottom: 80px;
-      right: 25px;
-      background-color: #25D366;
-      border-radius: 50px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      z-index: 1001;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 18px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-      user-select: none;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      color: white;
-      font-size: 1rem;
-    }
-    .whatsapp-float svg {
-      flex-shrink: 0;
-    }
-    .whatsapp-float:hover {
-      background-color: #1ebe57;
-      transform: scale(1.1);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-    }
-    .whatsapp-text {
-      white-space: nowrap;
-    }
-    @media (max-width: 480px) {
-      .whatsapp-float {
-        width: 60px;
-        height: 60px;
-        padding: 0;
-        border-radius: 50%;
-        justify-content: center;
-        font-size: 0;
-      }
-      .whatsapp-text {
-        display: none;
-      }
-    }
-
-    .search-bar { margin-top: 2rem; }
-    .search-button {
-      background: #003366;
-      color: white;
-      border: none;
-      padding: 1rem 2.5rem;
-      font-size: 1.1rem;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
-      text-transform: uppercase;
-    }
-    .search-button:hover {
-      background: #0055aa;
-      transform: scale(1.05);
-    }
-
-    .header-image {
-      flex: 1 1 45%;
       text-align: center;
-      position: relative;
-      height: 600px;
-      overflow: hidden;
-      border-radius: 25px;
-    }
-    .header-image img {
+      padding: 2rem 2rem;
+      max-width: 900px;
       width: 100%;
-      max-width: 1200px;
-      height: 100%;
-      max-height: 600px;
-      object-fit: cover;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 1s ease-in-out, transform 6s ease-in-out;
-    }
-    .header-image img.active {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.05);
     }
 
-    section {
-      padding: 4rem 1rem;
-    }
-    .section-title {
-      font-size: 2rem;
-      color: #003366;
-      margin-bottom: 1rem;
-    }
-    .section-description {
-      font-size: 1rem;
-      color: #333;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .quienes-somos-container {
-      display: flex;
+    /* Etiqueta superior */
+    .header-eyebrow {
+      display: inline-flex;
       align-items: center;
+      gap: 0.6rem;
+      background: rgba(64,180,229,0.12);
+      border: 1px solid rgba(64,180,229,0.3);
+      border-radius: 50px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--celeste);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeSlideDown 0.8s ease 0.3s forwards;
+    }
+    .header-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--celeste);
+      animation: blinkDot 1.5s infinite;
+    }
+    @keyframes blinkDot { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    /* Título principal */
+    .header-title {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      margin-bottom: 0.3rem;
+      opacity: 0;
+      animation: fadeSlideUp 0.9s ease 0.6s forwards;
+    }
+    .header-title .highlight {
+      display: block;
+      background: linear-gradient(90deg, var(--celeste), #7dd6f5, var(--celeste));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmerText 3s linear infinite;
+    }
+    @keyframes shimmerText { 0%{background-position:0%} 100%{background-position:200%} }
+
+    /* Línea decorativa */
+    .header-divider {
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--celeste), #ffffff, var(--celeste), transparent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+      animation: expandLine 1s ease 1.2s forwards;
+    }
+    @keyframes expandLine { to { width: 180px; } }
+
+    /* Subtítulo */
+    .header-subtitle {
+      font-size: clamp(0.9rem, 2.2vw, 1.15rem);
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      max-width: 560px;
+      margin: 0 auto 2.8rem;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeSlideUp 0.9s ease 1.4s forwards;
+    }
+
+    /* Botón CTA */
+    .header-cta-wrap {
+      display: flex;
+      gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 2rem;
+      opacity: 0;
+      animation: fadeSlideUp 0.9s ease 1.7s forwards;
     }
-    .quienes-somos-container img {
-      max-width: 400px;
-      width: 100%;
-      border-radius: 15px;
-    }
-    .quienes-somos-text {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-      flex: 1;
-      max-width: 450px;
-      padding: 2rem;
-      border: 1px solid #e4eaff;
-      border-radius: 15px;
-      min-height: 250px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      transition: 0.3s;
+    .search-button {
       position: relative;
       overflow: hidden;
+      padding: 1rem 2.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: inherit;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .quienes-somos-text::after {
-      content: "";
+    .search-button.primary {
+      background: var(--celeste);
+      color: var(--azul);
+      box-shadow: 0 8px 30px rgba(64,180,229,0.4);
+    }
+    .search-button.primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(64,180,229,0.55); }
+    .search-button.secondary {
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .search-button.secondary:hover { border-color: rgba(255,255,255,0.7); transform: translateY(-3px); }
+    /* Ripple en botones */
+    .search-button::after {
+      content: '';
       position: absolute;
-      top: 0;
-      left: -75%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(120deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
-      transform: skewX(-25deg);
-      transition: 0.5s;
+      inset: 0;
+      background: rgba(255,255,255,0.2);
+      border-radius: inherit;
+      transform: scale(0);
+      transition: transform 0.4s ease;
     }
-    .quienes-somos-text:hover::after {
-      left: 125%;
-    }
-    .quienes-somos-text:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-    }
-/* ===== Proceso servicio a domicilio ===== */
+    .search-button:active::after { transform: scale(2); opacity: 0; }
 
-.domicilio-proceso {
-  padding: 5rem 1rem;
-  background: #f6fbfe;
-}
-
-.proceso-title {
-  max-width: 1200px;
-  margin: 0 auto 3.5rem;
-  font-size: 2rem;
-  color: #003366;
-  position: relative;
-}
-
-.proceso-title::after {
-  content: "";
-  display: block;
-  width: 120px;
-  height: 4px;
-  background: #0a8cb8;
-  margin-top: 0.8rem;
-  border-radius: 2px;
-}
-
-.proceso-cards {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-}
-
-.proceso-card {
-  background: #ffffff;
-  border-radius: 26px;
-  padding: 1.7rem 2rem;   /* ↓ menos altura */
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-}
-
-
-.proceso-icon {
-  font-size: 2.4rem;
-  margin-bottom: 1rem;
-}
-
-.proceso-card h4 {
-  margin: 0 0 1rem;
-  color: #003366;
-  font-size: 1.2rem;
-}
-
-.proceso-card p {
-  margin: 0;
-  font-size: 0.98rem;
-  line-height: 1.6;
-  color: #444;
-  text-align: justify;
-}
-
-/* Responsive */
-@media (max-width: 1000px) {
-  .proceso-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .proceso-cards {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-    /* ——————————————————————————————
-       Estilos nuevos para sección Análisis clínicos (tarjetas)
-       —————————————————————————————— */
-    #analisis_clinicos .card-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 2rem;
-      padding: 2rem 0;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .card-item {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Indicador scroll */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
       display: flex;
       flex-direction: column;
-      text-align: center;
-    }
-
-    .card-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-    }
-
-    .card-item img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-bottom: 1px solid #eaeaea;
-    }
-
-    .card-caption {
-      padding: 1rem;
-      font-weight: 600;
-      color: #003366;
-      font-size: 1rem;
-    }
-.proceso-icon {
-  color: #003366; /* azul de tu marca */
-}
-/* ===== Animación servicio a domicilio ===== */
-.domicilio-anim {
-  opacity: 0;
-  transition: all 1s ease;
-}
-
-.domicilio-img {
-  transform: translateX(-80px);
-}
-
-.domicilio-text {
-  transform: translateX(80px);
-}
-
-/* Cuando entra en pantalla */
-.section-observable.animate-slide-in .domicilio-img,
-.section-observable.animate-slide-in .domicilio-text {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* ===== CTA servicio a domicilio (SEGURA) ===== */
-.cta-domicilio {
-  max-width: 1200px;
-  margin: 2.5rem auto;
-  padding: 0 1rem;
-}
-
-.cta-domicilio a {
-  display: block;
-  width: 100%;
-  background: #003366;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: 800;
-  padding: 1.3rem 2rem;
-  border-radius: 60px;
-  text-align: center;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
-  transition: all 0.3s ease;
-  letter-spacing: 0.5px;
-}
-
-.cta-domicilio a:hover {
-  background: #0055aa;
-  transform: translateY(-3px);
-  box-shadow: 0 14px 35px rgba(0,0,0,0.25);
-}
-
-
-    /* Animación de entrada para secciones visibles */
-    @keyframes slideInLeft {
-      0% {
-        opacity: 0;
-        transform: translateX(-100px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-    .section-observable {
+      align-items: center;
+      gap: 0.4rem;
       opacity: 0;
-      transform: translateX(-100px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      animation: fadeSlideUp 0.8s ease 2.2s forwards;
     }
-    .section-observable.animate-slide-in {
-       animation: slideInLeft 3.5s ease forwards;
+    .scroll-indicator span {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .scroll-mouse {
+      width: 24px; height: 38px;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      padding-top: 6px;
+    }
+    .scroll-mouse::before {
+      content: '';
+      width: 4px; height: 8px;
+      background: var(--celeste);
+      border-radius: 2px;
+      animation: scrollDot 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollDot { 0%,100%{transform:translateY(0);opacity:1} 80%{transform:translateY(10px);opacity:0} }
+
+    /* Animaciones generales */
+    @keyframes fadeSlideUp   { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeSlideDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+
+    /* Responsive header */
+    @media (max-width: 768px) {
+      header { min-height: 100svh; }
+      .header-content { padding: 5rem 1.5rem 6rem; }
+      .header-title { letter-spacing: -0.5px; }
+      .scroll-indicator { bottom: 1.2rem; }
     }
 
-    /* Estilo para la imagen del modal */
-    #img-modal img {
-      animation: zoomIn 0.3s ease;
+    /* SECCIONES */
+    section { padding:4rem 1rem; }
+    .section-title { font-size:2rem; color:var(--azul); font-weight:900; margin-bottom:1.5rem; }
+    .section-description { max-width:800px; margin:0 auto 2.5rem; font-size:1.3rem; line-height:1.9; color:var(--azul); font-weight:500; background:linear-gradient(145deg,#f0f7fb,#d9edf6); padding:2.5rem 3rem; border-radius:28px; box-shadow:0 12px 28px rgba(0,0,0,0.12); }
+
+    /* QUIÉNES SOMOS */
+    .qs-inner { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:2rem; max-width:1100px; margin:0 auto; }
+    .qs-inner img { max-width:400px; width:100%; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.12); transition:transform 0.3s ease, box-shadow 0.3s ease; }
+    .qs-inner img:hover { transform:translateY(-5px); box-shadow:0 12px 25px rgba(0,0,0,0.25); }
+    .qs-texto { flex:1 1 450px; text-align:justify; font-weight:600; font-size:1.15rem; line-height:1.6; color:var(--azul); background:#f9fbfc; padding:2rem 2.5rem; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.1); transition:box-shadow 0.3s ease, transform 0.3s ease; position:relative; overflow:hidden; }
+    .qs-texto::after { content:""; position:absolute; top:0; left:-75%; width:50%; height:100%; background:linear-gradient(120deg,rgba(255,255,255,0.2),transparent); transform:skewX(-25deg); transition:0.5s; }
+    .qs-texto:hover { transform:translateY(-7px); box-shadow:0 14px 35px rgba(0,0,0,0.15); }
+    .qs-texto:hover::after { left:125%; }
+
+    /* GALERÍA */
+    .card-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:2rem; padding:2rem 0; max-width:1100px; margin:0 auto; }
+    .card-item { background:var(--blanco); border-radius:16px; box-shadow:0 6px 18px rgba(0,0,0,0.08); overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; display:flex; flex-direction:column; }
+    .card-item:hover { transform:translateY(-5px); box-shadow:0 12px 28px rgba(0,0,0,0.12); }
+    .card-item img { width:100%; height:160px; object-fit:cover; cursor:pointer; border-bottom:1px solid #eaeaea; }
+    .card-caption { padding:1rem; font-weight:600; color:var(--azul); font-size:1rem; text-align:center; }
+
+    /* DOMICILIO */
+    #domicilio { padding:5rem 1rem; }
+    .domicilio-linea { max-width:1200px; margin:3rem auto 0; display:flex; align-items:center; gap:3.5rem; }
+    .domicilio-linea img { width:45%; height:420px; object-fit:cover; border-radius:26px; box-shadow:0 18px 40px rgba(0,0,0,0.18); }
+    .domicilio-card { width:55%; background:linear-gradient(145deg,#f4f9fc,#e2f1f8); padding:2.2rem 2.5rem; border-radius:26px; box-shadow:0 12px 30px rgba(0,0,0,0.12); }
+    .domicilio-card p { font-size:1.08rem; line-height:1.7; color:var(--azul); text-align:justify; }
+
+    /* PROCESO */
+    .domicilio-proceso { padding:5rem 1rem; background:#f6fbfe; }
+    .proceso-title { max-width:1200px; margin:0 auto 3.5rem; font-size:2rem; color:var(--azul); position:relative; }
+    .proceso-title::after { content:""; display:block; width:120px; height:4px; background:#0a8cb8; margin-top:0.8rem; border-radius:2px; }
+    .proceso-cards { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
+    .proceso-card { background:var(--blanco); border-radius:26px; padding:1.7rem 2rem; box-shadow:0 12px 30px rgba(0,0,0,0.08); opacity:0; transform:translateY(20px); animation:cardFadeIn 0.8s ease forwards; position:relative; transition:transform 0.3s ease, box-shadow 0.3s ease; }
+    .proceso-card:nth-child(1){animation-delay:0.1s} .proceso-card:nth-child(2){animation-delay:0.25s} .proceso-card:nth-child(3){animation-delay:0.4s}
+    .proceso-card::after { content:""; position:absolute; inset:0; border-radius:inherit; background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.35),transparent 70%); opacity:0; pointer-events:none; }
+    .proceso-card:hover { transform:translateY(-6px); box-shadow:0 14px 32px rgba(0,0,0,0.18); }
+    .proceso-card:hover::after { opacity:1; }
+    @keyframes cardFadeIn { to{opacity:1;transform:translateY(0)} }
+    .proceso-icon { font-size:2.4rem; margin-bottom:1rem; color:var(--azul); }
+    .proceso-card h4 { margin:0 0 1rem; color:var(--azul); font-size:1.2rem; }
+    .proceso-card p { font-size:0.98rem; line-height:1.6; color:#444; text-align:justify; }
+    .cta-domicilio { max-width:1200px; margin:2.5rem auto; padding:0 1rem; }
+    .cta-domicilio a { display:block; width:100%; background:var(--azul); color:var(--blanco); font-size:1.2rem; font-weight:800; padding:1.3rem 2rem; border-radius:60px; text-align:center; box-shadow:0 10px 26px rgba(0,0,0,0.18); transition:all 0.3s ease; }
+    .cta-domicilio a:hover { background:var(--azul-claro); transform:translateY(-3px); box-shadow:0 14px 35px rgba(0,0,0,0.25); }
+
+    /* SUCURSALES */
+    #sucursales { padding:3rem 1rem; max-width:1200px; margin:0 auto; }
+    .sucursales-contenedor { display:flex; flex-direction:column; align-items:center; gap:2rem; }
+    .descripcion { max-width:850px; text-align:justify; background:#f9fbfc; padding:1.5rem 2rem; border-radius:16px; box-shadow:0 4px 14px rgba(0,0,0,0.08); color:var(--azul); font-size:1.1rem; line-height:1.6; font-weight:500; }
+    .sucursal-card { display:grid; grid-template-columns:280px 1fr 1fr; width:100%; max-width:1000px; background:var(--blanco); border-radius:14px; box-shadow:0 6px 16px rgba(0,0,0,0.08); overflow:hidden; }
+    .horario-box { background:var(--gris-suave); padding:1.2rem; color:var(--azul); display:flex; flex-direction:column; justify-content:center; border-right:1px solid #e0e6ed; }
+    .horario-box h3 { font-size:1.1rem; font-weight:800; margin-bottom:0.6rem; }
+    .horario-box p { margin:0.25rem 0; font-size:0.95rem; font-weight:600; }
+    .mapa { display:flex; flex-direction:column; }
+    .mapa h3 { text-align:center; color:var(--azul); margin:1rem 0 0.5rem; }
+    .mapa iframe { width:100%; height:350px; border:0; flex-grow:1; }
+    .imagen img { width:100%; height:100%; object-fit:cover; }
+
+    /* CONTACTO */
+    #contacto { padding:4rem 1rem; max-width:760px; margin:4rem auto; background:var(--blanco); border-radius:28px; box-shadow:0 8px 28px rgba(0,0,0,0.06); }
+    .contacto-eyebrow { font-weight:600; letter-spacing:1px; color:var(--azul); margin-bottom:6px; }
+    .contacto-titulo { font-size:3rem; color:var(--naranja); font-weight:800; text-transform:uppercase; }
+    .contacto-linea { width:110px; height:6px; background:var(--azul); margin:10px auto 28px; border-radius:4px; }
+    .input-pill { display:block; width:100%; padding:14px 18px; margin-bottom:18px; border-radius:24px; border:1px solid rgba(0,0,0,0.12); background:#f6f7f8; font-size:1rem; outline:none; transition:box-shadow 0.2s, border-color 0.2s; font-family:inherit; }
+    .input-pill:focus { box-shadow:0 6px 18px rgba(15,20,30,0.06); border-color:rgba(0,0,0,0.3); }
+    textarea.input-pill { border-radius:14px; min-height:120px; resize:vertical; }
+    .campo-label { text-align:center; font-weight:600; color:#6b7579; margin-bottom:8px; }
+    .btn-enviar { display:inline-block; padding:12px 28px; background:var(--naranja); color:var(--blanco); border-radius:8px; border:none; font-weight:700; cursor:pointer; font-size:1rem; font-family:inherit; box-shadow:0 6px 18px rgba(255,153,0,0.3); transition:transform 0.12s ease; }
+    .btn-enviar:active { transform:translateY(1px); }
+
+    /* COTIZACIONES */
+    #cotizaciones { padding:4rem 1rem; max-width:1100px; margin:0 auto; }
+    #cot-lock { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; background:linear-gradient(145deg,#f0f7fb,#d9edf6); border-radius:28px; padding:3rem 2rem; box-shadow:0 12px 32px rgba(0,0,0,0.12); max-width:480px; margin:0 auto; }
+    #cot-lock .lock-icon { font-size:3.5rem; }
+    #cot-lock h3 { font-size:1.4rem; color:var(--azul); font-weight:800; }
+    #cot-lock p { font-size:1rem; color:#555; }
+    .pass-wrap { display:flex; gap:0.7rem; width:100%; max-width:340px; }
+    .pass-wrap input { flex:1; padding:12px 16px; border-radius:50px; border:2px solid #c5daea; background:var(--blanco); font-size:1rem; outline:none; font-family:inherit; transition:border-color 0.2s; }
+    .pass-wrap input:focus { border-color:var(--azul); }
+    .pass-wrap input.error { border-color:#e53935; animation:shake 0.3s ease; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+    .btn-desbloquear { padding:12px 20px; background:var(--azul); color:var(--blanco); border:none; border-radius:50px; font-weight:700; cursor:pointer; font-family:inherit; font-size:1rem; transition:background 0.2s, transform 0.1s; }
+    .btn-desbloquear:hover { background:var(--azul-claro); }
+    .btn-desbloquear:active { transform:scale(0.97); }
+    #cot-error { color:#e53935; font-size:0.9rem; font-weight:600; display:none; }
+    #cot-content { display:none; }
+    #cot-content.visible { display:block; animation:fadeIn 0.5s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    .cot-layout { display:grid; grid-template-columns:1fr 340px; gap:2rem; align-items:start; }
+    .cot-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; grid-column:1/-1; }
+    .btn-cerrar-sesion { padding:8px 18px; background:transparent; border:2px solid var(--azul); color:var(--azul); border-radius:50px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.9rem; transition:all 0.2s; }
+    .btn-cerrar-sesion:hover { background:var(--azul); color:var(--blanco); }
+    .cot-buscador { position:relative; margin-bottom:1rem; }
+    .cot-buscador input { width:100%; padding:14px 20px 14px 48px; border-radius:50px; border:2px solid #c5daea; background:var(--blanco); font-size:1rem; outline:none; font-family:inherit; transition:border-color 0.2s; box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+    .cot-buscador input:focus { border-color:var(--azul); }
+    .cot-buscador .search-icon { position:absolute; left:16px; top:50%; transform:translateY(-50%); color:#999; pointer-events:none; }
+    .cot-lista { max-height:480px; overflow-y:auto; border-radius:18px; background:var(--blanco); box-shadow:0 4px 16px rgba(0,0,0,0.08); }
+    .cot-lista::-webkit-scrollbar { width:6px; }
+    .cot-lista::-webkit-scrollbar-thumb { background:#c5daea; border-radius:3px; }
+    .estudio-item { display:flex; justify-content:space-between; align-items:center; padding:0.9rem 1.2rem; border-bottom:1px solid #eef2f6; cursor:pointer; transition:background 0.15s; text-align:left; gap:1rem; }
+    .estudio-item:last-child { border-bottom:none; }
+    .estudio-item:hover { background:#f0f7fb; }
+    .estudio-item.seleccionado { background:#e8f4fd; }
+    .estudio-nombre { font-weight:600; color:var(--azul); font-size:0.95rem; flex:1; }
+    .estudio-muestra { font-size:0.78rem; color:#888; margin-top:2px; }
+    .estudio-precio-lista { font-weight:800; color:var(--azul); font-size:1rem; white-space:nowrap; }
+    .estudio-add { width:28px; height:28px; border-radius:50%; background:var(--azul); color:var(--blanco); border:none; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.2s, transform 0.1s; }
+    .estudio-add:hover { background:var(--azul-claro); transform:scale(1.1); }
+    .estudio-add.agregado { background:#4caf50; }
+    .sin-resultados { padding:2rem; color:#999; font-size:0.95rem; }
+    .cot-carrito { background:var(--blanco); border-radius:20px; box-shadow:0 6px 24px rgba(0,0,0,0.10); overflow:hidden; position:sticky; top:80px; }
+    .carrito-titulo { background:var(--azul); color:var(--blanco); padding:1rem 1.2rem; font-weight:800; font-size:1rem; display:flex; align-items:center; gap:0.5rem; }
+    .carrito-vacio { padding:2rem 1.2rem; color:#aaa; font-size:0.9rem; text-align:center; }
+    .carrito-items { max-height:340px; overflow-y:auto; }
+    .carrito-items::-webkit-scrollbar { width:5px; }
+    .carrito-items::-webkit-scrollbar-thumb { background:#c5daea; border-radius:3px; }
+    .carrito-item { display:flex; justify-content:space-between; align-items:center; padding:0.75rem 1.2rem; border-bottom:1px solid #eef2f6; gap:0.5rem; }
+    .carrito-item:last-child { border-bottom:none; }
+    .carrito-item-nombre { font-size:0.88rem; color:#333; flex:1; text-align:left; line-height:1.3; }
+    .carrito-item-precio { font-weight:700; color:var(--azul); font-size:0.9rem; white-space:nowrap; }
+    .btn-quitar { background:#ffeaea; color:#e53935; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.2s; }
+    .btn-quitar:hover { background:#ffcccc; }
+    .carrito-total { padding:1rem 1.2rem; border-top:2px solid #eef2f6; background:#f8fbfe; }
+    .total-linea { display:flex; justify-content:space-between; align-items:center; font-weight:900; color:var(--azul); font-size:1.2rem; }
+    .total-cantidad { font-size:0.8rem; color:#888; font-weight:600; margin-top:4px; text-align:right; }
+    .btn-limpiar { margin-top:0.8rem; width:100%; padding:8px; background:transparent; border:1.5px solid #ddd; color:#888; border-radius:50px; cursor:pointer; font-family:inherit; font-size:0.85rem; transition:all 0.2s; }
+    .btn-limpiar:hover { border-color:#e53935; color:#e53935; }
+    .cot-nota { margin-top:1.5rem; padding:1rem 1.5rem; background:#fff8e1; border-radius:14px; border-left:4px solid var(--naranja); font-size:0.9rem; color:#7a5500; text-align:left; grid-column:1/-1; }
+
+    /* FAB MÓVIL */
+    #carrito-fab { position:fixed; bottom:80px; left:20px; background:var(--azul); color:var(--blanco); border:none; border-radius:50px; padding:12px 20px; font-size:1rem; font-weight:800; font-family:inherit; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,51,0.35); z-index:1001; align-items:center; gap:8px; transition:transform 0.2s, background 0.2s; }
+    #carrito-fab:hover { background:var(--azul-claro); transform:scale(1.05); }
+    #fab-count { background:var(--naranja); color:var(--blanco); border-radius:50%; width:22px; height:22px; font-size:0.8rem; display:inline-flex; align-items:center; justify-content:center; }
+    #carrito-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1099; }
+    #carrito-overlay.active { display:block; }
+    #carrito-panel-movil { position:fixed; bottom:0; left:0; right:0; background:var(--blanco); border-radius:24px 24px 0 0; box-shadow:0 -8px 30px rgba(0,0,0,0.2); z-index:1100; max-height:80vh; overflow-y:auto; transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.32,0.72,0,1); }
+    #carrito-panel-movil.open { transform:translateY(0); }
+    .panel-header { display:flex; justify-content:space-between; align-items:center; padding:1.2rem 1.4rem; background:var(--azul); color:var(--blanco); border-radius:24px 24px 0 0; font-weight:800; font-size:1rem; position:sticky; top:0; }
+    .panel-header button { background:rgba(255,255,255,0.2); border:none; color:var(--blanco); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; }
+    @media (min-width:861px) { #carrito-fab { display:none !important; } #carrito-panel-movil, #carrito-overlay { display:none !important; } .cot-layout { grid-template-columns:1fr 340px; } }
+    @media (max-width:860px) { .cot-layout { grid-template-columns:1fr; } .cot-carrito { display:none; } }
+
+    /* MODAL */
+    #img-modal { display:none; position:fixed; z-index:2000; inset:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; }
+    #img-modal img { max-width:90vw; max-height:90vh; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.5); animation:zoomIn 0.3s ease; }
+    @keyframes zoomIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+
+    /* WHATSAPP */
+    .whatsapp-float { position:fixed; bottom:80px; right:25px; background:#25D366; border-radius:50px; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:1001; display:flex; align-items:center; gap:12px; padding:10px 18px; color:var(--blanco); font-weight:600; font-size:1rem; transition:background 0.3s ease, transform 0.3s ease; }
+    .whatsapp-float:hover { background:#1ebe57; transform:scale(1.1); }
+    .whatsapp-float svg { flex-shrink:0; }
+
+    /* FOOTER */
+    footer { position:fixed; bottom:0; left:0; width:100vw; background:var(--azul); color:var(--blanco); padding:12px 1rem; z-index:1000; font-size:.85rem; }
+    .footer-inner { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; max-width:1200px; margin:0 auto; gap:0.5rem; }
+    .footer-redes { display:flex; gap:1.5rem; align-items:center; }
+    .footer-redes a { color:var(--blanco); display:flex; align-items:center; gap:0.5rem; }
+
+    /* ANIMACIONES */
+    .section-observable { opacity:0; transform:translateX(-100px); transition:opacity 0.5s ease, transform 0.5s ease; }
+    .section-observable.animate-slide-in { animation:slideInLeft 3.5s ease forwards; }
+    @keyframes slideInLeft { 0%{opacity:0;transform:translateX(-100px)} 100%{opacity:1;transform:translateX(0)} }
+    .domicilio-anim { opacity:0; transition:all 1s ease; }
+    .domicilio-img { transform:translateX(-80px); }
+    .domicilio-text { transform:translateX(80px); }
+    .section-observable.animate-slide-in .domicilio-img,
+    .section-observable.animate-slide-in .domicilio-text { opacity:1; transform:translateX(0); }
+
+    /* RESPONSIVE */
+    @media (max-width:900px) {
+      .domicilio-linea { flex-direction:column; }
+      .domicilio-linea img { width:100%; height:320px; }
+      .domicilio-card { width:100%; }
+      .proceso-cards { grid-template-columns:repeat(2,1fr); }
+      .sucursal-card { grid-template-columns:1fr; }
+      .horario-box { text-align:center; border-right:none; border-bottom:1px solid #e0e6ed; }
+      .mapa iframe { height:300px; }
     }
-    @keyframes zoomIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    @media (max-width:768px) {
+      .navbar { height:56px; padding:0 14px; }
+      .logo { font-size:1rem; }
+      .logo img { height:38px; }
+      .menu-toggle { display:block; }
+      .nav-buttons { display:none; flex-direction:column; width:100%; background:var(--azul); padding:1rem 0; }
+      .nav-buttons a { padding:0.8rem 0; margin:0; font-size:1.1rem; }
+      .nav-buttons.active { display:flex; }
+      .section-description { font-size:1.1rem; padding:1.8rem 1.5rem; }
     }
-/* 🔹 Ajustes responsive para móvil */
-@media (max-width: 768px) {
-  /* Navbar */
-  .navbar {
-    flex-wrap: wrap;
-    padding: 1rem;
-    text-align: center;
-  }
-
-  .navbar .logo {
-    justify-content: center;
-    margin-bottom: 1rem;
-  }
-
-  .nav-buttons {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 0.8rem;
-  }
-
-  .navbar a {
-    margin: 0;
-    font-size: 1.1rem;
-  }
-
-  /* Header */
-  header {
-    flex-direction: column;
-    padding: 4rem 1rem;
-    text-align: center;
-    min-height: auto;
-  }
-
-  header h1 {
-    font-size: 2.2rem;
-  }
-
-  header p {
-    font-size: 1.1rem;
-  }
-
-  .header-image {
-    height: 300px;
-  }
-
-  /* Sucursales */
-  #sucursales > div {
-    flex-direction: column;
-  }
-
-  #sucursales iframe {
-    height: 250px;
-  }
-
-  /* Formulario de contacto */
-  #contacto form {
-    padding: 1rem;
-  }
-
-  #contacto .title-large {
-    font-size: 2.2rem;
-  }
-}
-.mobile-break {
-  display: inline;
-}
-
-@media (max-width: 480px) {
-  .mobile-break {
-    display: block;
-  }
-}
-/* ===== MENÚ HAMBURGUESA PRO ===== */
-.menu-toggle {
-  display: none;
-  font-size: 2.2rem;
-  cursor: pointer;
-  color: #000; /* negro */
-}
-
-/* MÓVIL */
-@media (max-width: 768px) {
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .nav-buttons {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    background: #003366;
-    padding: 1rem 0;
-  }
-
-  .nav-buttons a {
-    padding: 0.8rem 0;
-    margin: 0;
-    font-size: 1.1rem;
-  }
-
-  .nav-buttons.active {
-    display: flex;
-  }
-}
-/* 🔹 Ajustes extra para pantallas muy pequeñas (menos de 480px) */
-@media (max-width: 480px) {
-  #analisis_clinicos .card-gallery {
-    grid-template-columns: 1fr;
-  }
-
-  .card-item img {
-    height: 180px;
-  }
-
-  .section-description {
-    font-size: 1rem;
-    padding: 1.5rem;
-  }
-}
-    footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  background: #003366; /* color de la barra */
-  color: white;
-  text-align: center;
-  padding: 12px 0;
-  z-index: 1000;
-}
-
-body {
-  padding-bottom: 60px; /* evita que el footer tape contenido */
-}
+    @media (max-width:600px) { .proceso-cards { grid-template-columns:1fr; } }
+    @media (max-width:480px) {
+      .card-gallery { grid-template-columns:1fr; }
+      .card-item img { height:160px; }
+      .whatsapp-float { width:60px; height:60px; padding:0; border-radius:50%; justify-content:center; }
+      .whatsapp-float .whatsapp-text { display:none; }
+      .cta-domicilio a { font-size:1rem; padding:1rem 1.2rem; border-radius:16px; }
+    }
+    .mobile-break { display:inline; }
+    @media (max-width:480px) { .mobile-break { display:block; } }
   </style>
 </head>
 <body>
 
-  <div class="loader" id="loader">
-    <div class="dna"><span></span><span></span><span></span><span></span></div>
-  </div>
+  <div id="loader"><div class="dna"><span></span><span></span><span></span><span></span></div></div>
 
-<div class="navbar">
-  <div class="logo">
-    <img src="log.png" alt="Logo Diagnóstico Santa Lucía" style="height: 80px; width: auto; margin-right: 1rem;">
-    LABORATORIO DSL
-  </div>
-
-  <!-- BOTÓN HAMBURGUESA (solo móvil) -->
-  <div class="menu-toggle" id="menuToggle">☰</div>
-
-  <div class="nav-buttons" id="navMenu">
-    <a href="#quienes_somos">Quiénes somos</a>
-    <a href="#analisis_clinicos">Análisis clínicos</a>
-    <a href="#domicilio">Servicio a domicilio</a>
-    <a href="#sucursales">Sucursales</a>
-    <a href="#contacto">Empresas</a>
-  </div>
-</div>
+  <nav class="navbar">
+    <a class="logo" href="#"><img src="log.png" alt="Logo DSL">LABORATORIO DSL</a>
+    <div class="menu-toggle" id="menuToggle">☰</div>
+    <div class="nav-buttons" id="navMenu">
+      <a href="#quienes_somos">Quiénes somos</a>
+      <a href="#analisis_clinicos">Análisis clínicos</a>
+      <a href="#domicilio">Servicio a domicilio</a>
+      <a href="#sucursales">Sucursales</a>
+      <a href="#contacto">Empresas</a>
+      <a href="#cotizaciones">Cotizaciones</a>
+    </div>
+  </nav>
 
   <header>
-    <div>
-      <h1>Diagnóstico Santa Lucía</h1>
-      <p>Tu salud comienza con un buen diagnóstico, y nosotros lo hacemos posible</p>
-      <div class="search-bar">
-        <button class="search-button" onclick="document.getElementById('analisis_clinicos').scrollIntoView({ behavior: 'smooth' })">
-          Conoce nuestros paquetes
-        </button>
+    <!-- Slider de fondo -->
+    <div class="header-bg" id="header-slider-container"></div>
+    <!-- Overlay -->
+    <div class="header-overlay"></div>
+    <!-- Partículas -->
+    <div class="header-particles" id="particles"></div>
+    <!-- Contenido -->
+    <div class="header-content">
+      <div class="header-eyebrow">Guadalajara, Jalisco</div>
+      <h1 class="header-title">
+        Diagnóstico
+        <span class="highlight">Santa Lucía</span>
+      </h1>
+      <div class="header-divider"></div>
+      <p class="header-subtitle">Tu salud comienza con un buen diagnóstico,<br>y nosotros lo hacemos posible</p>
+      <div class="header-cta-wrap">
+        <button class="search-button primary" onclick="document.getElementById('analisis_clinicos').scrollIntoView({behavior:'smooth'})">Conoce nuestros paquetes</button>
+        <button class="search-button secondary" onclick="document.getElementById('domicilio').scrollIntoView({behavior:'smooth'})">Servicio a domicilio</button>
       </div>
     </div>
-    <div class="header-image" id="header-slider-container"></div>
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+      <div class="scroll-mouse"></div>
+      <span>Scroll</span>
+    </div>
   </header>
 
-  <section id="quienes_somos" class="section-observable" style="margin-top: 1rem;">
-    <h2 style="color:#003366; font-weight:900; font-size:2rem; margin-bottom:1rem;">Quiénes somos</h2>
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2rem; max-width:1100px; margin: 0 auto;">
-      <img
-        src="logo.png"
-        alt="Logo Diagnóstico Santa Lucía"
-        style="max-width: 400px; width: 100%; border-radius: 20px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); transition: transform 0.3s ease, box-shadow 0.3s ease;"
-        onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 25px rgba(0, 0, 0, 0.25)';"
-        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 20px rgba(0, 0, 0, 0.12)';"
-      />
-      <p
-        style="flex: 1 1 450px; text-align: justify; font-weight: 600; font-size: 1.15rem; line-height: 1.6; color: #003366; background: #f9fbfc; padding: 2rem 2.5rem; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); transition: box-shadow 0.3s ease, transform 0.3s ease; position: relative; overflow: hidden;"
-        onmouseover="this.style.transform='translateY(-7px)'; this.style.boxShadow='0 14px 35px rgba(0,0,0,0.15)';"
-        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';"
-      >
-        Somos una empresa dedicada a ofrecer servicios de laboratorio clínico con alta calidad y confiabilidad. Contamos con personal altamente calificado en toma de muestras, análisis clínicos y entrega de resultados. Nuestros laboratorios están ubicados en hospitales de prestigio, equipados con tecnología de última generación. Además, nuestras salas de toma de muestras están diseñadas para garantizar comodidad, rapidez y seguridad. Estamos comprometidos con brindar un servicio cercano, confiable y accesible, contribuyendo al bienestar y salud de los colaboradores y las empresas que confían en nosotros.
-      </p>
+  <section id="quienes_somos" class="section-observable">
+    <h2 class="section-title">Quiénes somos</h2>
+    <div class="qs-inner">
+      <img src="logo.png" alt="Logo Diagnóstico Santa Lucía">
+      <p class="qs-texto">Somos una empresa dedicada a ofrecer servicios de laboratorio clínico con alta calidad y confiabilidad. Contamos con personal altamente calificado en toma de muestras, análisis clínicos y entrega de resultados. Nuestros laboratorios están ubicados en hospitales de prestigio, equipados con tecnología de última generación. Además, nuestras salas de toma de muestras están diseñadas para garantizar comodidad, rapidez y seguridad. Estamos comprometidos con brindar un servicio cercano, confiable y accesible, contribuyendo al bienestar y salud de los colaboradores y las empresas que confían en nosotros.</p>
     </div>
   </section>
 
-<section id="analisis_clinicos" class="section-observable">
-  <h2 class="section-title">Análisis clínicos</h2>
-  
-  <p class="section-description">
-    Ofrecemos una amplia gama de estudios clínicos diseñados para cuidar tu salud con precisión y confiabilidad. 
-    Desde <strong>biometrías</strong>, <strong>química sanguínea</strong> y <strong>paneles hormonales</strong>, hasta <strong>pruebas especializadas</strong>, cada análisis se realiza con tecnología de última generación y personal altamente calificado. 
-    <br><br>
-    Nuestra prioridad es brindarte resultados confiables en un entorno seguro, rápido y cómodo, para que tengas la tranquilidad de estar recibiendo un diagnóstico profesional y accesible.
-  </p>
-
-  <div class="card-gallery">
-    <div class="card-item">
-      <img src="QUIR.png" alt="Estudio Quirúrgico">
-      <div class="card-caption">Perfil Quirúrgico</div>
+  <section id="analisis_clinicos" class="section-observable">
+    <h2 class="section-title">Análisis clínicos</h2>
+    <p class="section-description">Ofrecemos una amplia gama de estudios clínicos diseñados para cuidar tu salud con precisión y confiabilidad. Desde <strong>biometrías</strong>, <strong>química sanguínea</strong> y <strong>paneles hormonales</strong>, hasta <strong>pruebas especializadas</strong>, cada análisis se realiza con tecnología de última generación y personal altamente calificado.<br><br>Nuestra prioridad es brindarte resultados confiables en un entorno seguro, rápido y cómodo.</p>
+    <div class="card-gallery">
+      <div class="card-item"><img src="QUIR.png" alt="Perfil Quirúrgico"><div class="card-caption">Perfil Quirúrgico</div></div>
+      <div class="card-item"><img src="PRE.png" alt="Perfil Prenatal 1"><div class="card-caption">Perfil Prenatal 1</div></div>
+      <div class="card-item"><img src="PER.png" alt="Perfiles Hormonales"><div class="card-caption">Perfiles Hormonales</div></div>
+      <div class="card-item"><img src="GRAL.png" alt="Estudios Generales"><div class="card-caption">Estudios Generales</div></div>
+      <div class="card-item"><img src="PRENATAL2.png" alt="Perfil Prenatal 2"><div class="card-caption">Perfil Prenatal 2</div></div>
+      <div class="card-item"><img src="PRENATAL3.png" alt="Perfil Prenatal 3"><div class="card-caption">Perfil Prenatal 3</div></div>
+      <div class="card-item"><img src="FACTOREU.jpg" alt="Perfil Reumático"><div class="card-caption">Perfil Reumático</div></div>
+      <div class="card-item"><img src="QUIMICA45.jpeg" alt="Química 45 Elementos"><div class="card-caption">Química 45 Elementos</div></div>
+      <div class="card-item"><img src="cardiaca.jpeg" alt="Perfil Cardíaco"><div class="card-caption">Perfil Cardíaco</div></div>
+      <div class="card-item"><img src="colesterol.jpeg" alt="Perfil de Colesterol"><div class="card-caption">Perfil de Colesterol</div></div>
+      <div class="card-item"><img src="tiroideo.jpeg" alt="Perfil Tiroideo"><div class="card-caption">Perfil Tiroideo</div></div>
     </div>
+  </section>
 
-    <div class="card-item">
-      <img src="PRE.png" alt="Perfil Prenatal 1">
-      <div class="card-caption">Perfil Prenatal 1</div>
-    </div>
-
-    <div class="card-item">
-      <img src="PER.png" alt="Perfil Diabético">
-      <div class="card-caption">Perfiles Hormonales</div>
-    </div>
-
-    <div class="card-item">
-      <img src="GRAL.png" alt="Perfil General">
-      <div class="card-caption">Estudios Generales</div>
-    </div>
-
-    <div class="card-item">
-      <img src="PRENATAL2.png" alt="Perfil Prenatal I">
-      <div class="card-caption">Perfil Prenatal 2</div>
-    </div>
-
-    <div class="card-item">
-      <img src="PRENATAL3.png" alt="Perfil Prenatal II">
-      <div class="card-caption">Perfil Prenatal 3</div>
-    </div>
-
-    <div class="card-item">
-      <img src="FACTOREU.jpg" alt="Factores Europeos">
-      <div class="card-caption">Perfil Reumático</div>
-    </div>
-
-    <div class="card-item">
-      <img src="QUIMICA45.jpeg" alt="Química de 45 elementos">
-      <div class="card-caption">Química 45 Elementos</div>
-    </div>
-
-    <!-- NUEVAS IMÁGENES AGREGADAS -->
-    <div class="card-item">
-      <img src="cardiaca.jpeg" alt="Perfil Cardíaco">
-      <div class="card-caption">Perfil Cardíaco</div>
-    </div>
-
-    <div class="card-item">
-      <img src="colesterol.jpeg" alt="Perfil de Colesterol">
-      <div class="card-caption">Perfil de Colesterol</div>
-    </div>
-
-    <div class="card-item">
-      <img src="tiroideo.jpeg" alt="Perfil Tiroideo">
-      <div class="card-caption">Perfil Tiroideo</div>
-    </div>
-  </div>
-</section>
-
-<section id="domicilio" class="section-observable domicilio-section">
-  <h2 class="section-title">Servicio de análisis clínicos a domicilio</h2>
-
-  <div class="domicilio-linea">
-    <img src="toma.png" alt="Toma de análisis clínicos a domicilio"
-     class="domicilio-anim domicilio-img">
-
-
- <div class="domicilio-card domicilio-anim domicilio-text">
-
-      <p>
-        En <strong>Laboratorio DSL</strong>, tu salud y bienestar son nuestra prioridad.
-        Por ello, ponemos a tu disposición el <strong>servicio de análisis clínicos a domicilio</strong>,
-        diseñado para brindarte comodidad, seguridad y atención profesional sin que tengas
-        que salir de casa.
-        <br><br>
-        Nuestro personal capacitado acude hasta tu domicilio con el equipo necesario y bajo
-        estrictos protocolos de higiene y calidad, garantizando resultados confiables y el
-        mismo nivel de atención que en nuestras sucursales.
-        <br><br>
-        Este servicio es ideal para adultos mayores, pacientes con movilidad reducida,
-        personas con agendas ocupadas o para quienes prefieren realizar sus estudios clínicos
-        desde la tranquilidad de su hogar.
-      </p>
-    </div>
-  </div>
-</section>
-<section class="domicilio-proceso">
-  <h3 class="proceso-title">¿Cómo solicitar tu servicio de estudios a domicilio?</h3>
-  <div class="proceso-cards">
-    <div class="proceso-card">
-      <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"
-     stroke="currentColor" stroke-width="2"
-     stroke-linecap="round" stroke-linejoin="round">
-  <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
-</svg>
-</div>
-      <h4>Contáctanos</h4>
-      <p>
-        Da clic en el botón <strong> “Agenda tu toma a domicilio” </strong> y proporciónanos los datos básicos del paciente: nombre, teléfono, dirección y estudios a realizar.
-      </p>
-    </div>
-
-    <div class="proceso-card">
-      <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"
-     stroke="#003366" stroke-width="2">
-  <rect x="3" y="4" width="18" height="18" rx="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-</svg>
-</div>
-      <h4>Agenda tu cita</h4>
-      <p>
-        Indícanos qué día y hora te gustaría agendar y te enviaremos tu cotización detallada junto con la confirmación de tu cita. Aceptamos pago en efectivo, tarjeta o transferencia bancaria.
-      </p>
-    </div>
-
-    <div class="proceso-card">
-      <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"
-     stroke="#003366" stroke-width="2">
-  <path d="M6 2h12"/>
-  <path d="M10 2v7l-4 9a3 3 0 0 0 3 4h6a3 3 0 0 0 3-4l-4-9V2"/>
-</svg>
-</div>
-      <h4>Toma de muestra</h4>
-      <p>
-        Uno de nuestros técnicos especializados acudirá puntualmente a tu domicilio con el equipo necesario para realizar la toma de muestras bajo estrictos protocolos de seguridad.
-      </p>
-    </div>
-
-    <div class="proceso-card">
-      <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"
-     stroke="#003366" stroke-width="2">
-  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-  <path d="M14 2v6h6"/>
-</svg>
-</div>
-      <h4>Entrega de resultados</h4>
-      <p>
-        Te enviamos tus resultados en formato PDF por correo electrónico o WhatsApp.
-        Si lo prefieres, también puedes recogerlos en sucursal.
-      </p>
-    </div>
-  </div>
-<div class="cta-domicilio">
-  <a href="https://wa.me/523351286935?text=Hola%20quiero%20agendar%20mi%20toma%20a%20domicilio"
-     target="_blank" rel="noopener noreferrer">
-    AGENDA TU TOMA <span class="mobile-break">A DOMICILIO</span>
-  </a>
-</div>
-
-</section>
-<section id="sucursales" class="section-observable">
-  <h2 class="section-title">Sucursales</h2>
-
-  <div class="sucursales-contenedor">
-
-    <div class="descripcion">
-      Contamos con tres ubicaciones estratégicas para ofrecerte mayor comodidad y facilidad de acceso a nuestros servicios de laboratorio.
-      <br><br>
-      Cada sucursal está dentro de hospitales y clinicas, garantizando un entorno seguro y atención profesional en todo momento.
-      <br><br>
-      Usa los mapas para localizar la sucursal más cercana y planifica tu visita de manera rápida y eficiente. Nuestro equipo está siempre listo para brindarte atención confiable y resultados precisos, cuidando tu salud y bienestar en cada estudio.
-    </div>
-
-    <!-- Sucursal Circunvalación Dr. Atl -->
-    <div class="sucursal-card sucursal-layout">
-<div class="horario-box">
-  <h3>Hospital Rosette</h3>
-  <p> Lunes a Sábado: 08:00 – 21:00</p>
-  <p> Domingo: 08:00 – 14:00</p>
-</div>
-      <div class="mapa">
-        <h3>📍 Sucursal Circunvalación Dr. Atl</h3>
-        <iframe 
-          src="https://www.google.com/maps?q=Av.%20Cvln.%20Dr.%20Atl%20487,%20Monumental,%2044320%20Guadalajara,%20Jal.&hl=es&z=17&output=embed"
-          allowfullscreen="" loading="lazy">
-        </iframe>
-      </div>
-      <div class="imagen">
-        <img src="ross.png" alt="Sucursal Circunvalación Dr. Atl">
+  <section id="domicilio" class="section-observable">
+    <h2 class="section-title">Servicio de análisis clínicos a domicilio</h2>
+    <div class="domicilio-linea">
+      <img src="toma.png" alt="Toma a domicilio" class="domicilio-anim domicilio-img">
+      <div class="domicilio-card domicilio-anim domicilio-text">
+        <p>En <strong>Laboratorio DSL</strong>, tu salud y bienestar son nuestra prioridad. Ponemos a tu disposición el <strong>servicio de análisis clínicos a domicilio</strong>, diseñado para brindarte comodidad, seguridad y atención profesional sin que tengas que salir de casa.<br><br>Nuestro personal capacitado acude hasta tu domicilio con el equipo necesario y bajo estrictos protocolos de higiene y calidad, garantizando los mismos resultados confiables que en nuestras sucursales.<br><br>Ideal para adultos mayores, pacientes con movilidad reducida o personas con agendas ocupadas.</p>
       </div>
     </div>
+  </section>
 
-    <!-- Sucursal Niños Héroes -->
-    <div class="sucursal-card sucursal-layout">
-<div class="horario-box">
-  <h3>Sanatorio Providencia</h3>
-  <p> Lunes a Sábado: 08:00 – 21:00</p>
-  <p> Domingo: 08:00 – 14:00</p>
-</div>
-
-      <div class="mapa">
-        <h3>📍 Sucursal Niños Héroes, Tlaquepaque</h3>
-        <iframe 
-          src="https://www.google.com/maps?q=Av.%20Ni%C3%B1os%20H%C3%A9roes%2029,%20Hidalgo,%2045500%20San%20Pedro%20Tlaquepaque,%20Jal.&hl=es&z=17&output=embed"
-          allowfullscreen="" loading="lazy">
-        </iframe>
+  <section class="domicilio-proceso">
+    <h3 class="proceso-title">¿Cómo solicitar tu servicio de estudios a domicilio?</h3>
+    <div class="proceso-cards">
+      <div class="proceso-card">
+        <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></div>
+        <h4>Contáctanos</h4>
+        <p>Da clic en <strong>"Agenda tu toma a domicilio"</strong> y proporciónanos los datos básicos: nombre, teléfono, dirección y estudios a realizar.</p>
       </div>
-      <div class="imagen">
-        <img src="provi.png" alt="Sucursal Niños Héroes">
+      <div class="proceso-card">
+        <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <h4>Agenda tu cita</h4>
+        <p>Indícanos día y hora y te enviaremos tu cotización junto con la confirmación. Aceptamos efectivo, tarjeta o transferencia.</p>
+      </div>
+      <div class="proceso-card">
+        <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12"/><path d="M10 2v7l-4 9a3 3 0 0 0 3 4h6a3 3 0 0 0 3-4l-4-9V2"/></svg></div>
+        <h4>Toma de muestra</h4>
+        <p>Un técnico especializado acudirá puntualmente con el equipo necesario bajo estrictos protocolos de seguridad.</p>
+      </div>
+      <div class="proceso-card">
+        <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+        <h4>Entrega de resultados</h4>
+        <p>Recibes tus resultados en PDF por correo o WhatsApp. También puedes recogerlos en sucursal si lo prefieres.</p>
       </div>
     </div>
-<!-- Sucursal Reforma, Tlaquepaque -->
-<div class="sucursal-card sucursal-layout">
-<div class="horario-box">
-  <h3>Clínica Vidafem</h3>
-  <p> Lunes a Sábado: 08:00 – 16:00</p>
-</div>
-  <div class="mapa">
-    <h3>📍 Sucursal Reforma, Tlaquepaque</h3>
-    <iframe 
-      src="https://www.google.com/maps?q=C.%20Reforma%20279,%2045500%20San%20Pedro%20Tlaquepaque,%20Jalisco&hl=es&z=17&output=embed"
-      allowfullscreen="" loading="lazy">
-    </iframe>
-  </div>
-  <div class="imagen">
-    <img src="vidafem.jpeg" alt="Sucursal Reforma Tlaquepaque">
-  </div>
-</div>
+    <div class="cta-domicilio">
+      <a href="https://wa.me/523351286935?text=Hola%20quiero%20agendar%20mi%20toma%20a%20domicilio" target="_blank" rel="noopener noreferrer">AGENDA TU TOMA <span class="mobile-break">A DOMICILIO</span></a>
+    </div>
+  </section>
 
+  <section id="sucursales" class="section-observable">
+    <h2 class="section-title">Sucursales</h2>
+    <div class="sucursales-contenedor">
+      <p class="descripcion">Contamos con tres ubicaciones estratégicas para ofrecerte mayor comodidad y acceso a nuestros servicios. Cada sucursal está dentro de hospitales y clínicas, garantizando un entorno seguro y atención profesional.<br><br>Usa los mapas para localizar la más cercana y planifica tu visita de manera rápida y eficiente.</p>
+      <div class="sucursal-card">
+        <div class="horario-box"><h3>Hospital Rosette</h3><p>Lunes a Sábado: 08:00 – 21:00</p><p>Domingo: 08:00 – 14:00</p></div>
+        <div class="mapa"><h3>📍 Sucursal Circunvalación Dr. Atl</h3><iframe src="https://www.google.com/maps?q=Av.%20Cvln.%20Dr.%20Atl%20487,%20Monumental,%2044320%20Guadalajara,%20Jal.&hl=es&z=17&output=embed" allowfullscreen loading="lazy"></iframe></div>
+        <div class="imagen"><img src="ross.png" alt="Sucursal Circunvalación Dr. Atl"></div>
+      </div>
+      <div class="sucursal-card">
+        <div class="horario-box"><h3>Sanatorio Providencia</h3><p>Lunes a Sábado: 08:00 – 21:00</p><p>Domingo: 08:00 – 14:00</p></div>
+        <div class="mapa"><h3>📍 Sucursal Niños Héroes, Tlaquepaque</h3><iframe src="https://www.google.com/maps?q=Av.%20Ni%C3%B1os%20H%C3%A9roes%2029,%20Hidalgo,%2045500%20San%20Pedro%20Tlaquepaque,%20Jal.&hl=es&z=17&output=embed" allowfullscreen loading="lazy"></iframe></div>
+        <div class="imagen"><img src="provi.png" alt="Sucursal Niños Héroes"></div>
+      </div>
+      <div class="sucursal-card">
+        <div class="horario-box"><h3>Clínica Vidafem</h3><p>Lunes a Sábado: 08:00 – 16:00</p></div>
+        <div class="mapa"><h3>📍 Sucursal Reforma, Tlaquepaque</h3><iframe src="https://www.google.com/maps?q=C.%20Reforma%20279,%2045500%20San%20Pedro%20Tlaquepaque,%20Jalisco&hl=es&z=17&output=embed" allowfullscreen loading="lazy"></iframe></div>
+        <div class="imagen"><img src="vidafem.jpeg" alt="Sucursal Reforma Tlaquepaque"></div>
+      </div>
+    </div>
+  </section>
 
-  </div>
-</section>
-
-<style>
-  /* --- CONTENEDOR GENERAL --- */
-  #sucursales {
-    padding: 3rem 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .section-title {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #003366;
-  }
-
-  .sucursales-contenedor {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  /* --- DESCRIPCIÓN --- */
-  .descripcion {
-    max-width: 850px;
-    text-align: justify;
-    background: #f9fbfc;
-    padding: 1.5rem 2rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-    color: #003366;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    font-weight: 500;
-  }
-
-  /* --- TARJETAS DE SUCURSALES --- */
-  .sucursal-card {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: stretch;
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-    overflow: hidden;
-    width: 100%;
-    max-width: 1000px;
-  }
-
-  .mapa, .imagen {
-    flex: 1 1 50%;
-    min-width: 320px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .mapa h3 {
-    text-align: center;
-    color: #003366;
-    margin: 1rem 0 0.5rem;
-  }
-/* 🔹 Layout sucursal con horario sin romper imagen */
-.sucursal-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr 1fr;
-  width: 100%;
-}
-
-.horario-box {
-  background: #f4f8fb;
-  padding: 1.2rem;
-  color: #003366;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-right: 1px solid #e0e6ed;
-}
-
-.horario-box h3 {
-  font-size: 1.1rem;
-  font-weight: 800;
-  margin-bottom: 0.6rem;
-}
-
-.horario-box p {
-  margin: 0.25rem 0;
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .sucursal-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .horario-box {
-    text-align: center;
-    border-right: none;
-    border-bottom: 1px solid #e0e6ed;
-  }
-}
-
-  .mapa iframe {
-    width: 100%;
-    height: 350px;
-    border: 0;
-    border-radius: 0;
-    flex-grow: 1;
-  }
-
-  .imagen img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* --- RESPONSIVE --- */
-  @media (max-width: 768px) {
-    .sucursal-card {
-      flex-direction: column;
-    }
-
-    .mapa iframe {
-      height: 300px;
-    }
-
-    .descripcion {
-      font-size: 1rem;
-      padding: 1.2rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .section-title {
-      font-size: 1.4rem;
-    }
-
-    .mapa h3 {
-      font-size: 1rem;
-    }
-  }
-</style>
-
-
-
-
-<section id="contacto" class="section-observable" style="padding:4rem 1rem; max-width:760px; margin: 4rem auto; background: #fff; border-radius: 28px; box-shadow: 0 8px 28px rgba(0,0,0,0.06); font-family: 'Inter', sans-serif; color: #003366; text-align: center;">
-  <div class="title-small" style="font-weight:600; letter-spacing:1px; color:#003366; margin-bottom:6px;">¿Te gustaría realizar análisis clínicos a tus empleados?</div>
-  <h2 class="title-large" style="font-size:3rem; line-height:1; margin:0 0 18px 0; color:#FF9900; font-weight:800; text-transform: uppercase;">CONTACTANOS</h2>
-  <div class="title-underline" style="width:110px; height:6px; background:#003366; margin:10px auto 28px auto; border-radius:4px;"></div>
-
-  <form id="contactForm" novalidate style="max-width:650px; margin: 0 auto; text-align:left;">
-    <div class="field" style="margin-bottom:18px;">
+  <section id="contacto" class="section-observable">
+    <p class="contacto-eyebrow">¿Te gustaría realizar análisis clínicos a tus empleados?</p>
+    <h2 class="contacto-titulo">Contáctanos</h2>
+    <div class="contacto-linea"></div>
+    <form id="contactForm" novalidate style="max-width:650px;margin:0 auto;text-align:left;">
       <label for="name" class="sr-only">Tu Nombre</label>
-      <input
-        class="input-pill"
-        id="name"
-        name="name"
-        type="text"
-        placeholder="Tu Nombre"
-        required
-        style="width:100%; padding:14px 18px; border-radius:24px; border:1px solid rgba(0,0,0,0.12); background:#f6f7f8; font-size:1rem; outline:none; transition: box-shadow 0.2s, border-color 0.2s;"
-        onfocus="this.style.boxShadow='0 6px 18px rgba(15,20,30,0.06)'; this.style.borderColor='rgba(0,0,0,0.3)';"
-        onblur="this.style.boxShadow='none'; this.style.borderColor='rgba(0,0,0,0.12)';"
-      >
-    </div>
-
-    <div class="field" style="margin-bottom:18px;">
+      <input class="input-pill" id="name" name="name" type="text" placeholder="Tu Nombre" required>
       <label for="email" class="sr-only">E-Mail</label>
-      <input
-        class="input-pill"
-        id="email"
-        name="email"
-        type="email"
-        placeholder="E-Mail"
-        required
-        style="width:100%; padding:14px 18px; border-radius:24px; border:1px solid rgba(0,0,0,0.12); background:#f6f7f8; font-size:1rem; outline:none; transition: box-shadow 0.2s, border-color 0.2s;"
-        onfocus="this.style.boxShadow='0 6px 18px rgba(15,20,30,0.06)'; this.style.borderColor='rgba(0,0,0,0.3)';"
-        onblur="this.style.boxShadow='none'; this.style.borderColor='rgba(0,0,0,0.12)';"
-      >
-    </div>
-
-    <div class="field" style="margin-bottom:18px;">
-      <div class="label-center" style="text-align:center; font-weight:600; color:#6b7579; margin-bottom:8px;">¿En qué podemos ayudarte?</div>
+      <input class="input-pill" id="email" name="email" type="email" placeholder="E-Mail" required>
+      <p class="campo-label">¿En qué podemos ayudarte?</p>
       <label for="message" class="sr-only">Mensaje</label>
-      <textarea
-        id="message"
-        name="message"
-        placeholder="Describe aquí tu consulta..."
-        aria-label="¿En qué podemos ayudarte?"
-        style="width:100%; min-height:120px; padding:18px; border-radius:14px; border:1px solid rgba(0,0,0,0.12); background:#f6f7f8; font-size:1rem; outline:none; resize:vertical; transition: box-shadow 0.2s, border-color 0.2s;"
-        onfocus="this.style.boxShadow='0 6px 18px rgba(15,20,30,0.06)'; this.style.borderColor='rgba(0,0,0,0.3)';"
-        onblur="this.style.boxShadow='none'; this.style.borderColor='rgba(0,0,0,0.12)';"
-      ></textarea>
+      <textarea class="input-pill" id="message" name="message" placeholder="Describe aquí tu consulta..."></textarea>
+      <div style="display:flex;justify-content:center;margin-top:18px;">
+        <button type="submit" class="btn-enviar">Enviar</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="cotizaciones" class="section-observable">
+    <h2 class="section-title">Cotizaciones</h2>
+    <div id="cot-lock">
+      <div class="lock-icon">🔒</div>
+      <h3>Área restringida</h3>
+      <p>Ingresa tu usuario y contraseña para acceder a las cotizaciones.</p>
+      <div class="pass-wrap" style="flex-direction:column; gap:0.6rem;">
+        <input type="text"     id="cot-user" placeholder="Usuario"     autocomplete="off" style="border-radius:50px;border:2px solid #c5daea;padding:12px 16px;font-size:1rem;outline:none;font-family:inherit;transition:border-color 0.2s;width:100%;">
+        <input type="password" id="cot-pass" placeholder="Contraseña"  autocomplete="off" style="border-radius:50px;border:2px solid #c5daea;padding:12px 16px;font-size:1rem;outline:none;font-family:inherit;transition:border-color 0.2s;width:100%;">
+        <button class="btn-desbloquear" style="width:100%;" onclick="desbloquearCotizaciones()">Entrar</button>
+      </div>
+      <span id="cot-error">Usuario o contraseña incorrectos. Intenta de nuevo.</span>
     </div>
-
-    <div class="btn-wrap" style="display:flex; justify-content:center; margin-top:18px;">
-      <button
-        type="submit"
-        class="btn"
-        style="display:inline-block; padding:12px 28px; background:#FF9900; color:#fff; border-radius:8px; border:none; font-weight:700; cursor:pointer; box-shadow: 0 6px 18px rgba(255,153,0,0.3); transition: transform 0.12s ease, box-shadow 0.12s ease;"
-        onmousedown="this.style.transform='translateY(1px)';"
-        onmouseup="this.style.transform='translateY(0)';"
-        onmouseleave="this.style.transform='translateY(0)';"
-      >
-        Enviar
-      </button>
+    <div id="cot-content">
+      <div class="cot-header">
+        <p style="color:var(--azul);font-weight:600;">✅ Sesión activa — <span id="cot-sucursal-nombre"></span></p>
+        <button class="btn-cerrar-sesion" onclick="cerrarSesion()">🔒 Cerrar sesión</button>
+      </div>
+      <div class="cot-layout">
+        <div>
+          <div class="cot-buscador">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="cot-search" placeholder="Buscar estudio o paquete..." oninput="filtrarEstudios()">
+          </div>
+          <div class="cot-lista" id="cot-lista"></div>
+        </div>
+        <div class="cot-carrito">
+          <div class="carrito-titulo">🧾 Estudios seleccionados</div>
+          <div id="carrito-vacio" class="carrito-vacio">Aún no has seleccionado ningún estudio.</div>
+          <div class="carrito-items" id="carrito-items"></div>
+          <div class="carrito-total" id="carrito-total" style="display:none;">
+            <div class="total-linea"><span>Total</span><span id="carrito-total-precio">$0.00</span></div>
+            <div class="total-cantidad" id="carrito-cantidad"></div>
+            <button class="btn-limpiar" onclick="limpiarCarrito()">🗑 Limpiar todo</button>
+          </div>
+        </div>
+        <div class="cot-nota" id="cot-nota">⚠️ <strong>Nota:</strong> Los precios son de referencia. Para cotizaciones empresariales o paquetes especiales, contáctanos directamente.</div>
+      </div>
     </div>
-  </form>
+  </section>
 
-  <script>
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const msg = document.getElementById('message').value.trim();
-
-      if (!name || !email || !msg) {
-        alert('Por favor completa todos los campos.');
-        return;
-      }
-
-      const subject = encodeURIComponent(`Consulta de ${name}`);
-      const body = encodeURIComponent(`Nombre: ${name}\nCorreo: ${email}\n\nMensaje:\n${msg}`);
-      const mailtoLink = `mailto:laboratorios.dsl@gmail.com?subject=${subject}&body=${body}`;
-
-      window.location.href = mailtoLink;
-      this.reset();
-    });
-  </script>
-</section>
-
-  <!-- Modal para imágenes -->
-  <div id="img-modal" style="display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center;">
-    <img id="img-modal-content" src="" alt="Vista ampliada" style="max-width: 90vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+  <!-- FAB MÓVIL -->
+  <button id="carrito-fab" onclick="abrirPanelMovil()" style="display:none;" aria-label="Ver carrito">🧾 <span id="fab-count">0</span></button>
+  <div id="carrito-overlay" onclick="cerrarPanelMovil()"></div>
+  <div id="carrito-panel-movil">
+    <div class="panel-header">
+      <span>🧾 Estudios seleccionados</span>
+      <button onclick="cerrarPanelMovil()">✕</button>
+    </div>
+    <div id="panel-vacio" class="carrito-vacio">Aún no has seleccionado ningún estudio.</div>
+    <div class="carrito-items" id="panel-items"></div>
+    <div class="carrito-total" id="panel-total" style="display:none;">
+      <div class="total-linea"><span>Total</span><span id="panel-total-precio">$0.00</span></div>
+      <div class="total-cantidad" id="panel-cantidad"></div>
+      <button class="btn-limpiar" onclick="limpiarCarrito()">🗑 Limpiar todo</button>
+    </div>
   </div>
 
+  <div id="img-modal"><img id="img-modal-content" src="" alt="Vista ampliada"></div>
+
+  <a href="https://wa.me/523351286935?text=Hola%20quiero%20más%20información" class="whatsapp-float" target="_blank" aria-label="Chat en WhatsApp" rel="noopener noreferrer">
+    <span class="whatsapp-text">AGENDA TU PRÓXIMA CITA</span>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M20.52 3.48A11.78 11.78 0 0012 0C5.373 0 0 5.373 0 12a11.9 11.9 0 001.68 6L0 24l6-1.68A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12a11.78 11.78 0 00-3.48-8.52zM12 21.75a9.63 9.63 0 01-5.156-1.52l-.37-.222-3.5 1 1-3.407-.242-.37A9.56 9.56 0 012.25 12 9.75 9.75 0 1121.75 12 9.7 9.7 0 0112 21.75zm5.14-7.46c-.27-.13-1.6-.79-1.84-.88s-.44-.13-.62.13-.71.88-.87 1.06-.32.2-.6.07a7.44 7.44 0 01-2.19-1.36 8.3 8.3 0 01-1.54-1.9c-.16-.27 0-.42.12-.56.13-.13.29-.32.44-.48a1.75 1.75 0 00.26-.43.39.39 0 000-.48c-.13-.13-.62-1.5-.85-2.06s-.44-.47-.61-.47-.42 0-.64 0a1.38 1.38 0 00-.5.24 2.06 2.06 0 00-.74.72 3.18 3.18 0 00-1 2.4 4.88 4.88 0 001.4 3.47 9.58 9.58 0 004.82 3.11 4.62 4.62 0 002.24.12 2.4 2.4 0 001.53-1.4 2.68 2.68 0 00.19-1.28c-.06-.12-.27-.18-.56-.31z"/></svg>
+  </a>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-redes">
+        <a href="https://www.facebook.com/profile.php?id=61579381267385" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.406.593 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.312h3.588l-.467 3.622h-3.121V24h6.116c.73 0 1.324-.593 1.324-1.324V1.325C24 .593 23.406 0 22.675 0z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/dsl_lab?igsh=OXo4dDB1a29vazhk" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.206.056 2.007.248 2.48.415a4.92 4.92 0 011.675 1.045 4.92 4.92 0 011.045 1.675c.167.473.359 1.274.415 2.48.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.056 1.206-.248 2.007-.415 2.48a4.918 4.918 0 01-1.045 1.675 4.918 4.918 0 01-1.675 1.045c-.473.167-1.274.359-2.48.415-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.206-.056-2.007-.248-2.48-.415a4.92 4.92 0 01-1.675-1.045 4.92 4.92 0 01-1.045-1.675c-.167-.473-.359-1.274-.415-2.48C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.056-1.206.248-2.007.415-2.48a4.92 4.92 0 011.045-1.675 4.92 4.92 0 011.675-1.045c.473-.167 1.274-.359 2.48-.415C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.735 0 8.332.012 7.052.07 5.77.128 4.6.34 3.515.735a7.08 7.08 0 00-2.57 1.67A7.08 7.08 0 00.735 4.975C.34 6.06.128 7.23.07 8.512.012 9.792 0 10.195 0 12c0 1.805.012 2.208.07 3.488.058 1.282.27 2.452.665 3.537a7.086 7.086 0 001.67 2.57 7.086 7.086 0 002.57 1.67c1.085.395 2.255.607 3.537.665C9.792 23.988 10.195 24 12 24s2.208-.012 3.488-.07c1.282-.058 2.452-.27 3.537-.665a7.08 7.08 0 002.57-1.67 7.08 7.08 0 001.67-2.57c.395-1.085.607-2.255.665-3.537.058-1.28.07-1.683.07-3.488s-.012-2.208-.07-3.488c-.058-1.282-.27-2.452-.665-3.537a7.08 7.08 0 00-1.67-2.57 7.08 7.08 0 00-2.57-1.67C16.452.34 15.282.128 14 .07 12.72.012 12.317 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+        </a>
+        <a href="tel:3351286935">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.05-.24c1.12.37 2.33.57 3.54.57.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.29 21 3 13.71 3 4c0-.55.45-1 1-1H7.5c.55 0 1 .45 1 1 0 1.21.2 2.42.57 3.54.13.37.04.78-.24 1.05l-2.21 2.2z"/></svg>
+          <span>33 5128 6935</span>
+        </a>
+      </div>
+      <div>©️ 2025 Diagnóstico Santa Lucía | Innovando el diagnóstico médico</div>
+    </div>
+  </footer>
 
   <script>
-    window.addEventListener('load', () => {
-      const loader = document.getElementById('loader');
-      setTimeout(() => { loader.style.display = 'none'; }, 1500);
+    // LOADER — máximo 800ms, no espera recursos externos
+    function ocultarLoader() { document.getElementById('loader').style.display = 'none'; }
+    document.addEventListener('DOMContentLoaded', () => setTimeout(ocultarLoader, 800));
+    window.addEventListener('load', ocultarLoader);
 
-      const sliderContainer = document.getElementById('header-slider-container');
-      const imagesSrc = ['1.jpeg','2.jpeg','3.jpeg','4.jpeg','5.jpeg','6.jpeg'];
-      let currentIndex = 0;
-      const imageElements = imagesSrc.map((src,i) => {
+    // SLIDER
+    document.addEventListener('DOMContentLoaded', () => {
+      // SLIDER DE FONDO
+      const container = document.getElementById('header-slider-container');
+      const srcs = ['1.jpeg','2.jpeg','3.jpeg','4.jpeg','5.jpeg','6.jpeg'];
+      let idx = 0;
+      const imgs = srcs.map((src, i) => {
         const img = document.createElement('img');
         img.src = src;
         if (i === 0) img.classList.add('active');
-        sliderContainer.appendChild(img);
+        container.appendChild(img);
         return img;
       });
       setInterval(() => {
-        imageElements[currentIndex].classList.remove('active');
-        currentIndex = (currentIndex + 1) % imageElements.length;
-        imageElements[currentIndex].classList.add('active');
-      }, 3000);
+        imgs[idx].classList.remove('active');
+        idx = (idx + 1) % imgs.length;
+        imgs[idx].classList.add('active');
+      }, 4000);
+
+      // PARTÍCULAS
+      const pContainer = document.getElementById('particles');
+      for (let i = 0; i < 18; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 5 + 2;
+        p.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${Math.random()*100}%;
+          animation-duration:${Math.random()*15+10}s;
+          animation-delay:${Math.random()*10}s;
+          opacity:${Math.random()*0.4+0.1};
+        `;
+        pContainer.appendChild(p);
+      }
+
+      // ANIMACIONES
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate-slide-in'); obs.unobserve(e.target); } });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.section-observable').forEach(el => observer.observe(el));
+
+      // MODAL IMÁGENES
+      const modal = document.getElementById('img-modal');
+      const modalImg = document.getElementById('img-modal-content');
+      document.querySelectorAll('#analisis_clinicos .card-item img').forEach(img => {
+        img.addEventListener('click', () => { modal.style.display = 'flex'; modalImg.src = img.src; modalImg.alt = img.alt; });
+      });
+      modal.addEventListener('click', () => { modal.style.display = 'none'; });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.style.display = 'none'; });
+
+      // MENÚ HAMBURGUESA
+      const toggle = document.getElementById('menuToggle');
+      const menu = document.getElementById('navMenu');
+      toggle.addEventListener('click', e => { e.stopPropagation(); menu.classList.toggle('active'); });
+      document.addEventListener('click', e => {
+        if (menu.classList.contains('active') && !menu.contains(e.target) && !toggle.contains(e.target)) menu.classList.remove('active');
+      });
+      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('active')));
+
+      // CONTACTO
+      document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const msg = document.getElementById('message').value.trim();
+        if (!name || !email || !msg) { alert('Por favor completa todos los campos.'); return; }
+        window.location.href = `mailto:laboratorios.dsl@gmail.com?subject=${encodeURIComponent('Consulta de '+name)}&body=${encodeURIComponent('Nombre: '+name+'\nCorreo: '+email+'\n\nMensaje:\n'+msg)}`;
+        this.reset();
+      });
+
+      // CONTRASEÑA COTIZACIONES
+      document.getElementById('cot-pass').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
+      document.getElementById('cot-user').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
     });
-  </script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-slide-in");
-            observer.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.1
-      });
+    // ===== USUARIOS Y LISTAS POR SUCURSAL =====
+    const usuarios = {
+      'vidafem':    { pass: 'LaboratorioDSL', nombre: 'Clínica Vidafem',       estudios: 'vidafem' },
+      'providencia':{ pass: 'LaboratorioDSL', nombre: 'Sanatorio Providencia', estudios: 'providencia' },
+    };
 
-      document.querySelectorAll(".section-observable").forEach(section => {
-        observer.observe(section);
-      });
+    const listasPorSucursal = {
+      vidafem: [
+        { nombre:"Alfafetoproteínas",                        muestra:"Suero",                                                             precio:440 },
+        { nombre:"Antígeno Carcinoembrionario (CEA)",        muestra:"Suero",                                                             precio:440 },
+        { nombre:"Bilirrubina",                              muestra:"Suero",                                                             precio:180 },
+        { nombre:"Biometría Hemática",                       muestra:"Sangre EDTA 2 ml",                                                  precio:180 },
+        { nombre:"CA 125",                                   muestra:"Suero",                                                             precio:495 },
+        { nombre:"CA 19.9",                                  muestra:"Suero",                                                             precio:550 },
+        { nombre:"Coprológico",                              muestra:"Suero",                                                             precio:190 },
+        { nombre:"Coproparasitoscópico 1 muestra",           muestra:"Suero",                                                             precio:110 },
+        { nombre:"Coproparasitoscópico 2 muestras",          muestra:"Heces recientes",                                                   precio:220 },
+        { nombre:"Coproparasitoscópico 3 muestras",          muestra:"Heces recientes",                                                   precio:275 },
+        { nombre:"Cultivos",                                 muestra:"Orina, Exudados, Sangre",                                           precio:580 },
+        { nombre:"Curva de Tolerancia a la glucosa 2 horas", muestra:"2 horas",                                                           precio:440 },
+        { nombre:"Curva de Tolerancia a la glucosa 3 horas", muestra:"3 horas",                                                           precio:520 },
+        { nombre:"Curva O'Sullivan",                         muestra:"Suero",                                                             precio:330 },
+        { nombre:"Dengue y Biometría Hemática",              muestra:"Sangre total",                                                      precio:600 },
+        { nombre:"Estradiol",                                muestra:"Suero",                                                             precio:210 },
+        { nombre:"Examen general de orina (EGO)",            muestra:"Muestra de orina reciente en frasco estéril",                       precio:120 },
+        { nombre:"FSH",                                      muestra:"Suero",                                                             precio:210 },
+        { nombre:"Glucosa",                                  muestra:"Suero",                                                             precio:88  },
+        { nombre:"Glucosa post carga 1 hr",                  muestra:"Suero",                                                             precio:187 },
+        { nombre:"Glucosa posprandial 1 hr",                 muestra:"1 hr después de desayunar",                                         precio:165 },
+        { nombre:"Glucosa posprandial 2 hr",                 muestra:"2 hr después de desayunar",                                         precio:220 },
+        { nombre:"Grupo y RH",                               muestra:"Sangre",                                                            precio:110 },
+        { nombre:"HIV 1 y 2",                                muestra:"Suero",                                                             precio:220 },
+        { nombre:"Influenza y Covid",                        muestra:"Secreción",                                                         precio:1000},
+        { nombre:"Insulina",                                 muestra:"Suero (Ayuno 4 horas)",                                             precio:280 },
+        { nombre:"LH",                                       muestra:"Suero",                                                             precio:210 },
+        { nombre:"Paquete 1",                                muestra:"BH, QS(3), VDRL, HIV, EGO, TSH, T4L, Grupo y RH",                  precio:1378},
+        { nombre:"Paquete 2",                                muestra:"BH, TP, TTP, EGO, TGO, TGP, QS(3)",                                precio:990 },
+        { nombre:"Paquete 3",                                muestra:"BH, TP, TTP, CEA 19.9, CEA 125, Alfafeto, CEA, HGC Cuantitativa",  precio:2750},
+        { nombre:"Paquete 4",                                muestra:"BH, TSH, T4L, Prolactina, Glucosa, Insulina, HGC Cuanti, CA 125",  precio:1750},
+        { nombre:"Perfil Hepático",                          muestra:"Suero (Ayuno 4 horas)",                                            precio:825 },
+        { nombre:"Perfil Ovárico",                           muestra:"Prolactina, Progesterona, FSH, LH, Estradiol",                     precio:880 },
+        { nombre:"Perfil Tiroideo Básico",                   muestra:"TSH, T3 Total, T4 Total (Ayuno 4 horas)",                          precio:495 },
+        { nombre:"Perfil Tiroideo Completo",                 muestra:"TSH, T3 Total, T4 Total, T3 Libre, T4 Libre, T3C, ITL",            precio:825 },
+        { nombre:"Perfil Torch",                             muestra:"Suero (Ayuno 8 hrs)",                                              precio:2310},
+        { nombre:"Perfil Toxémico",                          muestra:"QS(4), TGO, TGP, DHL, BIL, BH, EGO",                              precio:0   },
+        { nombre:"Progesterona",                             muestra:"Suero",                                                             precio:210 },
+        { nombre:"Prolactina",                               muestra:"Suero (Ayuno 4 horas)",                                            precio:210 },
+        { nombre:"Prueba de Embarazo Cuantitativa (HGC)",    muestra:"Suero",                                                             precio:440 },
+        { nombre:"Química sanguínea 3 elementos",            muestra:"GLU, UREA, CREAT (Ayuno 8 horas)",                                 precio:242 },
+        { nombre:"Química sanguínea 4 elementos",            muestra:"GLU, UREA, CREAT, AU (Ayuno 8 horas)",                             precio:330 },
+        { nombre:"Química sanguínea 6 elementos",            muestra:"GLU, UREA, CREAT, AU, COL, TRIG (Ayuno 8 horas)",                  precio:440 },
+        { nombre:"Rotavirus y Adenovirus",                   muestra:"Heces recientes",                                                   precio:550 },
+        { nombre:"Serología Herpes 1 y 2",                   muestra:"Suero",                                                             precio:1320},
+        { nombre:"T4L",                                      muestra:"Suero (Ayuno 8 horas)",                                            precio:198 },
+        { nombre:"Tamiz Ampliado 69 parámetros",             muestra:"Papel tamiz",                                                       precio:2200},
+        { nombre:"Tamiz Básico 25 parámetros",               muestra:"Papel tamiz",                                                       precio:1200},
+        { nombre:"Tamiz Esencial 20 parámetros",             muestra:"Papel tamiz",                                                       precio:900 },
+        { nombre:"Testosterona Total",                       muestra:"Suero (Ayuno 4 hrs)",                                              precio:220 },
+        { nombre:"TP",                                       muestra:"Plasma Citratado",                                                  precio:170 },
+        { nombre:"TSH",                                      muestra:"Suero (Ayuno 8 horas)",                                            precio:198 },
+        { nombre:"TTP",                                      muestra:"Plasma Citratado",                                                  precio:170 },
+        { nombre:"VDRL",                                     muestra:"Suero",                                                             precio:150 },
+      ],
+      providencia: [
+        // Lista pendiente — agregar estudios cuando estén disponibles
+      ],
+    };
 
-      // Modal para imágenes en sección análisis clínicos
-      const modal = document.getElementById("img-modal");
-      const modalImg = document.getElementById("img-modal-content");
+    let estudios = [];
+    let carrito  = [];
 
-      document.querySelectorAll("#analisis_clinicos .card-item img").forEach(img => {
-        img.style.cursor = "pointer";
-        img.addEventListener("click", function () {
-          modal.style.display = "flex";
-          modalImg.src = this.src;
-          modalImg.alt = this.alt;
-        });
-      });
-
-      modal.addEventListener("click", function (e) {
-        if (e.target === modal || e.target === modalImg) {
-          modal.style.display = "none";
-        }
-      });
-
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          modal.style.display = "none";
-        }
-      });
-    });
-  </script>
-
-  <a href="https://wa.me/523351286935?text=Hola%20quiero%20más%20información"
-     class="whatsapp-float" target="_blank" aria-label="Chat en WhatsApp" rel="noopener noreferrer">
-    <span class="whatsapp-text">AGENDA TU PRÓXIMA CITA</span>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="32px" height="32px">
-      <path d="M20.52 3.48A11.78 11.78 0 0012 0C5.373 0 0 5.373 0 12a11.9 11.9 0 001.68 6L0 24l6-1.68A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12a11.78 11.78 0 00-3.48-8.52zM12 21.75a9.63 9.63 0 01-5.156-1.52l-.37-.222-3.5 1 1-3.407-.242-.37A9.56 9.56 0 012.25 12 9.75 9.75 0 1121.75 12 9.7 9.7 0 0112 21.75zm5.14-7.46c-.27-.13-1.6-.79-1.84-.88s-.44-.13-.62.13-.71.88-.87 1.06-.32.2-.6.07a7.44 7.44 0 01-2.19-1.36 8.3 8.3 0 01-1.54-1.9c-.16-.27 0-.42.12-.56.13-.13.29-.32.44-.48a1.75 1.75 0 00.26-.43.39.39 0 000-.48c-.13-.13-.62-1.5-.85-2.06s-.44-.47-.61-.47-.42 0-.64 0a1.38 1.38 0 00-.5.24 2.06 2.06 0 00-.74.72 3.18 3.18 0 00-1 2.4 4.88 4.88 0 001.4 3.47 9.58 9.58 0 004.82 3.11 4.62 4.62 0 002.24.12 2.4 2.4 0 001.53-1.4 2.68 2.68 0 00.19-1.28c-.06-.12-.27-.18-.56-.31z"/>
-    </svg>
-  </a>
-
-  <footer style="background: #003366; color: #fff; padding: 1rem -0.3rem; font-size: .8rem; text-align: center;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <div style="display: flex; gap: 1.5rem; align-items: center;">
-        <a href="https://www.facebook.com/profile.php?id=61579381267385" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="color: white; text-decoration: none;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 32px; height: 32px; fill: currentColor;">
-            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.406.593 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.312h3.588l-.467 3.622h-3.121V24h6.116c.73 0 1.324-.593 1.324-1.324V1.325C24 .593 23.406 0 22.675 0z"/>
-          </svg>
-        </a>
-        <a href="https://www.instagram.com/dsl_lab?igsh=OXo4dDB1a29vazhk" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="color: white; text-decoration: none;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 32px; height: 32px; fill: currentColor;">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.206.056 2.007.248 2.48.415a4.92 4.92 0 011.675 1.045 4.92 4.92 0 011.045 1.675c.167.473.359 1.274.415 2.48.058 1.266.070 1.646.070 4.85s-.012 3.584-.070 4.85c-.056 1.206-.248 2.007-.415 2.48a4.918 4.918 0 01-1.045 1.675 4.918 4.918 0 01-1.675 1.045c-.473.167-1.274.359-2.48.415-1.266.058-1.646.070-4.85.070s-3.584-.012-4.85-.070c-1.206-.056-2.007-.248-2.48-.415a4.92 4.92 0 01-1.675-1.045 4.92 4.92 0 01-1.045-1.675c-.167-.473-.359-1.274-.415-2.48C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.070-4.85c.056-1.206.248-2.007.415-2.48a4.92 4.92 0 011.045-1.675 4.92 4.92 0 011.675-1.045c.473-.167 1.274-.359 2.48-.415C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.735 0 8.332.012 7.052.070 5.770.128 4.600.340 3.515.735a7.080 7.080 0 00-2.570 1.670A7.080 7.080 0 00.735 4.975C.340 6.060.128 7.230.070 8.512.012 9.792 0 10.195 0 12c0 1.805.012 2.208.070 3.488.058 1.282.270 2.452.665 3.537a7.086 7.086 0 001.670 2.570 7.086 7.086 0 002.570 1.670c1.085.395 2.255.607 3.537.665 1.280.058 1.683.070 3.488.070s2.208-.012 3.488-.070c1.282-.058 2.452-.270 3.537-.665a7.080 7.080 0 002.570-1.670 7.080 7.080 0 001.670-2.570c.395-1.085.607-2.255.665-3.537.058-1.280.070-1.683.070-3.488s-.012-2.208-.070-3.488c-.058-1.282-.270-2.452-.665-3.537a7.080 7.080 0 00-1.670-2.570 7.080 7.080 0 00-2.570-1.670C16.452.340 15.282.128 14 .070 12.720.012 12.317 0 12 0zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zm6.406-11.845a1.44 1.44 0 11-2.880 0 1.44 1.44 a 2.880 0z"/>
-          </svg>
-        </a>
-        <a href="tel:3351286935" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: currentColor;">
-            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.20-2.20a1.003 1.003 0 011.05-.24c1.12.37 2.33.57 3.54.57.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.29 21 3 13.71 3 4c0-.55.45-1 1-1H7.5c.55 0 1 .45 1 1 0 1.21.20 2.42.57 3.54.13.37.04.78-.24 1.05l-2.20 2.20z"/>
-          </svg>
-          <span style="font-size: 1rem;">33 5128 6935</span>
-        </a>
-      </div>
-      <div style="margin-top: 0.5rem;">
-        ©️ 2025 Diagnóstico Santa Lucía | Innovando el diagnóstico médico
-      </div>
-    </div>
-  </footer>
-<script>
-  const menuToggle = document.getElementById("menuToggle");
-  const navMenu = document.getElementById("navMenu");
-
-  // Abrir / cerrar con hamburguesa
-  menuToggle.addEventListener("click", function (e) {
-    e.stopPropagation(); // evita que el click se propague
-    navMenu.classList.toggle("active");
-  });
-
-  // Cerrar al dar click fuera del menú
-  document.addEventListener("click", function (e) {
-    if (
-      navMenu.classList.contains("active") &&
-      !navMenu.contains(e.target) &&
-      !menuToggle.contains(e.target)
-    ) {
-      navMenu.classList.remove("active");
+    function fmt(n) {
+      if (n === 0) return 'Consultar';
+      return '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2});
     }
-  });
 
-  // Opcional: cerrar menú al hacer click en un link
-  document.querySelectorAll(".nav-buttons a").forEach(link => {
-    link.addEventListener("click", () => {
-      navMenu.classList.remove("active");
-    });
-  });
-</script>
+    function renderLista(filtro='') {
+      const lista = document.getElementById('cot-lista');
+      if (!estudios.length) {
+        lista.innerHTML = '<div class="sin-resultados">📋 La lista de esta sucursal aún no está disponible. Pronto se actualizará.</div>';
+        return;
+      }
+      const lower = filtro.toLowerCase();
+      const fil = estudios.filter(e => e.nombre.toLowerCase().includes(lower) || e.muestra.toLowerCase().includes(lower));
+      if (!fil.length) { lista.innerHTML = '<div class="sin-resultados">No se encontraron estudios.</div>'; return; }
+      lista.innerHTML = fil.map(e => {
+        const i = estudios.indexOf(e), en = carrito.includes(i);
+        return `<div class="estudio-item ${en?'seleccionado':''}" onclick="toggleEstudio(${i})">
+          <div><div class="estudio-nombre">${e.nombre}</div><div class="estudio-muestra">${e.muestra}</div></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <span class="estudio-precio-lista">${fmt(e.precio)}</span>
+            <button class="estudio-add ${en?'agregado':''}" onclick="event.stopPropagation();toggleEstudio(${i})">${en?'✓':'+'}</button>
+          </div></div>`;
+      }).join('');
+    }
 
+    function renderCarrito() {
+      const ci=document.getElementById('carrito-items'), cv=document.getElementById('carrito-vacio'),
+            ct=document.getElementById('carrito-total'), cp=document.getElementById('carrito-total-precio'),
+            cc=document.getElementById('carrito-cantidad'), pi=document.getElementById('panel-items'),
+            pv=document.getElementById('panel-vacio'),     pt=document.getElementById('panel-total'),
+            pp=document.getElementById('panel-total-precio'), pc=document.getElementById('panel-cantidad'),
+            fab=document.getElementById('carrito-fab'),    fc=document.getElementById('fab-count');
+
+      if (fab) fab.style.display = carrito.length ? 'flex' : 'none';
+      if (fc)  fc.textContent = carrito.length;
+
+      const html  = carrito.map(i => `<div class="carrito-item"><span class="carrito-item-nombre">${estudios[i].nombre}</span><span class="carrito-item-precio">${fmt(estudios[i].precio)}</span><button class="btn-quitar" onclick="quitarEstudio(${i})">✕</button></div>`).join('');
+      const total = carrito.reduce((s,i) => s + estudios[i].precio, 0);
+      const cant  = `${carrito.length} estudio${carrito.length!==1?'s':''} seleccionado${carrito.length!==1?'s':''}`;
+
+      if (!carrito.length) {
+        if(ci) ci.innerHTML=''; if(cv) cv.style.display='block'; if(ct) ct.style.display='none';
+        if(pi) pi.innerHTML=''; if(pv) pv.style.display='block'; if(pt) pt.style.display='none';
+      } else {
+        if(cv) cv.style.display='none'; if(ct) ct.style.display='block';
+        if(ci) ci.innerHTML=html; if(cp) cp.textContent=fmt(total); if(cc) cc.textContent=cant;
+        if(pv) pv.style.display='none'; if(pt) pt.style.display='block';
+        if(pi) pi.innerHTML=html; if(pp) pp.textContent=fmt(total); if(pc) pc.textContent=cant;
+      }
+    }
+
+    function toggleEstudio(i) {
+      const p = carrito.indexOf(i);
+      if (p===-1) carrito.push(i); else carrito.splice(p,1);
+      renderLista(document.getElementById('cot-search').value);
+      renderCarrito();
+    }
+    function quitarEstudio(i)  { carrito=carrito.filter(x=>x!==i); renderLista(document.getElementById('cot-search').value); renderCarrito(); }
+    function limpiarCarrito()  { carrito=[]; renderLista(document.getElementById('cot-search').value); renderCarrito(); cerrarPanelMovil(); }
+    function filtrarEstudios() { renderLista(document.getElementById('cot-search').value); }
+
+    function abrirPanelMovil()  { document.getElementById('carrito-panel-movil').classList.add('open'); document.getElementById('carrito-overlay').classList.add('active'); document.body.style.overflow='hidden'; }
+    function cerrarPanelMovil() { document.getElementById('carrito-panel-movil').classList.remove('open'); document.getElementById('carrito-overlay').classList.remove('active'); document.body.style.overflow=''; }
+
+    function desbloquearCotizaciones() {
+      const user  = document.getElementById('cot-user').value.trim().toLowerCase();
+      const pass  = document.getElementById('cot-pass').value;
+      const error = document.getElementById('cot-error');
+
+      const cuenta = usuarios[user];
+      if (cuenta && cuenta.pass === pass) {
+        document.getElementById('cot-lock').style.display = 'none';
+        document.getElementById('cot-content').classList.add('visible');
+        document.getElementById('cot-sucursal-nombre').textContent = cuenta.nombre;
+        error.style.display = 'none';
+        estudios = listasPorSucursal[cuenta.estudios] || [];
+        carrito  = [];
+        renderLista(); renderCarrito();
+      } else {
+        ['cot-user','cot-pass'].forEach(id => {
+          const el = document.getElementById(id);
+          el.classList.add('error');
+          setTimeout(() => el.classList.remove('error'), 400);
+        });
+        error.style.display = 'block';
+        document.getElementById('cot-pass').value = '';
+      }
+    }
+
+    function cerrarSesion() {
+      document.getElementById('cot-lock').style.display = 'flex';
+      document.getElementById('cot-content').classList.remove('visible');
+      document.getElementById('cot-user').value = '';
+      document.getElementById('cot-pass').value = '';
+      estudios = []; carrito = [];
+      cerrarPanelMovil();
+    }
+
+  </script>
 </body>
 </html>
-
