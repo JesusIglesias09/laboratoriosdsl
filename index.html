@@ -492,12 +492,12 @@
     <a class="logo" href="#"><img src="log.png" alt="Logo DSL">LABORATORIO DSL</a>
     <div class="menu-toggle" id="menuToggle">☰</div>
     <div class="nav-buttons" id="navMenu">
-      <a href="#quienes_somos"    onclick="event.preventDefault();scrollTo('quienes_somos')">Quiénes somos</a>
-      <a href="#analisis_clinicos" onclick="event.preventDefault();scrollTo('analisis_clinicos')">Análisis clínicos</a>
-      <a href="#domicilio"         onclick="event.preventDefault();scrollTo('domicilio')">Servicio a domicilio</a>
-      <a href="#sucursales"        onclick="event.preventDefault();scrollTo('sucursales')">Sucursales</a>
-      <a href="#contacto"          onclick="event.preventDefault();scrollTo('contacto')">Empresas</a>
-      <a href="#cotizaciones"      onclick="event.preventDefault();scrollTo('cotizaciones')">Cotizaciones</a>
+      <a href="#quienes_somos"    onclick="event.preventDefault();irA('quienes_somos')">Quiénes somos</a>
+      <a href="#analisis_clinicos" onclick="event.preventDefault();irA('analisis_clinicos')">Análisis clínicos</a>
+      <a href="#domicilio"         onclick="event.preventDefault();irA('domicilio')">Servicio a domicilio</a>
+      <a href="#sucursales"        onclick="event.preventDefault();irA('sucursales')">Sucursales</a>
+      <a href="#contacto"          onclick="event.preventDefault();irA('contacto')">Empresas</a>
+      <a href="#cotizaciones"      onclick="event.preventDefault();irA('cotizaciones')">Cotizaciones</a>
     </div>
   </nav>
 
@@ -518,8 +518,8 @@
       <div class="header-divider"></div>
       <p class="header-subtitle">Tu salud comienza con un buen diagnóstico,<br>y nosotros lo hacemos posible</p>
       <div class="header-cta-wrap">
-        <button class="search-button primary" onclick="scrollTo('analisis_clinicos')">Conoce nuestros paquetes</button>
-        <button class="search-button secondary" onclick="scrollTo('domicilio')">Servicio a domicilio</button>
+        <button class="search-button primary" onclick="irA('analisis_clinicos')">Conoce nuestros paquetes</button>
+        <button class="search-button secondary" onclick="irA('domicilio')">Servicio a domicilio</button>
       </div>
     </div>
     <!-- Scroll indicator -->
@@ -780,7 +780,7 @@
       document.addEventListener('click', e => {
         if (menu.classList.contains('active') && !menu.contains(e.target) && !toggle.contains(e.target)) menu.classList.remove('active');
       });
-      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('active')));
+      // No agregar listener aquí — el onclick en el HTML ya llama irA() y cierra el menú
 
       // CONTACTO
       document.getElementById('contactForm').addEventListener('submit', function(e) {
@@ -793,16 +793,22 @@
         this.reset();
       });
 
-      // SCROLL CON OFFSET (compensa navbar sticky de ~70px)
-    function scrollTo(id) {
+      // SCROLL CON OFFSET — definida aquí dentro del DOMContentLoaded no es accesible desde onclick
+      document.getElementById('cot-pass').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
+      document.getElementById('cot-user').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
+    });
+
+    // FUNCIÓN GLOBAL DE SCROLL CON OFFSET (fuera del DOMContentLoaded para ser accesible desde onclick)
+    function irA(id) {
+      // Cerrar menú hamburguesa si está abierto
+      const menu = document.getElementById('navMenu');
+      if (menu) menu.classList.remove('active');
+      // Scroll con offset del navbar
       const el = document.getElementById(id);
       if (!el) return;
       const y = el.getBoundingClientRect().top + window.scrollY - 70;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
-      document.getElementById('cot-pass').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
-      document.getElementById('cot-user').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
-    });
 
     // ===== USUARIOS Y LISTAS POR SUCURSAL =====
     const usuarios = {
