@@ -18,7 +18,7 @@
       --fondo: #E6F1F7; --naranja: #FF9900; --blanco: #ffffff; --gris-suave: #f4f9fc;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 70px; }
     body { font-family: 'Inter', sans-serif; background: var(--fondo); color: #1a1a1a; overflow-x: hidden; padding-bottom: 60px; text-align: center; }
     a { text-decoration: none; }
     img { display: block; max-width: 100%; }
@@ -492,12 +492,12 @@
     <a class="logo" href="#"><img src="log.png" alt="Logo DSL">LABORATORIO DSL</a>
     <div class="menu-toggle" id="menuToggle">☰</div>
     <div class="nav-buttons" id="navMenu">
-      <a href="#quienes_somos">Quiénes somos</a>
-      <a href="#analisis_clinicos">Análisis clínicos</a>
-      <a href="#domicilio">Servicio a domicilio</a>
-      <a href="#sucursales">Sucursales</a>
-      <a href="#contacto">Empresas</a>
-      <a href="#cotizaciones">Cotizaciones</a>
+      <a href="#quienes_somos"    onclick="event.preventDefault();scrollTo('quienes_somos')">Quiénes somos</a>
+      <a href="#analisis_clinicos" onclick="event.preventDefault();scrollTo('analisis_clinicos')">Análisis clínicos</a>
+      <a href="#domicilio"         onclick="event.preventDefault();scrollTo('domicilio')">Servicio a domicilio</a>
+      <a href="#sucursales"        onclick="event.preventDefault();scrollTo('sucursales')">Sucursales</a>
+      <a href="#contacto"          onclick="event.preventDefault();scrollTo('contacto')">Empresas</a>
+      <a href="#cotizaciones"      onclick="event.preventDefault();scrollTo('cotizaciones')">Cotizaciones</a>
     </div>
   </nav>
 
@@ -518,8 +518,8 @@
       <div class="header-divider"></div>
       <p class="header-subtitle">Tu salud comienza con un buen diagnóstico,<br>y nosotros lo hacemos posible</p>
       <div class="header-cta-wrap">
-        <button class="search-button primary" onclick="document.getElementById('analisis_clinicos').scrollIntoView({behavior:'smooth'})">Conoce nuestros paquetes</button>
-        <button class="search-button secondary" onclick="document.getElementById('domicilio').scrollIntoView({behavior:'smooth'})">Servicio a domicilio</button>
+        <button class="search-button primary" onclick="scrollTo('analisis_clinicos')">Conoce nuestros paquetes</button>
+        <button class="search-button secondary" onclick="scrollTo('domicilio')">Servicio a domicilio</button>
       </div>
     </div>
     <!-- Scroll indicator -->
@@ -793,7 +793,13 @@
         this.reset();
       });
 
-      // CONTRASEÑA COTIZACIONES
+      // SCROLL CON OFFSET (compensa navbar sticky de ~70px)
+    function scrollTo(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const y = el.getBoundingClientRect().top + window.scrollY - 70;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
       document.getElementById('cot-pass').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
       document.getElementById('cot-user').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
     });
