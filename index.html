@@ -2,11 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Laboratorio DSL | Análisis Clínicos</title>
-  <meta name="description" content="Laboratorio Diagnóstico Santa Lucía. Estudios clínicos confiables: biometría hemática, química sanguínea, perfiles hormonales y más. Atención profesional en Guadalajara.">
+  <meta name="description" content="Laboratorio Diagnóstico Santa Lucía. Estudios clínicos confiables.">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="Laboratorio DSL">
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,10 +15,12 @@
     :root {
       --azul: #003366; --azul-claro: #0055aa; --celeste: #40B4E5;
       --fondo: #E6F1F7; --naranja: #FF9900; --blanco: #ffffff; --gris-suave: #f4f9fc;
+      --navbar-h: 64px;
+      --footer-h: 44px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; scroll-padding-top: 70px; }
-    body { font-family: 'Inter', sans-serif; background: var(--fondo); color: #1a1a1a; overflow-x: hidden; padding-bottom: 60px; text-align: center; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Inter', sans-serif; background: var(--fondo); color: #1a1a1a; overflow-x: hidden; }
     a { text-decoration: none; }
     img { display: block; max-width: 100%; }
 
@@ -33,468 +34,458 @@
     @keyframes pulse { 0%,100%{transform:scale(0.5);opacity:0.3} 50%{transform:scale(1.2);opacity:1} }
 
     /* NAVBAR */
-    .navbar { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 2rem; background:var(--azul); position:sticky; top:0; z-index:1000; }
-    .logo { font-size:1.6rem; font-weight:700; display:flex; align-items:center; color:var(--blanco); }
-    .logo img { height:80px; margin-right:1rem; }
-    .nav-buttons a { margin-left:2rem; color:var(--blanco); font-weight:700; font-size:1rem; position:relative; transition:0.3s; }
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 2rem; background: var(--azul);
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--navbar-h); z-index: 1000;
+    }
+    .logo { font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; color: var(--blanco); cursor: pointer; }
+    .logo img { height: 50px; margin-right: 0.8rem; }
+    .nav-buttons a {
+      margin-left: 1.6rem; color: var(--blanco); font-weight: 700; font-size: 0.95rem;
+      position: relative; transition: 0.3s; cursor: pointer;
+    }
     .nav-buttons a::after { content:''; position:absolute; left:0; bottom:-3px; width:0; height:3px; background:#FFDD57; transition:width 0.3s ease; }
-    .nav-buttons a:hover::after { width:100%; }
-    .menu-toggle { display:none; font-size:2.2rem; cursor:pointer; color:var(--blanco); }
+    .nav-buttons a:hover::after,
+    .nav-buttons a.active-link::after { width: 100%; }
+    .nav-buttons a.active-link { color: #FFDD57; }
+    .menu-toggle { display: none; font-size: 2.2rem; cursor: pointer; color: var(--blanco); }
 
-    /* HEADER */
-    header {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+    /* ===== LAYOUT DE VISTAS ===== */
+    #app {
+      position: fixed;
+      top: var(--navbar-h);
+      left: 0; right: 0;
+      bottom: var(--footer-h);
+    }
+
+    .vista {
+      display: none;
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: var(--fondo);
+      -webkit-overflow-scrolling: touch;
+    }
+    .vista.activa {
+      display: block;
+      animation: vistaEntra 0.35s ease forwards;
+    }
+    @keyframes vistaEntra {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== VISTA: INICIO ===== */
+    #vista-inicio {
       background: linear-gradient(135deg, #001a33 0%, #002f5c 50%, #003d7a 100%);
-      padding: 0;
     }
-
-    /* Slider de fondo */
-    .header-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-    }
+    .header-bg { position: absolute; inset: 0; z-index: 0; }
     .header-bg img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; opacity: 0;
       transition: opacity 1.8s ease-in-out;
       filter: brightness(0.25) saturate(0.8);
     }
     .header-bg img.active { opacity: 1; }
-
-    /* Overlay con gradiente elegante encima del slider */
     .header-overlay {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background:
         linear-gradient(180deg, rgba(0,20,50,0.6) 0%, rgba(0,30,70,0.3) 50%, rgba(0,20,50,0.7) 100%),
         radial-gradient(ellipse at 30% 50%, rgba(64,180,229,0.08) 0%, transparent 60%);
       z-index: 1;
     }
-
-    /* Partículas flotantes */
-    .header-particles {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .particle {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(64,180,229,0.15);
-      animation: floatUp linear infinite;
-    }
+    .header-particles { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+    .particle { position: absolute; border-radius: 50%; background: rgba(64,180,229,0.15); animation: floatUp linear infinite; }
     @keyframes floatUp {
       0%   { transform: translateY(110vh) scale(0); opacity: 0; }
       10%  { opacity: 1; }
       90%  { opacity: 0.6; }
       100% { transform: translateY(-10vh) scale(1); opacity: 0; }
     }
-
-    /* Contenido central */
     .header-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 2rem 2rem;
-      max-width: 900px;
-      width: 100%;
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100%; text-align: center; padding: 3rem 2rem 4rem;
     }
-
-    /* Etiqueta superior */
     .header-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: rgba(64,180,229,0.12);
-      border: 1px solid rgba(64,180,229,0.3);
-      border-radius: 50px;
-      padding: 0.4rem 1.2rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--celeste);
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeSlideDown 0.8s ease 0.3s forwards;
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: rgba(64,180,229,0.12); border: 1px solid rgba(64,180,229,0.3);
+      border-radius: 50px; padding: 0.4rem 1.2rem;
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--celeste); margin-bottom: 2rem;
+      opacity: 0; animation: fadeSlideDown 0.8s ease 0.3s forwards;
     }
-    .header-eyebrow::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--celeste);
-      animation: blinkDot 1.5s infinite;
-    }
+    .header-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--celeste); animation: blinkDot 1.5s infinite; }
     @keyframes blinkDot { 0%,100%{opacity:1} 50%{opacity:0.2} }
-
-    /* Título principal */
     .header-title {
-      font-size: clamp(2.8rem, 7vw, 5.5rem);
-      font-weight: 900;
-      line-height: 1.05;
-      color: #ffffff;
-      text-transform: uppercase;
-      letter-spacing: -1px;
-      margin-bottom: 0.3rem;
-      opacity: 0;
-      animation: fadeSlideUp 0.9s ease 0.6s forwards;
+      font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 900; line-height: 1.05;
+      color: #fff; text-transform: uppercase; letter-spacing: -1px; margin-bottom: 0.3rem;
+      opacity: 0; animation: fadeSlideUp 0.9s ease 0.6s forwards;
     }
     .header-title .highlight {
       display: block;
       background: linear-gradient(90deg, var(--celeste), #7dd6f5, var(--celeste));
       background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       animation: shimmerText 3s linear infinite;
     }
     @keyframes shimmerText { 0%{background-position:0%} 100%{background-position:200%} }
-
-    /* Línea decorativa */
     .header-divider {
-      width: 0;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, var(--celeste), #ffffff, var(--celeste), transparent);
-      margin: 1.5rem auto;
-      border-radius: 2px;
+      width: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--celeste), #fff, var(--celeste), transparent);
+      margin: 1.5rem auto; border-radius: 2px;
       animation: expandLine 1s ease 1.2s forwards;
     }
     @keyframes expandLine { to { width: 180px; } }
-
-    /* Subtítulo */
     .header-subtitle {
-      font-size: clamp(0.9rem, 2.2vw, 1.15rem);
-      font-weight: 500;
-      color: rgba(255,255,255,0.7);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      max-width: 560px;
-      margin: 0 auto 2.8rem;
-      line-height: 1.7;
-      opacity: 0;
-      animation: fadeSlideUp 0.9s ease 1.4s forwards;
+      font-size: clamp(0.9rem, 2.2vw, 1.15rem); font-weight: 500;
+      color: rgba(255,255,255,0.7); letter-spacing: 1.5px; text-transform: uppercase;
+      max-width: 560px; margin: 0 auto 2.8rem; line-height: 1.7;
+      opacity: 0; animation: fadeSlideUp 0.9s ease 1.4s forwards;
     }
-
-    /* Botón CTA */
     .header-cta-wrap {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeSlideUp 0.9s ease 1.7s forwards;
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      opacity: 0; animation: fadeSlideUp 0.9s ease 1.7s forwards;
     }
     .search-button {
-      position: relative;
-      overflow: hidden;
-      padding: 1rem 2.5rem;
-      font-size: 1rem;
-      font-weight: 700;
-      border-radius: 50px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-family: inherit;
-      border: none;
+      position: relative; overflow: hidden; padding: 1rem 2.5rem;
+      font-size: 1rem; font-weight: 700; border-radius: 50px; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 1px; font-family: inherit; border: none;
       transition: transform 0.2s, box-shadow 0.2s;
     }
-    .search-button.primary {
-      background: var(--celeste);
-      color: var(--azul);
-      box-shadow: 0 8px 30px rgba(64,180,229,0.4);
-    }
+    .search-button.primary { background: var(--celeste); color: var(--azul); box-shadow: 0 8px 30px rgba(64,180,229,0.4); }
     .search-button.primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(64,180,229,0.55); }
-    .search-button.secondary {
-      background: transparent;
-      color: #fff;
-      border: 2px solid rgba(255,255,255,0.3);
-    }
+    .search-button.secondary { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.3); }
     .search-button.secondary:hover { border-color: rgba(255,255,255,0.7); transform: translateY(-3px); }
-    /* Ripple en botones */
-    .search-button::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0.2);
-      border-radius: inherit;
-      transform: scale(0);
-      transition: transform 0.4s ease;
-    }
-    .search-button:active::after { transform: scale(2); opacity: 0; }
-
-    /* Indicador scroll */
     .scroll-indicator {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      opacity: 0;
-      animation: fadeSlideUp 0.8s ease 2.2s forwards;
+      position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      opacity: 0; animation: fadeSlideUp 0.8s ease 2.2s forwards;
     }
-    .scroll-indicator span {
-      font-size: 0.7rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-    }
-    .scroll-mouse {
-      width: 24px; height: 38px;
-      border: 2px solid rgba(255,255,255,0.25);
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      padding-top: 6px;
-    }
-    .scroll-mouse::before {
-      content: '';
-      width: 4px; height: 8px;
-      background: var(--celeste);
-      border-radius: 2px;
-      animation: scrollDot 1.8s ease-in-out infinite;
-    }
+    .scroll-indicator span { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+    .scroll-mouse { width: 24px; height: 38px; border: 2px solid rgba(255,255,255,0.25); border-radius: 12px; display: flex; justify-content: center; padding-top: 6px; }
+    .scroll-mouse::before { content: ''; width: 4px; height: 8px; background: var(--celeste); border-radius: 2px; animation: scrollDot 1.8s ease-in-out infinite; }
     @keyframes scrollDot { 0%,100%{transform:translateY(0);opacity:1} 80%{transform:translateY(10px);opacity:0} }
-
-    /* Animaciones generales */
     @keyframes fadeSlideUp   { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeSlideDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
 
-    /* Responsive header */
-    @media (max-width: 768px) {
-      header { min-height: 100svh; }
-      .header-content { padding: 5rem 1.5rem 6rem; }
-      .header-title { letter-spacing: -0.5px; }
-      .scroll-indicator { bottom: 1.2rem; }
-    }
-
-    /* SECCIONES */
-    section { padding:4rem 1rem; }
-    .section-title { font-size:2rem; color:var(--azul); font-weight:900; margin-bottom:1.5rem; }
-    .section-description { max-width:800px; margin:0 auto 2.5rem; font-size:1.3rem; line-height:1.9; color:var(--azul); font-weight:500; background:linear-gradient(145deg,#f0f7fb,#d9edf6); padding:2.5rem 3rem; border-radius:28px; box-shadow:0 12px 28px rgba(0,0,0,0.12); }
+    /* ===== CONTENIDO SECCIONES ===== */
+    .vista-inner { padding: 3rem 1rem 4rem; text-align: center; max-width: 1200px; margin: 0 auto; }
+    .section-title { font-size: 2rem; color: var(--azul); font-weight: 900; margin-bottom: 1.5rem; }
+    .section-description { max-width: 800px; margin: 0 auto 2.5rem; font-size: 1.3rem; line-height: 1.9; color: var(--azul); font-weight: 500; background: linear-gradient(145deg,#f0f7fb,#d9edf6); padding: 2.5rem 3rem; border-radius: 28px; box-shadow: 0 12px 28px rgba(0,0,0,0.12); }
 
     /* QUIÉNES SOMOS */
-    .qs-inner { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:2rem; max-width:1100px; margin:0 auto; }
-    .qs-inner img { max-width:400px; width:100%; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.12); transition:transform 0.3s ease, box-shadow 0.3s ease; }
-    .qs-inner img:hover { transform:translateY(-5px); box-shadow:0 12px 25px rgba(0,0,0,0.25); }
-    .qs-texto { flex:1 1 450px; text-align:justify; font-weight:600; font-size:1.15rem; line-height:1.6; color:var(--azul); background:#f9fbfc; padding:2rem 2.5rem; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.1); transition:box-shadow 0.3s ease, transform 0.3s ease; position:relative; overflow:hidden; }
-    .qs-texto::after { content:""; position:absolute; top:0; left:-75%; width:50%; height:100%; background:linear-gradient(120deg,rgba(255,255,255,0.2),transparent); transform:skewX(-25deg); transition:0.5s; }
-    .qs-texto:hover { transform:translateY(-7px); box-shadow:0 14px 35px rgba(0,0,0,0.15); }
-    .qs-texto:hover::after { left:125%; }
+    .qs-inner { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2rem; max-width: 1100px; margin: 0 auto; }
+    .qs-inner img { max-width: 400px; width: 100%; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.12); transition: transform 0.3s, box-shadow 0.3s; }
+    .qs-inner img:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.25); }
+    .qs-texto { flex: 1 1 450px; text-align: justify; font-weight: 600; font-size: 1.15rem; line-height: 1.6; color: var(--azul); background: #f9fbfc; padding: 2rem 2.5rem; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); transition: box-shadow 0.3s, transform 0.3s; }
+    .qs-texto:hover { transform: translateY(-7px); box-shadow: 0 14px 35px rgba(0,0,0,0.15); }
 
     /* GALERÍA */
-    .card-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:2rem; padding:2rem 0; max-width:1100px; margin:0 auto; }
-    .card-item { background:var(--blanco); border-radius:16px; box-shadow:0 6px 18px rgba(0,0,0,0.08); overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; display:flex; flex-direction:column; }
-    .card-item:hover { transform:translateY(-5px); box-shadow:0 12px 28px rgba(0,0,0,0.12); }
-    .card-item img { width:100%; height:160px; object-fit:cover; cursor:pointer; border-bottom:1px solid #eaeaea; }
-    .card-caption { padding:1rem; font-weight:600; color:var(--azul); font-size:1rem; text-align:center; }
+    .card-gallery { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 2rem; padding: 2rem 0; max-width: 1100px; margin: 0 auto; }
+    .card-item { background: var(--blanco); border-radius: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
+    .card-item:hover { transform: translateY(-5px); box-shadow: 0 12px 28px rgba(0,0,0,0.12); }
+    .card-item img { width: 100%; height: 160px; object-fit: cover; cursor: pointer; border-bottom: 1px solid #eaeaea; }
+    .card-caption { padding: 1rem; font-weight: 600; color: var(--azul); font-size: 1rem; text-align: center; }
 
     /* DOMICILIO */
-    #domicilio { padding:5rem 1rem; }
-    .domicilio-linea { max-width:1200px; margin:3rem auto 0; display:flex; align-items:center; gap:3.5rem; }
-    .domicilio-linea img { width:45%; height:420px; object-fit:cover; border-radius:26px; box-shadow:0 18px 40px rgba(0,0,0,0.18); }
-    .domicilio-card { width:55%; background:linear-gradient(145deg,#f4f9fc,#e2f1f8); padding:2.2rem 2.5rem; border-radius:26px; box-shadow:0 12px 30px rgba(0,0,0,0.12); }
-    .domicilio-card p { font-size:1.08rem; line-height:1.7; color:var(--azul); text-align:justify; }
-
-    /* PROCESO */
-    .domicilio-proceso { padding:5rem 1rem; background:#f6fbfe; }
-    .proceso-title { max-width:1200px; margin:0 auto 3.5rem; font-size:2rem; color:var(--azul); position:relative; }
-    .proceso-title::after { content:""; display:block; width:120px; height:4px; background:#0a8cb8; margin-top:0.8rem; border-radius:2px; }
-    .proceso-cards { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
-    .proceso-card { background:var(--blanco); border-radius:26px; padding:1.7rem 2rem; box-shadow:0 12px 30px rgba(0,0,0,0.08); opacity:0; transform:translateY(20px); animation:cardFadeIn 0.8s ease forwards; position:relative; transition:transform 0.3s ease, box-shadow 0.3s ease; }
-    .proceso-card:nth-child(1){animation-delay:0.1s} .proceso-card:nth-child(2){animation-delay:0.25s} .proceso-card:nth-child(3){animation-delay:0.4s}
-    .proceso-card::after { content:""; position:absolute; inset:0; border-radius:inherit; background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.35),transparent 70%); opacity:0; pointer-events:none; }
-    .proceso-card:hover { transform:translateY(-6px); box-shadow:0 14px 32px rgba(0,0,0,0.18); }
-    .proceso-card:hover::after { opacity:1; }
-    @keyframes cardFadeIn { to{opacity:1;transform:translateY(0)} }
-    .proceso-icon { font-size:2.4rem; margin-bottom:1rem; color:var(--azul); }
-    .proceso-card h4 { margin:0 0 1rem; color:var(--azul); font-size:1.2rem; }
-    .proceso-card p { font-size:0.98rem; line-height:1.6; color:#444; text-align:justify; }
-    .cta-domicilio { max-width:1200px; margin:2.5rem auto; padding:0 1rem; }
-    .cta-domicilio a { display:block; width:100%; background:var(--azul); color:var(--blanco); font-size:1.2rem; font-weight:800; padding:1.3rem 2rem; border-radius:60px; text-align:center; box-shadow:0 10px 26px rgba(0,0,0,0.18); transition:all 0.3s ease; }
-    .cta-domicilio a:hover { background:var(--azul-claro); transform:translateY(-3px); box-shadow:0 14px 35px rgba(0,0,0,0.25); }
+    .domicilio-linea { max-width: 1100px; margin: 2rem auto 0; display: flex; align-items: center; gap: 3.5rem; }
+    .domicilio-linea img { width: 45%; height: 420px; object-fit: cover; border-radius: 26px; box-shadow: 0 18px 40px rgba(0,0,0,0.18); }
+    .domicilio-card { flex: 1; background: linear-gradient(145deg,#f4f9fc,#e2f1f8); padding: 2.2rem 2.5rem; border-radius: 26px; box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+    .domicilio-card p { font-size: 1.08rem; line-height: 1.7; color: var(--azul); text-align: justify; }
+    .proceso-title { max-width: 1100px; margin: 3rem auto 2rem; font-size: 1.8rem; color: var(--azul); text-align: left; position: relative; }
+    .proceso-title::after { content: ""; display: block; width: 120px; height: 4px; background: #0a8cb8; margin-top: 0.8rem; border-radius: 2px; }
+    .proceso-cards { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; }
+    .proceso-card { background: var(--blanco); border-radius: 26px; padding: 1.7rem 2rem; box-shadow: 0 12px 30px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; }
+    .proceso-card:hover { transform: translateY(-6px); box-shadow: 0 14px 32px rgba(0,0,0,0.18); }
+    .proceso-icon { font-size: 2.4rem; margin-bottom: 1rem; color: var(--azul); }
+    .proceso-card h4 { margin: 0 0 1rem; color: var(--azul); font-size: 1.2rem; }
+    .proceso-card p { font-size: 0.98rem; line-height: 1.6; color: #444; text-align: justify; }
+    .cta-domicilio { max-width: 1100px; margin: 2.5rem auto; padding: 0 1rem; }
+    .cta-domicilio a { display: block; width: 100%; background: var(--azul); color: var(--blanco); font-size: 1.2rem; font-weight: 800; padding: 1.3rem 2rem; border-radius: 60px; text-align: center; box-shadow: 0 10px 26px rgba(0,0,0,0.18); transition: all 0.3s; }
+    .cta-domicilio a:hover { background: var(--azul-claro); transform: translateY(-3px); }
 
     /* SUCURSALES */
-    #sucursales { padding:3rem 1rem; max-width:1200px; margin:0 auto; }
-    .sucursales-contenedor { display:flex; flex-direction:column; align-items:center; gap:2rem; }
-    .descripcion { max-width:850px; text-align:justify; background:#f9fbfc; padding:1.5rem 2rem; border-radius:16px; box-shadow:0 4px 14px rgba(0,0,0,0.08); color:var(--azul); font-size:1.1rem; line-height:1.6; font-weight:500; }
-    .sucursal-card { display:grid; grid-template-columns:280px 1fr 1fr; width:100%; max-width:1000px; background:var(--blanco); border-radius:14px; box-shadow:0 6px 16px rgba(0,0,0,0.08); overflow:hidden; }
-    .horario-box { background:var(--gris-suave); padding:1.2rem; color:var(--azul); display:flex; flex-direction:column; justify-content:center; border-right:1px solid #e0e6ed; }
-    .horario-box h3 { font-size:1.1rem; font-weight:800; margin-bottom:0.6rem; }
-    .horario-box p { margin:0.25rem 0; font-size:0.95rem; font-weight:600; }
-    .mapa { display:flex; flex-direction:column; }
-    .mapa h3 { text-align:center; color:var(--azul); margin:1rem 0 0.5rem; }
-    .mapa iframe { width:100%; height:350px; border:0; flex-grow:1; }
-    .imagen img { width:100%; height:100%; object-fit:cover; }
+    .sucursales-contenedor { display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+    .descripcion { max-width: 850px; text-align: justify; background: #f9fbfc; padding: 1.5rem 2rem; border-radius: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); color: var(--azul); font-size: 1.1rem; line-height: 1.6; font-weight: 500; }
+    .sucursal-card { display: grid; grid-template-columns: 280px 1fr 1fr; width: 100%; max-width: 1000px; background: var(--blanco); border-radius: 14px; box-shadow: 0 6px 16px rgba(0,0,0,0.08); overflow: hidden; }
+    .horario-box { background: var(--gris-suave); padding: 1.2rem; color: var(--azul); display: flex; flex-direction: column; justify-content: center; border-right: 1px solid #e0e6ed; }
+    .horario-box h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.6rem; }
+    .horario-box p { margin: 0.25rem 0; font-size: 0.95rem; font-weight: 600; }
+    .mapa { display: flex; flex-direction: column; }
+    .mapa h3 { text-align: center; color: var(--azul); margin: 1rem 0 0.5rem; }
+    .mapa iframe { width: 100%; height: 350px; border: 0; flex-grow: 1; }
+    .imagen img { width: 100%; height: 100%; object-fit: cover; }
 
     /* CONTACTO */
-    #contacto { padding:4rem 1rem; max-width:760px; margin:4rem auto; background:var(--blanco); border-radius:28px; box-shadow:0 8px 28px rgba(0,0,0,0.06); }
-    .contacto-eyebrow { font-weight:600; letter-spacing:1px; color:var(--azul); margin-bottom:6px; }
-    .contacto-titulo { font-size:3rem; color:var(--naranja); font-weight:800; text-transform:uppercase; }
-    .contacto-linea { width:110px; height:6px; background:var(--azul); margin:10px auto 28px; border-radius:4px; }
-    .input-pill { display:block; width:100%; padding:14px 18px; margin-bottom:18px; border-radius:24px; border:1px solid rgba(0,0,0,0.12); background:#f6f7f8; font-size:1rem; outline:none; transition:box-shadow 0.2s, border-color 0.2s; font-family:inherit; }
-    .input-pill:focus { box-shadow:0 6px 18px rgba(15,20,30,0.06); border-color:rgba(0,0,0,0.3); }
-    textarea.input-pill { border-radius:14px; min-height:120px; resize:vertical; }
-    .campo-label { text-align:center; font-weight:600; color:#6b7579; margin-bottom:8px; }
-    .btn-enviar { display:inline-block; padding:12px 28px; background:var(--naranja); color:var(--blanco); border-radius:8px; border:none; font-weight:700; cursor:pointer; font-size:1rem; font-family:inherit; box-shadow:0 6px 18px rgba(255,153,0,0.3); transition:transform 0.12s ease; }
-    .btn-enviar:active { transform:translateY(1px); }
+    .contacto-inner { max-width: 760px; margin: 0 auto; background: var(--blanco); border-radius: 28px; box-shadow: 0 8px 28px rgba(0,0,0,0.06); padding: 3rem 2rem; }
+    .contacto-eyebrow { font-weight: 600; letter-spacing: 1px; color: var(--azul); margin-bottom: 6px; }
+    .contacto-titulo { font-size: 3rem; color: var(--naranja); font-weight: 800; text-transform: uppercase; }
+    .contacto-linea { width: 110px; height: 6px; background: var(--azul); margin: 10px auto 28px; border-radius: 4px; }
+    .input-pill { display: block; width: 100%; padding: 14px 18px; margin-bottom: 18px; border-radius: 24px; border: 1px solid rgba(0,0,0,0.12); background: #f6f7f8; font-size: 1rem; outline: none; transition: box-shadow 0.2s, border-color 0.2s; font-family: inherit; }
+    .input-pill:focus { box-shadow: 0 6px 18px rgba(15,20,30,0.06); border-color: rgba(0,0,0,0.3); }
+    textarea.input-pill { border-radius: 14px; min-height: 120px; resize: vertical; }
+    .campo-label { text-align: center; font-weight: 600; color: #6b7579; margin-bottom: 8px; }
+    .btn-enviar { display: inline-block; padding: 12px 28px; background: var(--naranja); color: var(--blanco); border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 1rem; font-family: inherit; box-shadow: 0 6px 18px rgba(255,153,0,0.3); transition: transform 0.12s; }
+    .btn-enviar:active { transform: translateY(1px); }
 
     /* COTIZACIONES */
-    #cotizaciones { padding:4rem 1rem; max-width:1100px; margin:0 auto; }
-    #cot-lock { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; background:linear-gradient(145deg,#f0f7fb,#d9edf6); border-radius:28px; padding:3rem 2rem; box-shadow:0 12px 32px rgba(0,0,0,0.12); max-width:480px; margin:0 auto; }
-    #cot-lock .lock-icon { font-size:3.5rem; }
-    #cot-lock h3 { font-size:1.4rem; color:var(--azul); font-weight:800; }
-    #cot-lock p { font-size:1rem; color:#555; }
-    .pass-wrap { display:flex; gap:0.7rem; width:100%; max-width:340px; }
-    .pass-wrap input { flex:1; padding:12px 16px; border-radius:50px; border:2px solid #c5daea; background:var(--blanco); font-size:1rem; outline:none; font-family:inherit; transition:border-color 0.2s; }
-    .pass-wrap input:focus { border-color:var(--azul); }
-    .pass-wrap input.error { border-color:#e53935; animation:shake 0.3s ease; }
+    #cot-lock { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; background: linear-gradient(145deg,#f0f7fb,#d9edf6); border-radius: 28px; padding: 3rem 2rem; box-shadow: 0 12px 32px rgba(0,0,0,0.12); max-width: 480px; margin: 0 auto; }
+    #cot-lock .lock-icon { font-size: 3.5rem; }
+    #cot-lock h3 { font-size: 1.4rem; color: var(--azul); font-weight: 800; }
+    #cot-lock p { font-size: 1rem; color: #555; }
+    .pass-wrap { display: flex; gap: 0.7rem; width: 100%; max-width: 340px; }
+    .pass-wrap input { flex: 1; padding: 12px 16px; border-radius: 50px; border: 2px solid #c5daea; background: var(--blanco); font-size: 1rem; outline: none; font-family: inherit; transition: border-color 0.2s; }
+    .pass-wrap input:focus { border-color: var(--azul); }
+    .pass-wrap input.error { border-color: #e53935; animation: shake 0.3s ease; }
     @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-    .btn-desbloquear { padding:12px 20px; background:var(--azul); color:var(--blanco); border:none; border-radius:50px; font-weight:700; cursor:pointer; font-family:inherit; font-size:1rem; transition:background 0.2s, transform 0.1s; }
-    .btn-desbloquear:hover { background:var(--azul-claro); }
-    .btn-desbloquear:active { transform:scale(0.97); }
-    #cot-error { color:#e53935; font-size:0.9rem; font-weight:600; display:none; }
-    #cot-content { display:none; }
-    #cot-content.visible { display:block; animation:fadeIn 0.5s ease; }
+    .btn-desbloquear { padding: 12px 20px; background: var(--azul); color: var(--blanco); border: none; border-radius: 50px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 1rem; transition: background 0.2s, transform 0.1s; }
+    .btn-desbloquear:hover { background: var(--azul-claro); }
+    #cot-error { color: #e53935; font-size: 0.9rem; font-weight: 600; display: none; }
+    #cot-content { display: none; }
+    #cot-content.visible { display: block; animation: fadeIn 0.5s ease; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-    .cot-layout { display:grid; grid-template-columns:1fr 340px; gap:2rem; align-items:start; }
-    .cot-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; grid-column:1/-1; }
-    .btn-cerrar-sesion { padding:8px 18px; background:transparent; border:2px solid var(--azul); color:var(--azul); border-radius:50px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.9rem; transition:all 0.2s; }
-    .btn-cerrar-sesion:hover { background:var(--azul); color:var(--blanco); }
-    .cot-buscador { position:relative; margin-bottom:1rem; }
-    .cot-buscador input { width:100%; padding:14px 20px 14px 48px; border-radius:50px; border:2px solid #c5daea; background:var(--blanco); font-size:1rem; outline:none; font-family:inherit; transition:border-color 0.2s; box-shadow:0 4px 12px rgba(0,0,0,0.06); }
-    .cot-buscador input:focus { border-color:var(--azul); }
-    .cot-buscador .search-icon { position:absolute; left:16px; top:50%; transform:translateY(-50%); color:#999; pointer-events:none; }
-    .cot-lista { max-height:480px; overflow-y:auto; border-radius:18px; background:var(--blanco); box-shadow:0 4px 16px rgba(0,0,0,0.08); }
-    .cot-lista::-webkit-scrollbar { width:6px; }
-    .cot-lista::-webkit-scrollbar-thumb { background:#c5daea; border-radius:3px; }
-    .estudio-item { display:flex; justify-content:space-between; align-items:center; padding:0.9rem 1.2rem; border-bottom:1px solid #eef2f6; cursor:pointer; transition:background 0.15s; text-align:left; gap:1rem; }
-    .estudio-item:last-child { border-bottom:none; }
-    .estudio-item:hover { background:#f0f7fb; }
-    .estudio-item.seleccionado { background:#e8f4fd; }
-    .estudio-nombre { font-weight:600; color:var(--azul); font-size:0.95rem; flex:1; }
-    .estudio-muestra { font-size:0.78rem; color:#888; margin-top:2px; }
-    .estudio-precio-lista { font-weight:800; color:var(--azul); font-size:1rem; white-space:nowrap; }
-    .estudio-add { width:28px; height:28px; border-radius:50%; background:var(--azul); color:var(--blanco); border:none; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.2s, transform 0.1s; }
-    .estudio-add:hover { background:var(--azul-claro); transform:scale(1.1); }
-    .estudio-add.agregado { background:#4caf50; }
-    .sin-resultados { padding:2rem; color:#999; font-size:0.95rem; }
-    .cot-carrito { background:var(--blanco); border-radius:20px; box-shadow:0 6px 24px rgba(0,0,0,0.10); overflow:hidden; position:sticky; top:80px; }
-    .carrito-titulo { background:var(--azul); color:var(--blanco); padding:1rem 1.2rem; font-weight:800; font-size:1rem; display:flex; align-items:center; gap:0.5rem; }
-    .carrito-vacio { padding:2rem 1.2rem; color:#aaa; font-size:0.9rem; text-align:center; }
-    .carrito-items { max-height:340px; overflow-y:auto; }
-    .carrito-items::-webkit-scrollbar { width:5px; }
-    .carrito-items::-webkit-scrollbar-thumb { background:#c5daea; border-radius:3px; }
-    .carrito-item { display:flex; justify-content:space-between; align-items:center; padding:0.75rem 1.2rem; border-bottom:1px solid #eef2f6; gap:0.5rem; }
-    .carrito-item:last-child { border-bottom:none; }
-    .carrito-item-nombre { font-size:0.88rem; color:#333; flex:1; text-align:left; line-height:1.3; }
-    .carrito-item-precio { font-weight:700; color:var(--azul); font-size:0.9rem; white-space:nowrap; }
-    .btn-quitar { background:#ffeaea; color:#e53935; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.2s; }
-    .btn-quitar:hover { background:#ffcccc; }
-    .carrito-total { padding:1rem 1.2rem; border-top:2px solid #eef2f6; background:#f8fbfe; }
-    .total-linea { display:flex; justify-content:space-between; align-items:center; font-weight:900; color:var(--azul); font-size:1.2rem; }
-    .total-cantidad { font-size:0.8rem; color:#888; font-weight:600; margin-top:4px; text-align:right; }
-    .btn-limpiar { margin-top:0.8rem; width:100%; padding:8px; background:transparent; border:1.5px solid #ddd; color:#888; border-radius:50px; cursor:pointer; font-family:inherit; font-size:0.85rem; transition:all 0.2s; }
-    .btn-limpiar:hover { border-color:#e53935; color:#e53935; }
-    .cot-nota { margin-top:1.5rem; padding:1rem 1.5rem; background:#fff8e1; border-radius:14px; border-left:4px solid var(--naranja); font-size:0.9rem; color:#7a5500; text-align:left; grid-column:1/-1; }
+    .cot-layout { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; align-items: start; }
+    .cot-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; grid-column: 1/-1; }
+    .btn-cerrar-sesion { padding: 8px 18px; background: transparent; border: 2px solid var(--azul); color: var(--azul); border-radius: 50px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: all 0.2s; }
+    .btn-cerrar-sesion:hover { background: var(--azul); color: var(--blanco); }
+    .cot-buscador { position: relative; margin-bottom: 1rem; }
+    .cot-buscador input { width: 100%; padding: 14px 20px 14px 48px; border-radius: 50px; border: 2px solid #c5daea; background: var(--blanco); font-size: 1rem; outline: none; font-family: inherit; transition: border-color 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    .cot-buscador input:focus { border-color: var(--azul); }
+    .cot-buscador .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #999; pointer-events: none; }
+    .cot-lista { max-height: 480px; overflow-y: auto; border-radius: 18px; background: var(--blanco); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .cot-lista::-webkit-scrollbar { width: 6px; }
+    .cot-lista::-webkit-scrollbar-thumb { background: #c5daea; border-radius: 3px; }
+    .estudio-item { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.2rem; border-bottom: 1px solid #eef2f6; cursor: pointer; transition: background 0.15s; text-align: left; gap: 1rem; }
+    .estudio-item:last-child { border-bottom: none; }
+    .estudio-item:hover { background: #f0f7fb; }
+    .estudio-item.seleccionado { background: #e8f4fd; }
+    .estudio-nombre { font-weight: 600; color: var(--azul); font-size: 0.95rem; flex: 1; }
+    .estudio-muestra { font-size: 0.78rem; color: #888; margin-top: 2px; }
+    .estudio-precio-lista { font-weight: 800; color: var(--azul); font-size: 1rem; white-space: nowrap; }
+    .estudio-add { width: 28px; height: 28px; border-radius: 50%; background: var(--azul); color: var(--blanco); border: none; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s, transform 0.1s; }
+    .estudio-add:hover { background: var(--azul-claro); transform: scale(1.1); }
+    .estudio-add.agregado { background: #4caf50; }
+    .sin-resultados { padding: 2rem; color: #999; font-size: 0.95rem; }
+    .cot-carrito { background: var(--blanco); border-radius: 20px; box-shadow: 0 6px 24px rgba(0,0,0,0.10); overflow: hidden; position: sticky; top: 16px; }
+    .carrito-titulo { background: var(--azul); color: var(--blanco); padding: 1rem 1.2rem; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .carrito-vacio { padding: 2rem 1.2rem; color: #aaa; font-size: 0.9rem; text-align: center; }
+    .carrito-items { max-height: 340px; overflow-y: auto; }
+    .carrito-items::-webkit-scrollbar { width: 5px; }
+    .carrito-items::-webkit-scrollbar-thumb { background: #c5daea; border-radius: 3px; }
+    .carrito-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.2rem; border-bottom: 1px solid #eef2f6; gap: 0.5rem; }
+    .carrito-item:last-child { border-bottom: none; }
+    .carrito-item-nombre { font-size: 0.88rem; color: #333; flex: 1; text-align: left; line-height: 1.3; }
+    .carrito-item-precio { font-weight: 700; color: var(--azul); font-size: 0.9rem; white-space: nowrap; }
+    .btn-quitar { background: #ffeaea; color: #e53935; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
+    .btn-quitar:hover { background: #ffcccc; }
+    .carrito-total { padding: 1rem 1.2rem; border-top: 2px solid #eef2f6; background: #f8fbfe; }
+    .total-linea { display: flex; justify-content: space-between; align-items: center; font-weight: 900; color: var(--azul); font-size: 1.2rem; }
+    .total-cantidad { font-size: 0.8rem; color: #888; font-weight: 600; margin-top: 4px; text-align: right; }
+    .btn-limpiar { margin-top: 0.8rem; width: 100%; padding: 8px; background: transparent; border: 1.5px solid #ddd; color: #888; border-radius: 50px; cursor: pointer; font-family: inherit; font-size: 0.85rem; transition: all 0.2s; }
+    .btn-limpiar:hover { border-color: #e53935; color: #e53935; }
+    .cot-nota { margin-top: 1.5rem; padding: 1rem 1.5rem; background: #fff8e1; border-radius: 14px; border-left: 4px solid var(--naranja); font-size: 0.9rem; color: #7a5500; text-align: left; grid-column: 1/-1; }
 
     /* FAB MÓVIL */
-    #carrito-fab { position:fixed; bottom:80px; left:20px; background:var(--azul); color:var(--blanco); border:none; border-radius:50px; padding:12px 20px; font-size:1rem; font-weight:800; font-family:inherit; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,51,0.35); z-index:1001; align-items:center; gap:8px; transition:transform 0.2s, background 0.2s; }
-    #carrito-fab:hover { background:var(--azul-claro); transform:scale(1.05); }
-    #fab-count { background:var(--naranja); color:var(--blanco); border-radius:50%; width:22px; height:22px; font-size:0.8rem; display:inline-flex; align-items:center; justify-content:center; }
-    #carrito-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1099; }
-    #carrito-overlay.active { display:block; }
-    #carrito-panel-movil { position:fixed; bottom:0; left:0; right:0; background:var(--blanco); border-radius:24px 24px 0 0; box-shadow:0 -8px 30px rgba(0,0,0,0.2); z-index:1100; max-height:80vh; overflow-y:auto; transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.32,0.72,0,1); }
-    #carrito-panel-movil.open { transform:translateY(0); }
-    .panel-header { display:flex; justify-content:space-between; align-items:center; padding:1.2rem 1.4rem; background:var(--azul); color:var(--blanco); border-radius:24px 24px 0 0; font-weight:800; font-size:1rem; position:sticky; top:0; }
-    .panel-header button { background:rgba(255,255,255,0.2); border:none; color:var(--blanco); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; }
-    @media (min-width:861px) { #carrito-fab { display:none !important; } #carrito-panel-movil, #carrito-overlay { display:none !important; } .cot-layout { grid-template-columns:1fr 340px; } }
-    @media (max-width:860px) { .cot-layout { grid-template-columns:1fr; } .cot-carrito { display:none; } }
+    #carrito-fab { position: fixed; bottom: 60px; left: 20px; background: var(--azul); color: var(--blanco); border: none; border-radius: 50px; padding: 12px 20px; font-size: 1rem; font-weight: 800; font-family: inherit; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,51,0.35); z-index: 1001; align-items: center; gap: 8px; transition: transform 0.2s, background 0.2s; display: none; }
+    #carrito-fab:hover { background: var(--azul-claro); transform: scale(1.05); }
+    #fab-count { background: var(--naranja); color: var(--blanco); border-radius: 50%; width: 22px; height: 22px; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center; }
+    #carrito-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1099; }
+    #carrito-overlay.active { display: block; }
+    #carrito-panel-movil { position: fixed; bottom: 0; left: 0; right: 0; background: var(--blanco); border-radius: 24px 24px 0 0; box-shadow: 0 -8px 30px rgba(0,0,0,0.2); z-index: 1100; max-height: 80vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.32,0.72,0,1); }
+    #carrito-panel-movil.open { transform: translateY(0); }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.4rem; background: var(--azul); color: var(--blanco); border-radius: 24px 24px 0 0; font-weight: 800; font-size: 1rem; position: sticky; top: 0; }
+    .panel-header button { background: rgba(255,255,255,0.2); border: none; color: var(--blanco); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
 
     /* MODAL */
-    #img-modal { display:none; position:fixed; z-index:2000; inset:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; }
-    #img-modal img { max-width:90vw; max-height:90vh; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.5); animation:zoomIn 0.3s ease; }
+    #img-modal { display: none; position: fixed; z-index: 2000; inset: 0; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
+    #img-modal img { max-width: 90vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: zoomIn 0.3s ease; }
     @keyframes zoomIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
 
     /* WHATSAPP */
-    .whatsapp-float { position:fixed; bottom:80px; right:25px; background:#25D366; border-radius:50px; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:1001; display:flex; align-items:center; gap:12px; padding:10px 18px; color:var(--blanco); font-weight:600; font-size:1rem; transition:background 0.3s ease, transform 0.3s ease; }
-    .whatsapp-float:hover { background:#1ebe57; transform:scale(1.1); }
-    .whatsapp-float svg { flex-shrink:0; }
+    .whatsapp-float { position: fixed; bottom: 60px; right: 25px; background: #25D366; border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1001; display: flex; align-items: center; gap: 12px; padding: 10px 18px; color: var(--blanco); font-weight: 600; font-size: 1rem; transition: background 0.3s, transform 0.3s; }
+    .whatsapp-float:hover { background: #1ebe57; transform: scale(1.1); }
 
     /* FOOTER */
-    footer { position:fixed; bottom:0; left:0; width:100vw; background:var(--azul); color:var(--blanco); padding:12px 1rem; z-index:1000; font-size:.85rem; }
-    .footer-inner { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; max-width:1200px; margin:0 auto; gap:0.5rem; }
-    .footer-redes { display:flex; gap:1.5rem; align-items:center; }
-    .footer-redes a { color:var(--blanco); display:flex; align-items:center; gap:0.5rem; }
+    footer { position: fixed; bottom: 0; left: 0; width: 100vw; background: var(--azul); color: var(--blanco); padding: 10px 1rem; z-index: 1000; font-size: .85rem; height: var(--footer-h); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; gap: 0.5rem; }
+    .footer-redes { display: flex; gap: 1.5rem; align-items: center; }
+    .footer-redes a { color: var(--blanco); display: flex; align-items: center; gap: 0.5rem; }
 
-    /* ANIMACIONES */
-    .section-observable { opacity:0; transform:translateX(-100px); transition:opacity 0.5s ease, transform 0.5s ease; }
-    .section-observable.animate-slide-in { animation:slideInLeft 3.5s ease forwards; }
-    @keyframes slideInLeft { 0%{opacity:0;transform:translateX(-100px)} 100%{opacity:1;transform:translateX(0)} }
-    .domicilio-anim { opacity:0; transition:all 1s ease; }
-    .domicilio-img { transform:translateX(-80px); }
-    .domicilio-text { transform:translateX(80px); }
-    .section-observable.animate-slide-in .domicilio-img,
-    .section-observable.animate-slide-in .domicilio-text { opacity:1; transform:translateX(0); }
+    /* =====================================================
+       RESPONSIVE MOBILE — MEJORAS SIN CAMBIAR DISEÑO
+       ===================================================== */
 
-    /* RESPONSIVE */
-    @media (max-width:900px) {
-      .domicilio-linea { flex-direction:column; }
-      .domicilio-linea img { width:100%; height:320px; }
-      .domicilio-card { width:100%; }
-      .proceso-cards { grid-template-columns:repeat(2,1fr); }
-      .sucursal-card { grid-template-columns:1fr; }
-      .horario-box { text-align:center; border-right:none; border-bottom:1px solid #e0e6ed; }
-      .mapa iframe { height:300px; }
+    /* Tablet grande */
+    @media (max-width: 900px) {
+      .domicilio-linea { flex-direction: column; gap: 1.5rem; }
+      .domicilio-linea img { width: 100%; height: 280px; }
+      .proceso-cards { grid-template-columns: repeat(2,1fr); gap: 1.2rem; }
+      .sucursal-card { grid-template-columns: 1fr; }
+      .horario-box { text-align: center; border-right: none; border-bottom: 1px solid #e0e6ed; }
+      .mapa iframe { height: 280px; }
+      .imagen { display: none; }
     }
-    @media (max-width:768px) {
-      .navbar { height:56px; padding:0 14px; position:fixed; top:0; left:0; width:100%; }
-      body { padding-top: 56px; }
-      .logo { font-size:1rem; }
-      .logo img { height:38px; }
-      .menu-toggle { display:block; }
+
+    /* Tablet y móvil */
+    @media (max-width: 768px) {
+      :root { --navbar-h: 56px; }
+
+      .navbar { padding: 0 14px; }
+      .logo { font-size: 1rem; }
+      .logo img { height: 36px; margin-right: 0.5rem; }
+      .menu-toggle { display: block; font-size: 2rem; line-height: 1; padding: 4px 8px; }
+
+      /* Menú desplegable móvil */
       .nav-buttons {
-        display:none;
-        flex-direction:column;
-        position:fixed;
-        top:56px;
-        left:0;
-        width:100%;
-        background:var(--azul);
-        padding:0.5rem 0 1rem;
-        z-index:999;
-        box-shadow:0 8px 20px rgba(0,0,0,0.3);
+        display: none; flex-direction: column; width: 100%;
+        background: var(--azul); padding: 0.5rem 0;
+        position: fixed; top: var(--navbar-h); left: 0; right: 0; z-index: 999;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        max-height: calc(100vh - var(--navbar-h));
+        overflow-y: auto;
       }
-      .nav-buttons a { padding:0.9rem 1.5rem; margin:0; font-size:1.1rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.08); }
-      .nav-buttons a:last-child { border-bottom:none; }
-      .nav-buttons.active { display:flex; }
-      .section-description { font-size:1.1rem; padding:1.8rem 1.5rem; }
+      .nav-buttons a {
+        padding: 1rem 1.5rem; margin: 0; font-size: 1.05rem;
+        display: block; border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+      .nav-buttons a:last-child { border-bottom: none; }
+      .nav-buttons.active { display: flex; }
+
+      /* Vistas */
+      .vista-inner { padding: 1.8rem 1rem 5rem; }
+      .section-title { font-size: 1.6rem; margin-bottom: 1rem; }
+      .section-description {
+        font-size: 1rem; padding: 1.5rem 1.2rem;
+        border-radius: 18px; margin-bottom: 1.5rem;
+      }
+
+      /* Inicio hero */
+      .header-content { padding: 2rem 1.2rem 5rem; }
+      .header-eyebrow { font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 1.2rem; }
+      .header-title { font-size: clamp(2rem, 10vw, 3.5rem); }
+      .header-subtitle { font-size: 0.82rem; letter-spacing: 1px; margin-bottom: 2rem; }
+      .search-button { padding: 0.85rem 1.8rem; font-size: 0.88rem; }
+      .header-cta-wrap { flex-direction: column; align-items: center; gap: 0.8rem; }
+      .header-cta-wrap .search-button { width: 100%; max-width: 300px; }
+      .scroll-indicator { display: none; }
+
+      /* Quiénes somos */
+      .qs-inner { gap: 1.2rem; }
+      .qs-inner img { max-width: 240px; }
+      .qs-texto {
+        flex: 1 1 100%; font-size: 1rem;
+        padding: 1.5rem 1.2rem; border-radius: 16px;
+      }
+
+      /* Galería */
+      .card-gallery { grid-template-columns: repeat(2,1fr); gap: 1rem; padding: 1rem 0; }
+      .card-item img { height: 130px; }
+      .card-caption { font-size: 0.88rem; padding: 0.7rem; }
+
+      /* Domicilio */
+      .domicilio-linea img { height: 220px; border-radius: 18px; }
+      .domicilio-card { padding: 1.5rem 1.2rem; border-radius: 18px; }
+      .domicilio-card p { font-size: 0.98rem; }
+      .proceso-title { font-size: 1.4rem; margin: 2rem auto 1.2rem; }
+      .proceso-cards { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .proceso-card { padding: 1.2rem 1rem; border-radius: 18px; }
+      .proceso-card h4 { font-size: 1rem; }
+      .proceso-card p { font-size: 0.88rem; }
+      .cta-domicilio a { font-size: 1rem; padding: 1.1rem 1.5rem; border-radius: 50px; }
+
+      /* Sucursales */
+      .descripcion { font-size: 0.98rem; padding: 1.2rem 1rem; }
+      .mapa h3 { font-size: 0.95rem; }
+      .mapa iframe { height: 240px; }
+      .horario-box h3 { font-size: 1rem; }
+      .horario-box p { font-size: 0.88rem; }
+
+      /* Contacto */
+      .contacto-inner { padding: 2rem 1.2rem; border-radius: 20px; }
+      .contacto-eyebrow { font-size: 0.9rem; }
+      .contacto-titulo { font-size: 2rem; }
+      .input-pill { padding: 12px 16px; font-size: 0.95rem; }
+
+      /* Cotizaciones */
+      #cot-lock { padding: 2rem 1.2rem; border-radius: 20px; }
+      #cot-lock h3 { font-size: 1.2rem; }
+      .pass-wrap { flex-direction: column; max-width: 100%; }
+      .btn-desbloquear { width: 100%; }
+      .cot-layout { grid-template-columns: 1fr; }
+      .cot-carrito { display: none; }
+      .cot-nota { grid-column: 1; font-size: 0.85rem; }
+      .cot-lista { max-height: 55vh; }
+      .estudio-item { padding: 0.8rem 1rem; gap: 0.6rem; }
+      .estudio-nombre { font-size: 0.88rem; }
+      .estudio-precio-lista { font-size: 0.9rem; }
+
+      /* Servicio / Login */
+      #srv-lock > div { padding: 2rem 1.2rem !important; border-radius: 20px !important; }
+      #srv-layout { grid-template-columns: 1fr !important; }
+      #srv-carrito-wrap { display: none !important; }
     }
-    @media (max-width:600px) { .proceso-cards { grid-template-columns:1fr; } }
-    @media (max-width:480px) {
-      .card-gallery { grid-template-columns:1fr; }
-      .card-item img { height:160px; }
-      .whatsapp-float { width:60px; height:60px; padding:0; border-radius:50%; justify-content:center; }
-      .whatsapp-float .whatsapp-text { display:none; }
-      .cta-domicilio a { font-size:1rem; padding:1rem 1.2rem; border-radius:16px; }
+
+    /* Móvil pequeño */
+    @media (max-width: 480px) {
+      .card-gallery { grid-template-columns: 1fr; }
+
+      /* WhatsApp: solo icono */
+      .whatsapp-float {
+        width: 56px; height: 56px; padding: 0;
+        border-radius: 50%; justify-content: center;
+        bottom: 56px; right: 14px;
+      }
+      .whatsapp-float .whatsapp-text { display: none; }
+
+      /* FAB carrito */
+      #carrito-fab { left: 12px; bottom: 56px; padding: 10px 16px; font-size: 0.9rem; }
+
+      /* Footer: ocultar texto cedula */
+      .footer-inner > div:last-child { display: none; }
+
+      /* Hero extra pequeño */
+      .header-title { font-size: clamp(1.8rem, 9vw, 2.8rem); }
+      .header-eyebrow { display: none; }
+
+      /* Proceso: 1 columna en móvil muy pequeño */
+      .proceso-cards { grid-template-columns: 1fr; }
+
+      /* Contacto titulo más pequeño */
+      .contacto-titulo { font-size: 1.6rem; }
+
+      /* Servicio: inputs más cómodos */
+      #vista-servicio .vista-inner { padding: 1.5rem 0.8rem 5rem; }
+      #srv-lock > div input,
+      #srv-lock > div button { font-size: 0.95rem !important; }
     }
-    .mobile-break { display:inline; }
-    @media (max-width:480px) { .mobile-break { display:block; } }
+
+    /* Pantalla muy pequeña (SE, Galaxy A, etc.) */
+    @media (max-width: 360px) {
+      .logo { font-size: 0.88rem; }
+      .logo img { height: 30px; }
+      .header-cta-wrap .search-button { font-size: 0.8rem; padding: 0.75rem 1.4rem; }
+    }
+
+    /* Tablet en modo landscape */
+    @media (max-width: 860px) {
+      .cot-layout { grid-template-columns: 1fr; }
+      .cot-carrito { display: none; }
+    }
+    @media (min-width: 861px) {
+      #carrito-fab { display: none !important; }
+      #carrito-panel-movil, #carrito-overlay { display: none !important; }
+    }
+
+    /* Inputs y botones: mayor área táctil en móvil */
+    @media (max-width: 768px) {
+      .estudio-add { width: 34px; height: 34px; font-size: 1.2rem; }
+      .btn-quitar  { width: 30px; height: 30px; font-size: 1rem; }
+      .btn-enviar  { width: 100%; padding: 14px 28px; font-size: 1rem; }
+    }
   </style>
 </head>
 <body>
@@ -502,194 +493,454 @@
   <div id="loader"><div class="dna"><span></span><span></span><span></span><span></span></div></div>
 
   <nav class="navbar">
-    <a class="logo" href="#"><img src="log.png" alt="Logo DSL">LABORATORIO DSL</a>
+    <a class="logo" onclick="mostrarVista('inicio')"><img src="log.png" alt="Logo DSL">LABORATORIO DSL</a>
     <div class="menu-toggle" id="menuToggle">☰</div>
     <div class="nav-buttons" id="navMenu">
-      <a href="#quienes_somos"    onclick="event.preventDefault();irA('quienes_somos')">Quiénes somos</a>
-      <a href="#analisis_clinicos" onclick="event.preventDefault();irA('analisis_clinicos')">Análisis clínicos</a>
-      <a href="#domicilio"         onclick="event.preventDefault();irA('domicilio')">Servicio a domicilio</a>
-      <a href="#sucursales"        onclick="event.preventDefault();irA('sucursales')">Sucursales</a>
-      <a href="#contacto"          onclick="event.preventDefault();irA('contacto')">Empresas</a>
-      <a href="#cotizaciones"      onclick="event.preventDefault();irA('cotizaciones')">Cotizaciones</a>
+      <a onclick="mostrarVista('quienes_somos')">Quiénes somos</a>
+      <a onclick="mostrarVista('analisis_clinicos')">Análisis clínicos</a>
+      <a onclick="mostrarVista('domicilio')">Servicio a domicilio</a>
+      <a onclick="mostrarVista('sucursales')">Sucursales</a>
+      <a onclick="mostrarVista('contacto')">Empresas</a>
+      <a onclick="mostrarVista('cotizaciones')">Cotizaciones</a>
+      <a onclick="mostrarVista('servicio')">Servicio</a>
     </div>
   </nav>
 
-  <header>
-    <!-- Slider de fondo -->
-    <div class="header-bg" id="header-slider-container"></div>
-    <!-- Overlay -->
-    <div class="header-overlay"></div>
-    <!-- Partículas -->
-    <div class="header-particles" id="particles"></div>
-    <!-- Contenido -->
-    <div class="header-content">
-      <div class="header-eyebrow">Guadalajara, Jalisco</div>
-      <h1 class="header-title">
-        Diagnóstico
-        <span class="highlight">Santa Lucía</span>
-      </h1>
-      <div class="header-divider"></div>
-      <p class="header-subtitle">Tu salud comienza con un buen diagnóstico,<br>y nosotros lo hacemos posible</p>
-      <div class="header-cta-wrap">
-        <button class="search-button primary" onclick="irA('analisis_clinicos')">Conoce nuestros paquetes</button>
-        <button class="search-button secondary" onclick="irA('domicilio')">Servicio a domicilio</button>
-      </div>
-    </div>
-    <!-- Scroll indicator -->
-    <div class="scroll-indicator">
-      <div class="scroll-mouse"></div>
-      <span>Scroll</span>
-    </div>
-  </header>
+  <div id="app">
 
-  <section id="quienes_somos" class="section-observable">
-    <h2 class="section-title">Quiénes somos</h2>
-    <div class="qs-inner">
-      <img src="logo.png" alt="Logo Diagnóstico Santa Lucía">
-      <p class="qs-texto">Somos una empresa dedicada a ofrecer servicios de laboratorio clínico con alta calidad y confiabilidad. Contamos con personal altamente calificado en toma de muestras, análisis clínicos y entrega de resultados. Nuestros laboratorios están ubicados en hospitales de prestigio, equipados con tecnología de última generación. Además, nuestras salas de toma de muestras están diseñadas para garantizar comodidad, rapidez y seguridad. Estamos comprometidos con brindar un servicio cercano, confiable y accesible, contribuyendo al bienestar y salud de los colaboradores y las empresas que confían en nosotros.</p>
-    </div>
-  </section>
-
-  <section id="analisis_clinicos" class="section-observable">
-    <h2 class="section-title">Análisis clínicos</h2>
-    <p class="section-description">Ofrecemos una amplia gama de estudios clínicos diseñados para cuidar tu salud con precisión y confiabilidad. Desde <strong>biometrías</strong>, <strong>química sanguínea</strong> y <strong>paneles hormonales</strong>, hasta <strong>pruebas especializadas</strong>, cada análisis se realiza con tecnología de última generación y personal altamente calificado.<br><br>Nuestra prioridad es brindarte resultados confiables en un entorno seguro, rápido y cómodo.</p>
-    <div class="card-gallery">
-      <div class="card-item"><img src="QUIR.png" alt="Perfil Quirúrgico"><div class="card-caption">Perfil Quirúrgico</div></div>
-      <div class="card-item"><img src="PRE.png" alt="Perfil Prenatal 1"><div class="card-caption">Perfil Prenatal 1</div></div>
-      <div class="card-item"><img src="PER.png" alt="Perfiles Hormonales"><div class="card-caption">Perfiles Hormonales</div></div>
-      <div class="card-item"><img src="GRAL.png" alt="Estudios Generales"><div class="card-caption">Estudios Generales</div></div>
-      <div class="card-item"><img src="PRENATAL2.png" alt="Perfil Prenatal 2"><div class="card-caption">Perfil Prenatal 2</div></div>
-      <div class="card-item"><img src="PRENATAL3.png" alt="Perfil Prenatal 3"><div class="card-caption">Perfil Prenatal 3</div></div>
-      <div class="card-item"><img src="FACTOREU.jpg" alt="Perfil Reumático"><div class="card-caption">Perfil Reumático</div></div>
-      <div class="card-item"><img src="QUIMICA45.jpeg" alt="Química 45 Elementos"><div class="card-caption">Química 45 Elementos</div></div>
-      <div class="card-item"><img src="cardiaca.jpeg" alt="Perfil Cardíaco"><div class="card-caption">Perfil Cardíaco</div></div>
-      <div class="card-item"><img src="colesterol.jpeg" alt="Perfil de Colesterol"><div class="card-caption">Perfil de Colesterol</div></div>
-      <div class="card-item"><img src="tiroideo.jpeg" alt="Perfil Tiroideo"><div class="card-caption">Perfil Tiroideo</div></div>
-    </div>
-  </section>
-
-  <section id="domicilio" class="section-observable">
-    <h2 class="section-title">Servicio de análisis clínicos a domicilio</h2>
-    <div class="domicilio-linea">
-      <img src="toma.png" alt="Toma a domicilio" class="domicilio-anim domicilio-img">
-      <div class="domicilio-card domicilio-anim domicilio-text">
-        <p>En <strong>Laboratorio DSL</strong>, tu salud y bienestar son nuestra prioridad. Ponemos a tu disposición el <strong>servicio de análisis clínicos a domicilio</strong>, diseñado para brindarte comodidad, seguridad y atención profesional sin que tengas que salir de casa.<br><br>Nuestro personal capacitado acude hasta tu domicilio con el equipo necesario y bajo estrictos protocolos de higiene y calidad, garantizando los mismos resultados confiables que en nuestras sucursales.<br><br>Ideal para adultos mayores, pacientes con movilidad reducida o personas con agendas ocupadas.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="domicilio-proceso">
-    <h3 class="proceso-title">¿Cómo solicitar tu servicio de estudios a domicilio?</h3>
-    <div class="proceso-cards">
-      <div class="proceso-card">
-        <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></div>
-        <h4>Contáctanos</h4>
-        <p>Da clic en <strong>"Agenda tu toma a domicilio"</strong> y proporciónanos los datos básicos: nombre, teléfono, dirección y estudios a realizar.</p>
-      </div>
-      <div class="proceso-card">
-        <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-        <h4>Agenda tu cita</h4>
-        <p>Indícanos día y hora y te enviaremos tu cotización junto con la confirmación. Aceptamos efectivo, tarjeta o transferencia.</p>
-      </div>
-      <div class="proceso-card">
-        <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12"/><path d="M10 2v7l-4 9a3 3 0 0 0 3 4h6a3 3 0 0 0 3-4l-4-9V2"/></svg></div>
-        <h4>Toma de muestra</h4>
-        <p>Un técnico especializado acudirá puntualmente con el equipo necesario bajo estrictos protocolos de seguridad.</p>
-      </div>
-      <div class="proceso-card">
-        <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
-        <h4>Entrega de resultados</h4>
-        <p>Recibes tus resultados en PDF por correo o WhatsApp. También puedes recogerlos en sucursal si lo prefieres.</p>
-      </div>
-    </div>
-    <div class="cta-domicilio">
-      <a href="https://wa.me/523351286935?text=Hola%20quiero%20agendar%20mi%20toma%20a%20domicilio" target="_blank" rel="noopener noreferrer">AGENDA TU TOMA <span class="mobile-break">A DOMICILIO</span></a>
-    </div>
-  </section>
-
-  <section id="sucursales" class="section-observable">
-    <h2 class="section-title">Sucursales</h2>
-    <div class="sucursales-contenedor">
-      <p class="descripcion">Contamos con tres ubicaciones estratégicas para ofrecerte mayor comodidad y acceso a nuestros servicios. Cada sucursal está dentro de hospitales y clínicas, garantizando un entorno seguro y atención profesional.<br><br>Usa los mapas para localizar la más cercana y planifica tu visita de manera rápida y eficiente.</p>
-      <div class="sucursal-card">
-        <div class="horario-box"><h3>Hospital Rosette</h3><p>Lunes a Sábado: 08:00 – 21:00</p><p>Domingo: 08:00 – 14:00</p></div>
-        <div class="mapa"><h3>📍 Sucursal Circunvalación Dr. Atl</h3><iframe src="https://www.google.com/maps?q=Av.%20Cvln.%20Dr.%20Atl%20487,%20Monumental,%2044320%20Guadalajara,%20Jal.&hl=es&z=17&output=embed" allowfullscreen loading="lazy"></iframe></div>
-        <div class="imagen"><img src="ross.png" alt="Sucursal Circunvalación Dr. Atl"></div>
-      </div>
-      <div class="sucursal-card">
-        <div class="horario-box"><h3>Sanatorio Providencia</h3><p>Lunes a Sábado: 08:00 – 21:00</p><p>Domingo: 08:00 – 14:00</p></div>
-        <div class="mapa"><h3>📍 Sucursal Niños Héroes, Tlaquepaque</h3><iframe src="https://www.google.com/maps?q=Av.%20Ni%C3%B1os%20H%C3%A9roes%2029,%20Hidalgo,%2045500%20San%20Pedro%20Tlaquepaque,%20Jal.&hl=es&z=17&output=embed" allowfullscreen loading="lazy"></iframe></div>
-        <div class="imagen"><img src="provi.png" alt="Sucursal Niños Héroes"></div>
-      </div>
-      <div class="sucursal-card">
-        <div class="horario-box"><h3>Clínica Vidafem</h3><p>Lunes a Sábado: 08:00 – 16:00</p></div>
-        <div class="mapa"><h3>📍 Sucursal Reforma, Tlaquepaque</h3><iframe src="https://www.google.com/maps?q=C.%20Reforma%20279,%2045500%20San%20Pedro%20Tlaquepaque,%20Jalisco&hl=es&z=17&output=embed" allowfullscreen loading="lazy"></iframe></div>
-        <div class="imagen"><img src="vidafem.jpeg" alt="Sucursal Reforma Tlaquepaque"></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="contacto" class="section-observable">
-    <p class="contacto-eyebrow">¿Te gustaría realizar análisis clínicos a tus empleados?</p>
-    <h2 class="contacto-titulo">Contáctanos</h2>
-    <div class="contacto-linea"></div>
-    <form id="contactForm" novalidate style="max-width:650px;margin:0 auto;text-align:left;">
-      <label for="name" class="sr-only">Tu Nombre</label>
-      <input class="input-pill" id="name" name="name" type="text" placeholder="Tu Nombre" required>
-      <label for="email" class="sr-only">E-Mail</label>
-      <input class="input-pill" id="email" name="email" type="email" placeholder="E-Mail" required>
-      <p class="campo-label">¿En qué podemos ayudarte?</p>
-      <label for="message" class="sr-only">Mensaje</label>
-      <textarea class="input-pill" id="message" name="message" placeholder="Describe aquí tu consulta..."></textarea>
-      <div style="display:flex;justify-content:center;margin-top:18px;">
-        <button type="submit" class="btn-enviar">Enviar</button>
-      </div>
-    </form>
-  </section>
-
-  <section id="cotizaciones" class="section-observable">
-    <h2 class="section-title">Cotizaciones</h2>
-    <div id="cot-lock">
-      <div class="lock-icon">🔒</div>
-      <h3>Área restringida</h3>
-      <p>Ingresa tu usuario y contraseña para acceder a las cotizaciones.</p>
-      <div class="pass-wrap" style="flex-direction:column; gap:0.6rem;">
-        <input type="text"     id="cot-user" placeholder="Usuario"     autocomplete="off" style="border-radius:50px;border:2px solid #c5daea;padding:12px 16px;font-size:1rem;outline:none;font-family:inherit;transition:border-color 0.2s;width:100%;">
-        <input type="password" id="cot-pass" placeholder="Contraseña"  autocomplete="off" style="border-radius:50px;border:2px solid #c5daea;padding:12px 16px;font-size:1rem;outline:none;font-family:inherit;transition:border-color 0.2s;width:100%;">
-        <button class="btn-desbloquear" style="width:100%;" onclick="desbloquearCotizaciones()">Entrar</button>
-      </div>
-      <span id="cot-error">Usuario o contraseña incorrectos. Intenta de nuevo.</span>
-    </div>
-    <div id="cot-content">
-      <div class="cot-header">
-        <p style="color:var(--azul);font-weight:600;">✅ Sesión activa — <span id="cot-sucursal-nombre"></span></p>
-        <button class="btn-cerrar-sesion" onclick="cerrarSesion()">🔒 Cerrar sesión</button>
-      </div>
-      <div class="cot-layout">
-        <div>
-          <div class="cot-buscador">
-            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="cot-search" placeholder="Buscar estudio o paquete..." oninput="filtrarEstudios()">
-          </div>
-          <div class="cot-lista" id="cot-lista"></div>
+    <!-- INICIO -->
+    <div class="vista activa" id="vista-inicio">
+      <div class="header-bg" id="header-slider-container"></div>
+      <div class="header-overlay"></div>
+      <div class="header-particles" id="particles"></div>
+      <div class="header-content">
+        <div class="header-eyebrow">Guadalajara, Jalisco</div>
+        <h1 class="header-title">
+          Diagnóstico
+          <span class="highlight">Santa Lucía</span>
+        </h1>
+        <div class="header-divider"></div>
+        <p class="header-subtitle">Tu salud comienza con un buen diagnóstico,<br>y nosotros lo hacemos posible</p>
+        <div class="header-cta-wrap">
+          <button class="search-button primary" onclick="mostrarVista('analisis_clinicos')">Conoce nuestros paquetes</button>
+          <button class="search-button secondary" onclick="mostrarVista('domicilio')">Servicio a domicilio</button>
         </div>
-        <div class="cot-carrito">
-          <div class="carrito-titulo">🧾 Estudios seleccionados</div>
-          <div id="carrito-vacio" class="carrito-vacio">Aún no has seleccionado ningún estudio.</div>
-          <div class="carrito-items" id="carrito-items"></div>
-          <div class="carrito-total" id="carrito-total" style="display:none;">
-            <div class="total-linea"><span>Total</span><span id="carrito-total-precio">$0.00</span></div>
-            <div class="total-cantidad" id="carrito-cantidad"></div>
-            <button class="btn-limpiar" onclick="limpiarCarrito()">🗑 Limpiar todo</button>
+      </div>
+      <div class="scroll-indicator">
+        <div class="scroll-mouse"></div>
+        <span>Explora</span>
+      </div>
+    </div>
+
+    <!-- QUIÉNES SOMOS -->
+    <div class="vista" id="vista-quienes_somos">
+      <div class="vista-inner">
+        <h2 class="section-title">Quiénes somos</h2>
+        <div class="qs-inner">
+          <img src="logo.png" alt="Logo Diagnóstico Santa Lucía">
+          <p class="qs-texto">Somos una empresa dedicada a ofrecer servicios de laboratorio clínico con alta calidad y confiabilidad. Contamos con personal altamente calificado en toma de muestras, análisis clínicos y entrega de resultados. Nuestros laboratorios están ubicados en hospitales de prestigio, equipados con tecnología de última generación. Además, nuestras salas de toma de muestras están diseñadas para garantizar comodidad, rapidez y seguridad. Estamos comprometidos con brindar un servicio cercano, confiable y accesible, contribuyendo al bienestar y salud de los colaboradores y las empresas que confían en nosotros.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANÁLISIS CLÍNICOS -->
+    <div class="vista" id="vista-analisis_clinicos">
+      <div class="vista-inner">
+        <h2 class="section-title">Análisis clínicos</h2>
+        <p class="section-description">Ofrecemos una amplia gama de estudios clínicos diseñados para cuidar tu salud con precisión y confiabilidad. Desde <strong>biometrías</strong>, <strong>química sanguínea</strong> y <strong>paneles hormonales</strong>, hasta <strong>pruebas especializadas</strong>, cada análisis se realiza con tecnología de última generación y personal altamente calificado.<br><br>Nuestra prioridad es brindarte resultados confiables en un entorno seguro, rápido y cómodo.</p>
+        <div class="card-gallery">
+          <div class="card-item"><img src="QUIR.png" alt="Perfil Quirúrgico"><div class="card-caption">Perfil Quirúrgico</div></div>
+          <div class="card-item"><img src="PRE.png" alt="Perfil Prenatal 1"><div class="card-caption">Perfil Prenatal 1</div></div>
+          <div class="card-item"><img src="PER.png" alt="Perfiles Hormonales"><div class="card-caption">Perfiles Hormonales</div></div>
+          <div class="card-item"><img src="GRAL.png" alt="Estudios Generales"><div class="card-caption">Estudios Generales</div></div>
+          <div class="card-item"><img src="PRENATAL2.png" alt="Perfil Prenatal 2"><div class="card-caption">Perfil Prenatal 2</div></div>
+          <div class="card-item"><img src="PRENATAL3.png" alt="Perfil Prenatal 3"><div class="card-caption">Perfil Prenatal 3</div></div>
+          <div class="card-item"><img src="FACTOREU.jpg" alt="Perfil Reumático"><div class="card-caption">Perfil Reumático</div></div>
+          <div class="card-item"><img src="QUIMICA45.jpeg" alt="Química 45 Elementos"><div class="card-caption">Química 45 Elementos</div></div>
+          <div class="card-item"><img src="cardiaca.jpeg" alt="Perfil Cardíaco"><div class="card-caption">Perfil Cardíaco</div></div>
+          <div class="card-item"><img src="colesterol.jpeg" alt="Perfil de Colesterol"><div class="card-caption">Perfil de Colesterol</div></div>
+          <div class="card-item"><img src="tiroideo.jpeg" alt="Perfil Tiroideo"><div class="card-caption">Perfil Tiroideo</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOMICILIO -->
+    <div class="vista" id="vista-domicilio">
+      <div class="vista-inner">
+        <h2 class="section-title">Servicio de análisis clínicos a domicilio</h2>
+        <div class="domicilio-linea">
+          <img src="toma.png" alt="Toma a domicilio">
+          <div class="domicilio-card">
+            <p>En <strong>Laboratorio DSL</strong>, tu salud y bienestar son nuestra prioridad. Ponemos a tu disposición el <strong>servicio de análisis clínicos a domicilio</strong>, diseñado para brindarte comodidad, seguridad y atención profesional sin que tengas que salir de casa.<br><br>Nuestro personal capacitado acude hasta tu domicilio con el equipo necesario y bajo estrictos protocolos de higiene y calidad, garantizando los mismos resultados confiables que en nuestras sucursales.<br><br>Ideal para adultos mayores, pacientes con movilidad reducida o personas con agendas ocupadas.</p>
           </div>
         </div>
-        <div class="cot-nota" id="cot-nota">⚠️ <strong>Nota:</strong> Los precios son de referencia. Para cotizaciones empresariales o paquetes especiales, contáctanos directamente.</div>
+        <h3 class="proceso-title">¿Cómo solicitar tu servicio de estudios a domicilio?</h3>
+        <div class="proceso-cards">
+          <div class="proceso-card">
+            <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></div>
+            <h4>Contáctanos</h4>
+            <p>Da clic en <strong>"Agenda tu toma a domicilio"</strong> y proporciónanos los datos básicos: nombre, teléfono, dirección y estudios a realizar.</p>
+          </div>
+          <div class="proceso-card">
+            <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <h4>Agenda tu cita</h4>
+            <p>Indícanos día y hora y te enviaremos tu cotización junto con la confirmación. Aceptamos efectivo, tarjeta o transferencia.</p>
+          </div>
+          <div class="proceso-card">
+            <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12"/><path d="M10 2v7l-4 9a3 3 0 0 0 3 4h6a3 3 0 0 0 3-4l-4-9V2"/></svg></div>
+            <h4>Toma de muestra</h4>
+            <p>Un técnico especializado acudirá puntualmente con el equipo necesario bajo estrictos protocolos de seguridad.</p>
+          </div>
+          <div class="proceso-card">
+            <div class="proceso-icon"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+            <h4>Entrega de resultados</h4>
+            <p>Recibes tus resultados en PDF por correo o WhatsApp. También puedes recogerlos en sucursal si lo prefieres.</p>
+          </div>
+        </div>
+        <div class="cta-domicilio">
+          <a href="https://wa.me/523351286935?text=Hola%20quiero%20agendar%20mi%20toma%20a%20domicilio" target="_blank" rel="noopener noreferrer">AGENDA TU TOMA A DOMICILIO</a>
+        </div>
       </div>
     </div>
-  </section>
+
+    <!-- SUCURSALES -->
+    <div class="vista" id="vista-sucursales">
+      <div class="vista-inner">
+        <h2 class="section-title">Sucursales</h2>
+        <div class="sucursales-contenedor">
+          <p class="descripcion">Contamos con tres ubicaciones estratégicas para ofrecerte mayor comodidad y acceso a nuestros servicios. Cada sucursal está dentro de hospitales y clínicas, garantizando un entorno seguro y atención profesional.<br><br>Usa los mapas para localizar la más cercana y planifica tu visita de manera rápida y eficiente.</p>
+          <div class="sucursal-card">
+            <div class="horario-box"><h3>Hospital Rosette</h3><p>Lunes a Sábado: 08:00 – 21:00</p><p>Domingo: 08:00 – 14:00</p></div>
+            <div class="mapa"><h3>📍 Sucursal Circunvalación Dr. Atl</h3><iframe src="https://www.google.com/maps?q=Av.%20Cvln.%20Dr.%20Atl%20487,%20Monumental,%2044320%20Guadalajara,%20Jal.&hl=es&z=17&output=embed" allowfullscreen loading="lazy"></iframe></div>
+            <div class="imagen"><img src="ross.png" alt="Sucursal Circunvalación Dr. Atl"></div>
+          </div>
+          <div class="sucursal-card">
+            <div class="horario-box"><h3>Sanatorio Providencia</h3><p>Lunes a Sábado: 08:00 – 21:00</p><p>Domingo: 08:00 – 14:00</p></div>
+            <div class="mapa"><h3>📍 Sucursal Niños Héroes, Tlaquepaque</h3><iframe src="https://www.google.com/maps?q=Av.%20Ni%C3%B1os%20H%C3%A9roes%2029,%20Hidalgo,%2045500%20San%20Pedro%20Tlaquepaque,%20Jal.&hl=es&z=17&output=embed" allowfullscreen loading="lazy"></iframe></div>
+            <div class="imagen"><img src="provi.png" alt="Sucursal Niños Héroes"></div>
+          </div>
+          <div class="sucursal-card">
+            <div class="horario-box"><h3>Clínica Vidafem</h3><p>Lunes a Sábado: 08:00 – 16:00</p></div>
+            <div class="mapa"><h3>📍 Sucursal Reforma, Tlaquepaque</h3><iframe src="https://www.google.com/maps?q=C.%20Reforma%20279,%2045500%20San%20Pedro%20Tlaquepaque,%20Jalisco&hl=es&z=17&output=embed" allowfullscreen loading="lazy"></iframe></div>
+            <div class="imagen"><img src="vidafem.jpeg" alt="Sucursal Reforma Tlaquepaque"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACTO -->
+    <div class="vista" id="vista-contacto">
+      <div class="vista-inner">
+        <div class="contacto-inner">
+          <p class="contacto-eyebrow">¿Te gustaría realizar análisis clínicos a tus empleados?</p>
+          <h2 class="contacto-titulo">Contáctanos</h2>
+          <div class="contacto-linea"></div>
+          <form id="contactForm" novalidate style="max-width:650px;margin:0 auto;text-align:left;">
+            <input class="input-pill" id="name" name="name" type="text" placeholder="Tu Nombre" required>
+            <input class="input-pill" id="email" name="email" type="email" placeholder="E-Mail" required>
+            <p class="campo-label">¿En qué podemos ayudarte?</p>
+            <textarea class="input-pill" id="message" name="message" placeholder="Describe aquí tu consulta..."></textarea>
+            <div style="display:flex;justify-content:center;margin-top:18px;">
+              <button type="submit" class="btn-enviar">Enviar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVICIO -->
+    <div class="vista" id="vista-servicio">
+      <div class="vista-inner">
+        <h2 class="section-title">Servicio de Laboratorio</h2>
+
+        <div id="srv-lock">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1.4rem;
+                      background:linear-gradient(145deg,#f0f7fb,#d9edf6);
+                      border-radius:28px;padding:3rem 2rem;
+                      box-shadow:0 12px 32px rgba(0,0,0,0.12);
+                      max-width:440px;margin:0 auto;">
+            <div style="font-size:3.2rem;">🔐</div>
+            <h3 style="font-size:1.4rem;color:var(--azul);font-weight:800;">Acceso Restringido</h3>
+            <p style="color:#555;font-size:1rem;text-align:center;">Ingresa tus credenciales para acceder al sistema de órdenes.</p>
+            <div style="display:flex;flex-direction:column;gap:.7rem;width:100%;max-width:340px;">
+              <input id="srv-user" type="text" placeholder="Usuario"
+                     style="padding:13px 18px;border-radius:50px;border:2px solid #c5daea;
+                            background:#fff;font-size:1rem;outline:none;font-family:inherit;
+                            transition:border-color .2s;width:100%;">
+              <input id="srv-pass" type="password" placeholder="Contraseña"
+                     style="padding:13px 18px;border-radius:50px;border:2px solid #c5daea;
+                            background:#fff;font-size:1rem;outline:none;font-family:inherit;
+                            transition:border-color .2s;width:100%;">
+              <button onclick="srvLogin()"
+                      style="padding:13px;background:var(--azul);color:#fff;border:none;
+                             border-radius:50px;font-weight:700;cursor:pointer;
+                             font-family:inherit;font-size:1rem;
+                             transition:background .2s;width:100%;">
+                Entrar
+              </button>
+            </div>
+            <span id="srv-error" style="color:#e53935;font-size:.9rem;font-weight:600;display:none;">
+              Usuario o contraseña incorrectos.
+            </span>
+          </div>
+        </div>
+
+        <div id="srv-content" style="display:none;">
+
+          <div style="display:flex;justify-content:space-between;align-items:center;
+                      margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+            <p style="color:var(--azul);font-weight:700;font-size:1rem;">
+              ✅ Sesión activa — <span id="srv-sesion-nombre" style="color:var(--celeste);"></span>
+            </p>
+            <button onclick="srvLogout()"
+                    style="padding:8px 20px;background:transparent;
+                           border:2px solid var(--azul);color:var(--azul);
+                           border-radius:50px;font-weight:700;cursor:pointer;
+                           font-family:inherit;font-size:.9rem;transition:all .2s;"
+                    onmouseover="this.style.background='var(--azul)';this.style.color='#fff'"
+                    onmouseout="this.style.background='transparent';this.style.color='var(--azul)'">
+              🔒 Cerrar sesión
+            </button>
+          </div>
+
+          <div id="srv-layout"
+               style="display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start;">
+
+            <div>
+              <div style="background:#fff;border-radius:22px;
+                          box-shadow:0 6px 22px rgba(0,0,0,0.09);
+                          padding:1.8rem 2rem;margin-bottom:1.5rem;">
+                <h3 style="color:var(--azul);font-size:1.15rem;font-weight:800;
+                            margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem;">
+                  🧑‍⚕️ Datos del Paciente
+                </h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+
+                  <div style="grid-column:1/-1;">
+                    <label style="font-size:.82rem;font-weight:700;color:#666;
+                                   text-transform:uppercase;letter-spacing:.5px;">Nombre completo *</label>
+                    <input id="srv-nombre" type="text" placeholder="Nombre del paciente"
+                           style="display:block;width:100%;margin-top:.35rem;padding:11px 16px;border-radius:12px;
+                                  border:1.5px solid #d0dce8;background:#f7fafc;font-size:1rem;outline:none;
+                                  font-family:inherit;transition:border-color .2s;">
+                  </div>
+
+                  <div>
+                    <label style="font-size:.82rem;font-weight:700;color:#666;
+                                   text-transform:uppercase;letter-spacing:.5px;">Edad *</label>
+                    <input id="srv-edad" type="number" min="0" max="130" placeholder="Años"
+                           style="display:block;width:100%;margin-top:.35rem;padding:11px 16px;border-radius:12px;
+                                  border:1.5px solid #d0dce8;background:#f7fafc;font-size:1rem;outline:none;
+                                  font-family:inherit;transition:border-color .2s;">
+                  </div>
+
+                  <div>
+                    <label style="font-size:.82rem;font-weight:700;color:#666;
+                                   text-transform:uppercase;letter-spacing:.5px;">Fecha de nacimiento *</label>
+                    <input id="srv-fechanac" type="date"
+                           style="display:block;width:100%;margin-top:.35rem;padding:11px 16px;border-radius:12px;
+                                  border:1.5px solid #d0dce8;background:#f7fafc;font-size:1rem;outline:none;
+                                  font-family:inherit;transition:border-color .2s;">
+                  </div>
+
+                  <div>
+                    <label style="font-size:.82rem;font-weight:700;color:#666;
+                                   text-transform:uppercase;letter-spacing:.5px;">Sexo *</label>
+                    <select id="srv-sexo"
+                            style="display:block;width:100%;margin-top:.35rem;padding:11px 16px;border-radius:12px;
+                                   border:1.5px solid #d0dce8;background:#f7fafc;font-size:1rem;outline:none;
+                                   font-family:inherit;transition:border-color .2s;cursor:pointer;">
+                      <option value="">Seleccionar…</option>
+                      <option value="Masculino">Masculino</option>
+                      <option value="Femenino">Femenino</option>
+                      <option value="Otro">Otro</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style="font-size:.82rem;font-weight:700;color:#666;
+                                   text-transform:uppercase;letter-spacing:.5px;">Nombre del médico *</label>
+                    <input id="srv-medico" type="text" placeholder="Dr./Dra. …"
+                           style="display:block;width:100%;margin-top:.35rem;padding:11px 16px;border-radius:12px;
+                                  border:1.5px solid #d0dce8;background:#f7fafc;font-size:1rem;outline:none;
+                                  font-family:inherit;transition:border-color .2s;">
+                  </div>
+
+                  <div>
+                    <label style="font-size:.82rem;font-weight:700;color:#666;
+                                   text-transform:uppercase;letter-spacing:.5px;">Hora de toma *</label>
+                    <input id="srv-hora" type="time"
+                           style="display:block;width:100%;margin-top:.35rem;padding:11px 16px;border-radius:12px;
+                                  border:1.5px solid #d0dce8;background:#f7fafc;font-size:1rem;outline:none;
+                                  font-family:inherit;transition:border-color .2s;">
+                  </div>
+
+                </div>
+              </div>
+
+              <div style="background:#fff;border-radius:22px;
+                          box-shadow:0 6px 22px rgba(0,0,0,0.09);
+                          padding:1.8rem 2rem;">
+                <h3 style="color:var(--azul);font-size:1.15rem;font-weight:800;
+                            margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;">
+                  🔬 Catálogo de Estudios
+                </h3>
+
+                <div style="position:relative;margin-bottom:1rem;">
+                  <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#aaa;pointer-events:none;"
+                       width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  <input id="srv-search" type="text" placeholder="Buscar estudio…" oninput="srvFiltrar()"
+                         style="width:100%;padding:12px 18px 12px 42px;border-radius:50px;border:2px solid #c5daea;
+                                background:#f8fbfe;font-size:.97rem;outline:none;font-family:inherit;
+                                transition:border-color .2s;box-shadow:0 3px 10px rgba(0,0,0,0.05);">
+                </div>
+
+                <div id="srv-lista"
+                     style="max-height:420px;overflow-y:auto;border-radius:14px;
+                            background:#f8fbfe;border:1px solid #e4edf5;
+                            -webkit-overflow-scrolling:touch;">
+                </div>
+
+                <!-- BOTÓN PROCESAR EN MÓVIL (visible solo en pantallas pequeñas) -->
+                <div id="srv-procesar-movil" style="display:none;margin-top:1.2rem;">
+                  <button onclick="srvProcesar()"
+                          style="width:100%;padding:14px;
+                                 background:linear-gradient(135deg,#25D366,#1da851);
+                                 color:#fff;border:none;border-radius:14px;
+                                 font-weight:800;font-size:1rem;cursor:pointer;
+                                 font-family:inherit;letter-spacing:.3px;
+                                 box-shadow:0 6px 18px rgba(37,211,102,.35);
+                                 display:flex;align-items:center;justify-content:center;gap:.6rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22">
+                      <path d="M20.52 3.48A11.78 11.78 0 0012 0C5.373 0 0 5.373 0 12a11.9 11.9 0 001.68 6L0 24l6-1.68A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12a11.78 11.78 0 00-3.48-8.52zM12 21.75a9.63 9.63 0 01-5.156-1.52l-.37-.222-3.5 1 1-3.407-.242-.37A9.56 9.56 0 012.25 12 9.75 9.75 0 1121.75 12 9.7 9.7 0 0112 21.75zm5.14-7.46c-.27-.13-1.6-.79-1.84-.88s-.44-.13-.62.13-.71.88-.87 1.06-.32.2-.6.07a7.44 7.44 0 01-2.19-1.36 8.3 8.3 0 01-1.54-1.9c-.16-.27 0-.42.12-.56.13-.13.29-.32.44-.48a1.75 1.75 0 00.26-.43.39.39 0 000-.48c-.13-.13-.62-1.5-.85-2.06s-.44-.47-.61-.47-.42 0-.64 0a1.38 1.38 0 00-.5.24 2.06 2.06 0 00-.74.72 3.18 3.18 0 00-1 2.4 4.88 4.88 0 001.4 3.47 9.58 9.58 0 004.82 3.11 4.62 4.62 0 002.24.12 2.4 2.4 0 001.53-1.4 2.68 2.68 0 00.19-1.28c-.06-.12-.27-.18-.56-.31z"/>
+                    </svg>
+                    Procesar Orden por WhatsApp
+                  </button>
+                  <p style="font-size:.76rem;color:#aaa;text-align:center;margin-top:.6rem;line-height:1.4;">
+                    Se abrirá WhatsApp con todos los datos listos para enviar.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div id="srv-carrito-wrap"
+                 style="background:#fff;border-radius:22px;
+                        box-shadow:0 6px 22px rgba(0,0,0,0.10);
+                        overflow:hidden;position:sticky;top:16px;">
+
+              <div style="background:var(--azul);color:#fff;
+                          padding:1rem 1.3rem;font-weight:800;font-size:1rem;
+                          display:flex;align-items:center;gap:.5rem;">
+                🧾 Estudios seleccionados
+              </div>
+
+              <div id="srv-carrito-vacio"
+                   style="padding:2rem 1.3rem;color:#aaa;font-size:.9rem;text-align:center;">
+                Aún no has agregado ningún estudio.
+              </div>
+
+              <div id="srv-carrito-items" style="max-height:320px;overflow-y:auto;"></div>
+
+              <div id="srv-carrito-total"
+                   style="display:none;padding:1rem 1.3rem;
+                          border-top:2px solid #eef2f6;background:#f8fbfe;">
+                <div style="display:flex;justify-content:space-between;align-items:center;
+                            font-weight:900;color:var(--azul);font-size:1.15rem;">
+                  <span>Total</span>
+                  <span id="srv-total-monto">$0.00</span>
+                </div>
+                <div id="srv-total-cant"
+                     style="font-size:.8rem;color:#888;font-weight:600;margin-top:3px;text-align:right;"></div>
+                <button onclick="srvLimpiarCarrito()"
+                        style="margin-top:.8rem;width:100%;padding:8px;
+                               background:transparent;border:1.5px solid #ddd;
+                               color:#888;border-radius:50px;cursor:pointer;
+                               font-family:inherit;font-size:.85rem;transition:all .2s;"
+                        onmouseover="this.style.borderColor='#e53935';this.style.color='#e53935'"
+                        onmouseout="this.style.borderColor='#ddd';this.style.color='#888'">
+                  🗑 Limpiar todo
+                </button>
+              </div>
+
+              <div style="padding:1.1rem 1.3rem;border-top:2px solid #eef2f6;">
+                <button onclick="srvProcesar()" id="srv-btn-procesar"
+                        style="width:100%;padding:14px;
+                               background:linear-gradient(135deg,#25D366,#1da851);
+                               color:#fff;border:none;border-radius:14px;
+                               font-weight:800;font-size:1rem;cursor:pointer;
+                               font-family:inherit;letter-spacing:.3px;
+                               box-shadow:0 6px 18px rgba(37,211,102,.35);
+                               transition:transform .15s,box-shadow .15s;
+                               display:flex;align-items:center;
+                               justify-content:center;gap:.6rem;">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22">
+                    <path d="M20.52 3.48A11.78 11.78 0 0012 0C5.373 0 0 5.373 0 12a11.9 11.9 0 001.68 6L0 24l6-1.68A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12a11.78 11.78 0 00-3.48-8.52zM12 21.75a9.63 9.63 0 01-5.156-1.52l-.37-.222-3.5 1 1-3.407-.242-.37A9.56 9.56 0 012.25 12 9.75 9.75 0 1121.75 12 9.7 9.7 0 0112 21.75zm5.14-7.46c-.27-.13-1.6-.79-1.84-.88s-.44-.13-.62.13-.71.88-.87 1.06-.32.2-.6.07a7.44 7.44 0 01-2.19-1.36 8.3 8.3 0 01-1.54-1.9c-.16-.27 0-.42.12-.56.13-.13.29-.32.44-.48a1.75 1.75 0 00.26-.43.39.39 0 000-.48c-.13-.13-.62-1.5-.85-2.06s-.44-.47-.61-.47-.42 0-.64 0a1.38 1.38 0 00-.5.24 2.06 2.06 0 00-.74.72 3.18 3.18 0 00-1 2.4 4.88 4.88 0 001.4 3.47 9.58 9.58 0 004.82 3.11 4.62 4.62 0 002.24.12 2.4 2.4 0 001.53-1.4 2.68 2.68 0 00.19-1.28c-.06-.12-.27-.18-.56-.31z"/>
+                  </svg>
+                  Procesar Orden por WhatsApp
+                </button>
+                <p style="font-size:.76rem;color:#aaa;text-align:center;margin-top:.6rem;line-height:1.4;">
+                  Se abrirá WhatsApp con todos los datos listos para enviar.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- COTIZACIONES -->
+    <div class="vista" id="vista-cotizaciones">
+      <div class="vista-inner">
+        <h2 class="section-title">Cotizaciones</h2>
+        <div id="cot-lock">
+          <div class="lock-icon">🔒</div>
+          <h3>Área restringida</h3>
+          <p>Ingresa tu usuario y contraseña para acceder a las cotizaciones.</p>
+          <div class="pass-wrap" style="flex-direction:column;gap:0.6rem;">
+            <input type="text"     id="cot-user" placeholder="Usuario"    autocomplete="off" style="border-radius:50px;border:2px solid #c5daea;padding:12px 16px;font-size:1rem;outline:none;font-family:inherit;transition:border-color 0.2s;width:100%;">
+            <input type="password" id="cot-pass" placeholder="Contraseña" autocomplete="off" style="border-radius:50px;border:2px solid #c5daea;padding:12px 16px;font-size:1rem;outline:none;font-family:inherit;transition:border-color 0.2s;width:100%;">
+            <button class="btn-desbloquear" style="width:100%;" onclick="desbloquearCotizaciones()">Entrar</button>
+          </div>
+          <span id="cot-error">Usuario o contraseña incorrectos. Intenta de nuevo.</span>
+        </div>
+        <div id="cot-content">
+          <div class="cot-header">
+            <p style="color:var(--azul);font-weight:600;">✅ Sesión activa — <span id="cot-sucursal-nombre"></span></p>
+            <button class="btn-cerrar-sesion" onclick="cerrarSesion()">🔒 Cerrar sesión</button>
+          </div>
+          <div class="cot-layout">
+            <div>
+              <div class="cot-buscador">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="cot-search" placeholder="Buscar estudio o paquete..." oninput="filtrarEstudios()">
+              </div>
+              <div class="cot-lista" id="cot-lista"></div>
+            </div>
+            <div class="cot-carrito">
+              <div class="carrito-titulo">🧾 Estudios seleccionados</div>
+              <div id="carrito-vacio" class="carrito-vacio">Aún no has seleccionado ningún estudio.</div>
+              <div class="carrito-items" id="carrito-items"></div>
+              <div class="carrito-total" id="carrito-total" style="display:none;">
+                <div class="total-linea"><span>Total</span><span id="carrito-total-precio">$0.00</span></div>
+                <div class="total-cantidad" id="carrito-cantidad"></div>
+                <button class="btn-limpiar" onclick="limpiarCarrito()">🗑 Limpiar todo</button>
+              </div>
+            </div>
+            <div class="cot-nota" id="cot-nota">⚠️ <strong>Nota:</strong> Los precios son de referencia. Para cotizaciones empresariales o paquetes especiales, contáctanos directamente.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /#app -->
 
   <!-- FAB MÓVIL -->
-  <button id="carrito-fab" onclick="abrirPanelMovil()" style="display:none;" aria-label="Ver carrito">🧾 <span id="fab-count">0</span></button>
+  <button id="carrito-fab" onclick="abrirPanelMovil()" aria-label="Ver carrito">🧾 <span id="fab-count">0</span></button>
   <div id="carrito-overlay" onclick="cerrarPanelMovil()"></div>
   <div id="carrito-panel-movil">
     <div class="panel-header">
@@ -716,29 +967,42 @@
     <div class="footer-inner">
       <div class="footer-redes">
         <a href="https://www.facebook.com/profile.php?id=61579381267385" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.406.593 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.312h3.588l-.467 3.622h-3.121V24h6.116c.73 0 1.324-.593 1.324-1.324V1.325C24 .593 23.406 0 22.675 0z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.406.593 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.312h3.588l-.467 3.622h-3.121V24h6.116c.73 0 1.324-.593 1.324-1.324V1.325C24 .593 23.406 0 22.675 0z"/></svg>
         </a>
         <a href="https://www.instagram.com/dsl_lab?igsh=OXo4dDB1a29vazhk" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.206.056 2.007.248 2.48.415a4.92 4.92 0 011.675 1.045 4.92 4.92 0 011.045 1.675c.167.473.359 1.274.415 2.48.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.056 1.206-.248 2.007-.415 2.48a4.918 4.918 0 01-1.045 1.675 4.918 4.918 0 01-1.675 1.045c-.473.167-1.274.359-2.48.415-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.206-.056-2.007-.248-2.48-.415a4.92 4.92 0 01-1.675-1.045 4.92 4.92 0 01-1.045-1.675c-.167-.473-.359-1.274-.415-2.48C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.056-1.206.248-2.007.415-2.48a4.92 4.92 0 011.045-1.675 4.92 4.92 0 011.675-1.045c.473-.167 1.274-.359 2.48-.415C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.735 0 8.332.012 7.052.07 5.77.128 4.6.34 3.515.735a7.08 7.08 0 00-2.57 1.67A7.08 7.08 0 00.735 4.975C.34 6.06.128 7.23.07 8.512.012 9.792 0 10.195 0 12c0 1.805.012 2.208.07 3.488.058 1.282.27 2.452.665 3.537a7.086 7.086 0 001.67 2.57 7.086 7.086 0 002.57 1.67c1.085.395 2.255.607 3.537.665C9.792 23.988 10.195 24 12 24s2.208-.012 3.488-.07c1.282-.058 2.452-.27 3.537-.665a7.08 7.08 0 002.57-1.67 7.08 7.08 0 001.67-2.57c.395-1.085.607-2.255.665-3.537.058-1.28.07-1.683.07-3.488s-.012-2.208-.07-3.488c-.058-1.282-.27-2.452-.665-3.537a7.08 7.08 0 00-1.67-2.57 7.08 7.08 0 00-2.57-1.67C16.452.34 15.282.128 14 .07 12.72.012 12.317 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.206.056 2.007.248 2.48.415a4.92 4.92 0 011.675 1.045 4.92 4.92 0 011.045 1.675c.167.473.359 1.274.415 2.48.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.056 1.206-.248 2.007-.415 2.48a4.918 4.918 0 01-1.045 1.675 4.918 4.918 0 01-1.675 1.045c-.473.167-1.274.359-2.48.415-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.206-.056-2.007-.248-2.48-.415a4.92 4.92 0 01-1.675-1.045 4.92 4.92 0 01-1.045-1.675c-.167-.473-.359-1.274-.415-2.48C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.056-1.206.248-2.007.415-2.48a4.92 4.92 0 011.045-1.675 4.92 4.92 0 011.675-1.045c.473-.167 1.274-.359 2.48-.415C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.735 0 8.332.012 7.052.07 5.77.128 4.6.34 3.515.735a7.08 7.08 0 00-2.57 1.67A7.08 7.08 0 00.735 4.975C.34 6.06.128 7.23.07 8.512.012 9.792 0 10.195 0 12c0 1.805.012 2.208.07 3.488.058 1.282.27 2.452.665 3.537a7.086 7.086 0 001.67 2.57 7.086 7.086 0 002.57 1.67c1.085.395 2.255.607 3.537.665C9.792 23.988 10.195 24 12 24s2.208-.012 3.488-.07c1.282-.058 2.452-.27 3.537-.665a7.08 7.08 0 002.57-1.67 7.08 7.08 0 001.67-2.57c.395-1.085.607-2.255.665-3.537.058-1.28.07-1.683.07-3.488s-.012-2.208-.07-3.488c-.058-1.282-.27-2.452-.665-3.537a7.08 7.08 0 00-1.67-2.57 7.08 7.08 0 00-2.57-1.67C16.452.34 15.282.128 14 .07 12.72.012 12.317 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
         </a>
         <a href="tel:3351286935">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.05-.24c1.12.37 2.33.57 3.54.57.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.29 21 3 13.71 3 4c0-.55.45-1 1-1H7.5c.55 0 1 .45 1 1 0 1.21.2 2.42.57 3.54.13.37.04.78-.24 1.05l-2.21 2.2z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.05-.24c1.12.37 2.33.57 3.54.57.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.29 21 3 13.71 3 4c0-.55.45-1 1-1H7.5c.55 0 1 .45 1 1 0 1.21.2 2.42.57 3.54.13.37.04.78-.24 1.05l-2.21 2.2z"/></svg>
           <span>33 5128 6935</span>
         </a>
       </div>
-      <div>©️ 2025 Diagnóstico Santa Lucía | Innovando el diagnóstico médico</div>
+      <div>Jairzinho Martinez Hernandez | UV Química Clínica | Céd. 10485875</div>
     </div>
   </footer>
 
   <script>
-    // LOADER — máximo 800ms, no espera recursos externos
+    // LOADER
     function ocultarLoader() { document.getElementById('loader').style.display = 'none'; }
     document.addEventListener('DOMContentLoaded', () => setTimeout(ocultarLoader, 800));
     window.addEventListener('load', ocultarLoader);
 
-    // SLIDER
+    // ===== SISTEMA DE VISTAS =====
+    const navLinks = document.querySelectorAll('.nav-buttons a');
+
+    function mostrarVista(id) {
+      document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
+      const target = document.getElementById('vista-' + id);
+      if (target) { target.classList.add('activa'); target.scrollTop = 0; }
+      navLinks.forEach(a => {
+        a.classList.remove('active-link');
+        if ((a.getAttribute('onclick') || '').includes("'" + id + "'")) a.classList.add('active-link');
+      });
+      document.getElementById('navMenu').classList.remove('active');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      // SLIDER DE FONDO
+      // SLIDER
       const container = document.getElementById('header-slider-container');
       const srcs = ['1.jpeg','2.jpeg','3.jpeg','4.jpeg','5.jpeg','6.jpeg'];
       let idx = 0;
@@ -761,27 +1025,15 @@
         const p = document.createElement('div');
         p.className = 'particle';
         const size = Math.random() * 5 + 2;
-        p.style.cssText = `
-          width:${size}px; height:${size}px;
-          left:${Math.random()*100}%;
-          animation-duration:${Math.random()*15+10}s;
-          animation-delay:${Math.random()*10}s;
-          opacity:${Math.random()*0.4+0.1};
-        `;
+        p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*0.4+0.1};`;
         pContainer.appendChild(p);
       }
-
-      // ANIMACIONES
-      const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate-slide-in'); obs.unobserve(e.target); } });
-      }, { threshold: 0.1 });
-      document.querySelectorAll('.section-observable').forEach(el => observer.observe(el));
 
       // MODAL IMÁGENES
       const modal = document.getElementById('img-modal');
       const modalImg = document.getElementById('img-modal-content');
-      document.querySelectorAll('#analisis_clinicos .card-item img').forEach(img => {
-        img.addEventListener('click', () => { modal.style.display = 'flex'; modalImg.src = img.src; modalImg.alt = img.alt; });
+      document.querySelectorAll('#vista-analisis_clinicos .card-item img').forEach(img => {
+        img.addEventListener('click', () => { modal.style.display = 'flex'; modalImg.src = img.src; });
       });
       modal.addEventListener('click', () => { modal.style.display = 'none'; });
       document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.style.display = 'none'; });
@@ -793,7 +1045,6 @@
       document.addEventListener('click', e => {
         if (menu.classList.contains('active') && !menu.contains(e.target) && !toggle.contains(e.target)) menu.classList.remove('active');
       });
-      // No agregar listener aquí — el onclick en el HTML ya llama irA() y cierra el menú
 
       // CONTACTO
       document.getElementById('contactForm').addEventListener('submit', function(e) {
@@ -806,25 +1057,24 @@
         this.reset();
       });
 
-      // SCROLL CON OFFSET — definida aquí dentro del DOMContentLoaded no es accesible desde onclick
       document.getElementById('cot-pass').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
       document.getElementById('cot-user').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
+
+      // RESPONSIVE SERVICIO: mostrar botón procesar en móvil
+      const mq = window.matchMedia('(max-width:860px)');
+      const ajustarServicio = () => {
+        const layout = document.getElementById('srv-layout');
+        const carrito = document.getElementById('srv-carrito-wrap');
+        const btnMovil = document.getElementById('srv-procesar-movil');
+        if (layout) layout.style.gridTemplateColumns = mq.matches ? '1fr' : '1fr 360px';
+        if (carrito) carrito.style.display = mq.matches ? 'none' : 'block';
+        if (btnMovil) btnMovil.style.display = mq.matches ? 'block' : 'none';
+      };
+      ajustarServicio();
+      mq.addEventListener('change', ajustarServicio);
     });
 
-    // FUNCIÓN GLOBAL DE SCROLL CON OFFSET (fuera del DOMContentLoaded para ser accesible desde onclick)
-    function irA(id) {
-      // Cerrar menú hamburguesa si está abierto
-      const menu = document.getElementById('navMenu');
-      if (menu) menu.classList.remove('active');
-      // Offset según tamaño de pantalla
-      const offset = window.innerWidth <= 768 ? 56 : 70;
-      const el = document.getElementById(id);
-      if (!el) return;
-      const y = el.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
-
-    // ===== USUARIOS Y LISTAS POR SUCURSAL =====
+    // ===== COTIZACIONES =====
     const usuarios = {
       'vidafem':    { pass: 'LaboratorioDSL', nombre: 'Clínica Vidafem',       estudios: 'vidafem' },
       'providencia':{ pass: 'LaboratorioDSL', nombre: 'Sanatorio Providencia', estudios: 'providencia' },
@@ -868,7 +1118,7 @@
         { nombre:"Perfil Tiroideo Básico",                   muestra:"TSH, T3 Total, T4 Total (Ayuno 4 horas)",                          precio:495 },
         { nombre:"Perfil Tiroideo Completo",                 muestra:"TSH, T3 Total, T4 Total, T3 Libre, T4 Libre, T3C, ITL",            precio:825 },
         { nombre:"Perfil Torch",                             muestra:"Suero (Ayuno 8 hrs)",                                              precio:2310},
-        { nombre:"Perfil Toxémico",                          muestra:"QS(4), TGO, TGP, DHL, BIL, BH, EGO",                              precio:1200 },
+        { nombre:"Perfil Toxémico",                          muestra:"QS(4), TGO, TGP, DHL, BIL, BH, EGO",                              precio:0   },
         { nombre:"Progesterona",                             muestra:"Suero",                                                             precio:210 },
         { nombre:"Prolactina",                               muestra:"Suero (Ayuno 4 horas)",                                            precio:210 },
         { nombre:"Prueba de Embarazo Cuantitativa (HGC)",    muestra:"Suero",                                                             precio:440 },
@@ -876,7 +1126,7 @@
         { nombre:"Química sanguínea 4 elementos",            muestra:"GLU, UREA, CREAT, AU (Ayuno 8 horas)",                             precio:330 },
         { nombre:"Química sanguínea 6 elementos",            muestra:"GLU, UREA, CREAT, AU, COL, TRIG (Ayuno 8 horas)",                  precio:440 },
         { nombre:"Rotavirus y Adenovirus",                   muestra:"Heces recientes",                                                   precio:550 },
-        { nombre:"Serología Herpes 1 y 2",                   muestra:"Suero",                                                             precio:1200},
+        { nombre:"Serología Herpes 1 y 2",                   muestra:"Suero",                                                             precio:1320},
         { nombre:"T4L",                                      muestra:"Suero (Ayuno 8 horas)",                                            precio:198 },
         { nombre:"Tamiz Ampliado 69 parámetros",             muestra:"Papel tamiz",                                                       precio:2200},
         { nombre:"Tamiz Básico 25 parámetros",               muestra:"Papel tamiz",                                                       precio:1200},
@@ -887,25 +1137,16 @@
         { nombre:"TTP",                                      muestra:"Plasma Citratado",                                                  precio:170 },
         { nombre:"VDRL",                                     muestra:"Suero",                                                             precio:150 },
       ],
-      providencia: [
-        // Lista pendiente — agregar estudios cuando estén disponibles
-      ],
+      providencia: [],
     };
 
-    let estudios = [];
-    let carrito  = [];
+    let estudios = [], carrito = [];
 
-    function fmt(n) {
-      if (n === 0) return 'Consultar';
-      return '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2});
-    }
+    function fmt(n) { return n === 0 ? 'Consultar' : '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 
     function renderLista(filtro='') {
       const lista = document.getElementById('cot-lista');
-      if (!estudios.length) {
-        lista.innerHTML = '<div class="sin-resultados">📋 La lista de esta sucursal aún no está disponible. Pronto se actualizará.</div>';
-        return;
-      }
+      if (!estudios.length) { lista.innerHTML = '<div class="sin-resultados">📋 La lista de esta sucursal aún no está disponible.</div>'; return; }
       const lower = filtro.toLowerCase();
       const fil = estudios.filter(e => e.nombre.toLowerCase().includes(lower) || e.muestra.toLowerCase().includes(lower));
       if (!fil.length) { lista.innerHTML = '<div class="sin-resultados">No se encontraron estudios.</div>'; return; }
@@ -924,17 +1165,14 @@
       const ci=document.getElementById('carrito-items'), cv=document.getElementById('carrito-vacio'),
             ct=document.getElementById('carrito-total'), cp=document.getElementById('carrito-total-precio'),
             cc=document.getElementById('carrito-cantidad'), pi=document.getElementById('panel-items'),
-            pv=document.getElementById('panel-vacio'),     pt=document.getElementById('panel-total'),
+            pv=document.getElementById('panel-vacio'), pt=document.getElementById('panel-total'),
             pp=document.getElementById('panel-total-precio'), pc=document.getElementById('panel-cantidad'),
-            fab=document.getElementById('carrito-fab'),    fc=document.getElementById('fab-count');
-
+            fab=document.getElementById('carrito-fab'), fc=document.getElementById('fab-count');
       if (fab) fab.style.display = carrito.length ? 'flex' : 'none';
       if (fc)  fc.textContent = carrito.length;
-
-      const html  = carrito.map(i => `<div class="carrito-item"><span class="carrito-item-nombre">${estudios[i].nombre}</span><span class="carrito-item-precio">${fmt(estudios[i].precio)}</span><button class="btn-quitar" onclick="quitarEstudio(${i})">✕</button></div>`).join('');
+      const html = carrito.map(i => `<div class="carrito-item"><span class="carrito-item-nombre">${estudios[i].nombre}</span><span class="carrito-item-precio">${fmt(estudios[i].precio)}</span><button class="btn-quitar" onclick="quitarEstudio(${i})">✕</button></div>`).join('');
       const total = carrito.reduce((s,i) => s + estudios[i].precio, 0);
-      const cant  = `${carrito.length} estudio${carrito.length!==1?'s':''} seleccionado${carrito.length!==1?'s':''}`;
-
+      const cant = `${carrito.length} estudio${carrito.length!==1?'s':''} seleccionado${carrito.length!==1?'s':''}`;
       if (!carrito.length) {
         if(ci) ci.innerHTML=''; if(cv) cv.style.display='block'; if(ct) ct.style.display='none';
         if(pi) pi.innerHTML=''; if(pv) pv.style.display='block'; if(pt) pt.style.display='none';
@@ -946,24 +1184,17 @@
       }
     }
 
-    function toggleEstudio(i) {
-      const p = carrito.indexOf(i);
-      if (p===-1) carrito.push(i); else carrito.splice(p,1);
-      renderLista(document.getElementById('cot-search').value);
-      renderCarrito();
-    }
-    function quitarEstudio(i)  { carrito=carrito.filter(x=>x!==i); renderLista(document.getElementById('cot-search').value); renderCarrito(); }
-    function limpiarCarrito()  { carrito=[]; renderLista(document.getElementById('cot-search').value); renderCarrito(); cerrarPanelMovil(); }
+    function toggleEstudio(i) { const p=carrito.indexOf(i); if(p===-1) carrito.push(i); else carrito.splice(p,1); renderLista(document.getElementById('cot-search').value); renderCarrito(); }
+    function quitarEstudio(i) { carrito=carrito.filter(x=>x!==i); renderLista(document.getElementById('cot-search').value); renderCarrito(); }
+    function limpiarCarrito() { carrito=[]; renderLista(document.getElementById('cot-search').value); renderCarrito(); cerrarPanelMovil(); }
     function filtrarEstudios() { renderLista(document.getElementById('cot-search').value); }
-
     function abrirPanelMovil()  { document.getElementById('carrito-panel-movil').classList.add('open'); document.getElementById('carrito-overlay').classList.add('active'); document.body.style.overflow='hidden'; }
     function cerrarPanelMovil() { document.getElementById('carrito-panel-movil').classList.remove('open'); document.getElementById('carrito-overlay').classList.remove('active'); document.body.style.overflow=''; }
 
     function desbloquearCotizaciones() {
-      const user  = document.getElementById('cot-user').value.trim().toLowerCase();
-      const pass  = document.getElementById('cot-pass').value;
+      const user = document.getElementById('cot-user').value.trim().toLowerCase();
+      const pass = document.getElementById('cot-pass').value;
       const error = document.getElementById('cot-error');
-
       const cuenta = usuarios[user];
       if (cuenta && cuenta.pass === pass) {
         document.getElementById('cot-lock').style.display = 'none';
@@ -971,7 +1202,7 @@
         document.getElementById('cot-sucursal-nombre').textContent = cuenta.nombre;
         error.style.display = 'none';
         estudios = listasPorSucursal[cuenta.estudios] || [];
-        carrito  = [];
+        carrito = [];
         renderLista(); renderCarrito();
       } else {
         ['cot-user','cot-pass'].forEach(id => {
@@ -993,7 +1224,640 @@
       cerrarPanelMovil();
     }
 
+    // ===== SERVICIO =====
+    const SRV_USUARIOS = {
+      medijar:   { pass: 'U2020', nombre: 'MEDIJAR' },
+      santonio:  { pass: '3030',  nombre: 'SANTONIO' },
+      fbd:       { pass: '4040',  nombre: 'FBD' },
+    };
+
+    const SRV_ESTUDIOS = [
+      { nombre:"17-ALFA-HIDROXI-PROGESTERONA",                           muestra:"Ayuno de 4 horas",       precio:220    },
+      { nombre:"AC. ANTI Ag C HEPATITIS B (Anti-HBc TOTAL)",             muestra:"Ayuno de 4 horas",       precio:241    },
+      { nombre:"AC. ANTI AG C HEPATITIS B IgG (Anti-HBcG)",              muestra:"Ayuno de 4 horas",       precio:241    },
+      { nombre:"AC. ANTI AG C HEPATITIS B IgM (Anti-HBcM)",              muestra:"Ayuno de 4 horas",       precio:241    },
+      { nombre:"AC. ANTI Ag CAPSIDE DEL VIRUS EPSTEIN BARR",             muestra:"Ayuno de 4 horas",       precio:592    },
+      { nombre:"AC. ANTI Ag E HEPATITIS B (Anti-HBe)",                   muestra:"Ayuno de 4 horas",       precio:241    },
+      { nombre:"AC. ANTI AG EPSTEIN BARR IgG E IgM CAPSIDE",             muestra:"Ayuno de 4 horas",       precio:753    },
+      { nombre:"AC. ANTI AG HEPATICO SOLUBLE SLA",                       muestra:"Ayuno de 4 horas",       precio:1855   },
+      { nombre:"AC. ANTI AG S HEPATITIS B (Anti-HBs)",                   muestra:"Ayuno de 4 horas",       precio:241    },
+      { nombre:"AC. ANTI AMEBA (SEROAMEBA)",                             muestra:"Ayuno de 4 horas",       precio:269    },
+      { nombre:"AC. ANTI Babesia microti IGG E IGM",                     muestra:"Ayuno de 4 horas",       precio:1210   },
+      { nombre:"AC. ANTI BARTONELLA IgG E IgM",                          muestra:"Ayuno de 4 horas",       precio:2303   },
+      { nombre:"AC. ANTI BETA 2 GLICOPROTEINA 1 (B2,GP1)",               muestra:"Ayuno de 4 horas",       precio:355    },
+      { nombre:"AC. ANTI BETA 2 GLICOPROTEINA 1 (IgG, IgM, IgA)",        muestra:"Ayuno de 4 horas",       precio:985    },
+      { nombre:"AC. ANTI BETA 2 GLICOPROTEINA IgA",                      muestra:"Ayuno de 4 horas",       precio:498    },
+      { nombre:"AC. ANTI BETA 2 GLICOPROTEINA IgM",                      muestra:"Ayuno de 4 horas",       precio:499    },
+      { nombre:"AC. ANTI BORDETELLA PERTUSSIS",                           muestra:"Ayuno de 4 horas",       precio:648    },
+      { nombre:"AC. ANTI BORRELLIA BURGDORFERI IgG E IgM",               muestra:"Ayuno de 4 horas",       precio:648    },
+      { nombre:"AC. ANTI BRUCELLA 2-MERCAPTO ETANOL",                    muestra:"Ayuno de 4 horas",       precio:291    },
+      { nombre:"AC. ANTI CARDIOLIPINAS IgA",                             muestra:"Ayuno de 4 horas",       precio:450    },
+      { nombre:"AC. ANTI CARDIOLIPINAS IGG E IGM",                       muestra:"Ayuno de 4 horas",       precio:571    },
+      { nombre:"AC. ANTI CHLAMYDIA TRACHOMATIS IgG e IgM",               muestra:"Ayuno de 4 horas",       precio:550    },
+      { nombre:"AC. ANTI CHLAMYDIA TRACHOMATIS IgG, IgA, IgM",           muestra:"Ayuno de 4 horas",       precio:1040   },
+      { nombre:"AC. ANTI CITOMEGALOVIRUS IgG",                           muestra:"Ayuno de 4 horas",       precio:199    },
+      { nombre:"AC. ANTI CITOMEGALOVIRUS IgG E IgM",                     muestra:"Ayuno de 4 horas",       precio:353    },
+      { nombre:"AC. ANTI CITOMEGALOVIRUS IgM",                           muestra:"Ayuno de 4 horas",       precio:199    },
+      { nombre:"AC. ANTI CITOPLASMA DE NEUTROFILOS (PANCA/C-ANCA)",      muestra:"Ayuno de 4 horas",       precio:793    },
+      { nombre:"AC. ANTI COCCIDIOIDES IMMITIS IgM",                      muestra:"Ayuno de 4 horas",       precio:1027   },
+      { nombre:"AC. ANTI COXSACKIE A (2,4,7,9,10 Y 16)",                 muestra:"Ayuno de 4 horas",       precio:3100   },
+      { nombre:"AC. ANTI COXSACKIE B (1,2,3,4,5)",                       muestra:"Ayuno de 4 horas",       precio:2320   },
+      { nombre:"AC. ANTI DNA DOBLE CADENA",                              muestra:"Ayuno de 4 horas",       precio:287    },
+      { nombre:"AC. ANTI ECHINOCOCCUS IgG",                              muestra:"Ayuno de 4 horas",       precio:4531   },
+      { nombre:"AC. ANTI EPSTEIN BARR IgG CAPSIDE",                      muestra:"Ayuno de 4 horas",       precio:349    },
+      { nombre:"AC. ANTI EPSTEIN BARR IgM CAPSIDE",                      muestra:"Ayuno de 4 horas",       precio:275    },
+      { nombre:"AC. ANTI FILARIA IGG4",                                  muestra:"Ayuno de 4 horas",       precio:2164   },
+      { nombre:"AC. ANTI GANGLIOSIDOS (GM1, GD1a, ASIAIO GM1)",          muestra:"Ayuno de 4 horas",       precio:5683   },
+      { nombre:"AC. ANTI Giardia lamblia",                               muestra:"Ayuno de 4 horas",       precio:933    },
+      { nombre:"AC. ANTI HELICOBACTER PYLORI IgA",                       muestra:"Sin indicaciones",       precio:286    },
+      { nombre:"AC. ANTI HELICOBACTER PYLORI IGG E IGM",                 muestra:"Ayuno de 4 horas",       precio:387    },
+      { nombre:"AC. ANTI HERPES I (IgG e IgM)",                          muestra:"Ayuno de 4 horas",       precio:359    },
+      { nombre:"AC. ANTI HERPES II (IgG E IgM)",                         muestra:"Ayuno de 4 horas",       precio:240    },
+      { nombre:"AC. ANTI HERPES TIPO 6",                                 muestra:"Ayuno de 4 horas",       precio:1533   },
+      { nombre:"AC. ANTI HISTOPLASMA CAPSULATUM IgM",                    muestra:"Ayuno de 4 horas",       precio:799    },
+      { nombre:"AC. ANTI HIV I Y II",                                    muestra:"Ayuno de 4 horas",       precio:65     },
+      { nombre:"Ac. ANTI INFLUENZA A Y B",                               muestra:"Ayuno de 4 horas",       precio:1599   },
+      { nombre:"AC. ANTI ISLOTES DE LANGERHANS",                         muestra:"Ayuno de 4 horas",       precio:670    },
+      { nombre:"AC. ANTI Listeria monocytogenes",                        muestra:"Ayuno de 4 horas",       precio:1550   },
+      { nombre:"AC. ANTI MITOCONDRIALES",                                muestra:"Ayuno de 4 horas",       precio:285    },
+      { nombre:"AC. ANTI MYCOBACTERIUM TUBERCULOSIS IgG",                muestra:"Ayuno de 4 horas",       precio:399    },
+      { nombre:"AC. ANTI MYCOBACTERIUM TUBERCULOSIS IgG e IgM",          muestra:"Ayuno de 4 horas",       precio:725    },
+      { nombre:"AC. ANTI MYCOBACTERIUM TUBERCULOSIS IgM",                muestra:"Ayuno de 4 horas",       precio:409    },
+      { nombre:"AC. ANTI MYCOPLASMA PNEUMONIAE IgM",                     muestra:"Ayuno de 4 horas",       precio:235    },
+      { nombre:"AC. ANTI NUCLEARES (ELISA)",                             muestra:"Ayuno de 4 horas",       precio:240    },
+      { nombre:"AC. ANTI NUCLEARES IFI (ANAs)",                          muestra:"Ayuno de 8 horas",       precio:225    },
+      { nombre:"AC. ANTI NUCLEOSOMA",                                    muestra:"Ayuno de 4 horas",       precio:735    },
+      { nombre:"AC. ANTI PARVOVIRUS B-19 IgG e IgM",                    muestra:"Ayuno de 4 horas",       precio:867    },
+      { nombre:"AC. ANTI RECEPTOR TSH",                                  muestra:"Ayuno de 4 horas",       precio:978    },
+      { nombre:"AC. ANTI RUBEOLA IgG",                                   muestra:"Ayuno de 4 horas",       precio:173    },
+      { nombre:"AC. ANTI RUBEOLA IgM",                                   muestra:"Ayuno de 4 horas",       precio:173    },
+      { nombre:"AC. ANTI SACCHAROMYCES IGG E IGA (ASCA)",                muestra:"Ayuno de 4 horas",       precio:2631   },
+      { nombre:"AC. ANTI SARAMPION IgG e IgM",                          muestra:"Ayuno de 4 horas",       precio:425    },
+      { nombre:"AC. ANTI SARS-CoV (COVID 19) IgG e IgM (CUALITATIVO)",  muestra:"Sin indicaciones",       precio:213    },
+      { nombre:"AC. ANTI SARS-CoV (COVID 19) IgG e IgM (CUANTITATIVO)", muestra:"Sin indicaciones",       precio:359    },
+      { nombre:"AC. ANTI SARS-Cov2 IgG CUANTITATIVO",                   muestra:"Sin indicaciones",       precio:150    },
+      { nombre:"AC. ANTI SARS-Cov2 PROTEÍNA S (POST VACUNACIÓN)",        muestra:"Sin indicaciones",       precio:308    },
+      { nombre:"AC. ANTI TIROIDEOS 2 DETERMINACIONES",                   muestra:"Ayuno de 4 horas",       precio:450    },
+      { nombre:"AC. ANTI TOXOPLASMA IgG",                               muestra:"Ayuno de 4 horas",       precio:173    },
+      { nombre:"AC. ANTI TOXOPLASMA IgG E IgM",                         muestra:"Ayuno de 4 horas",       precio:333    },
+      { nombre:"AC. ANTI TOXOPLASMA IgM",                               muestra:"Ayuno de 4 horas",       precio:173    },
+      { nombre:"AC. ANTI TRANSGLUTAMINASA TISULAR IgA e IgG",           muestra:"Ayuno de 4 horas",       precio:699    },
+      { nombre:"AC. ANTI TREPONEMA (CUANTITATIVO)",                      muestra:"Ayuno de 4 horas",       precio:599    },
+      { nombre:"AC. ANTI TREPONEMA (FTA-ABS)",                           muestra:"Ayuno de 4 horas",       precio:387    },
+      { nombre:"AC. ANTI Treponema pallidum IgG (CUALITATIVO)",          muestra:"Ayuno de 4 horas",       precio:772    },
+      { nombre:"AC. ANTI Treponema pallidum IgM (CUALITATIVO)",          muestra:"Ayuno de 4 horas",       precio:772    },
+      { nombre:"AC. ANTI Trypanosoma cruzi IgG (CHAGAS)",                muestra:"Ayuno de 4 horas",       precio:310    },
+      { nombre:"AC. ANTI Trypanosoma cruzi IgM (CHAGAS)",                muestra:"Ayuno de 4 horas",       precio:999    },
+      { nombre:"AC. ANTI Varicela zoster IgG E IgM",                    muestra:"Ayuno de 4 horas",       precio:499    },
+      { nombre:"AC. ANTI VIRUS CHIKUNGUNYA IgG/IgM",                    muestra:"Ayuno de 4 horas",       precio:427    },
+      { nombre:"AC. ANTI VIRUS HEPATITIS A IgG E IgM",                  muestra:"Ayuno de 4 horas",       precio:355    },
+      { nombre:"AC. ANTI VIRUS HEPATITIS A IgM (HAV-M)",                muestra:"Ayuno de 4 horas",       precio:248    },
+      { nombre:"AC. ANTI VIRUS ZIKA IgG e IgM",                         muestra:"Ayuno de 4 horas",       precio:1920   },
+      { nombre:"AC. ANTI-BRUCELLA (ROSA DE BENGALA)",                    muestra:"Ayuno de 4 horas",       precio:80     },
+      { nombre:"AC. ANTI-CISTICERCO",                                    muestra:"Ayuno de 4 horas",       precio:321    },
+      { nombre:"AC. ANTI-ENDOMISIO (EMA)",                               muestra:"Ayuno de 4 horas",       precio:1096   },
+      { nombre:"AC. ANTI-EPSTEIN BARR NUCLEAR IgG",                     muestra:"Ayuno de 8 horas",       precio:355    },
+      { nombre:"AC. ANTI-FACTOR INTRINSECO",                             muestra:"Ayuno de 4 horas",       precio:745    },
+      { nombre:"AC. ANTI-FOSFOLIPIDOS IGG E IGM",                        muestra:"Ayuno de 4 horas",       precio:435    },
+      { nombre:"AC. ANTI-GAD",                                           muestra:"Ayuno de 4 horas",       precio:556    },
+      { nombre:"AC. ANTI-HEPATITIS E IgG",                              muestra:"Ayuno de 4 horas",       precio:449    },
+      { nombre:"AC. ANTI-HEPATITIS E IgM",                              muestra:"Ayuno de 4 horas",       precio:449    },
+      { nombre:"AC. ANTI-LEISHMANIA IgG",                               muestra:"Ayuno de 4 horas",       precio:1899   },
+      { nombre:"AC. ANTINUCLEARES C/INMUNOESPECIFICIDAD",                muestra:"Ayuno de 4 horas",       precio:1799   },
+      { nombre:"AC. ANTI-PROTEINA P-Ribosomal",                         muestra:"Ayuno de 4 horas",       precio:699    },
+      { nombre:"AC. ANTI-RECEPTORES DE ACETILCOLINA",                   muestra:"Ayuno de 4 horas",       precio:589    },
+      { nombre:"AC. ANTI-TREPONEMA pallidum IgG/IgM",                   muestra:"Ayuno de 4 horas",       precio:699    },
+      { nombre:"ACETIL COLINESTERASA ERITROCITARIA",                     muestra:"Ayuno de 4 horas",       precio:948    },
+      { nombre:"ACETONA EN ORINA",                                       muestra:"Orina reciente",         precio:185    },
+      { nombre:"ACETONA EN SANGRE",                                      muestra:"Ayuno de 4 horas",       precio:185    },
+      { nombre:"ACIDO FOLICO (FOLATO)",                                  muestra:"Ayuno de 8 horas",       precio:131    },
+      { nombre:"ACIDO LACTICO (LACTATO)",                                muestra:"Consultar al químico",   precio:400    },
+      { nombre:"ACIDO METILMALONICO SANGRE",                             muestra:"Ayuno de 4 horas",       precio:1899   },
+      { nombre:"ACIDO MICOFENOLICO",                                     muestra:"Ayuno de 4 horas",       precio:1550   },
+      { nombre:"ACIDO PIRUVICO",                                         muestra:"Ayuno de 4 horas",       precio:1099   },
+      { nombre:"ACIDO URICO EN ORINA",                                   muestra:"Orina reciente",         precio:30     },
+      { nombre:"ACIDO URICO EN SUERO",                                   muestra:"Ayuno de 8 horas",       precio:30     },
+      { nombre:"ACIDO VALPROICO DEPAKENNE",                              muestra:"Ayuno de 8 horas",       precio:173    },
+      { nombre:"ACIDOS BILIARES FRACCIONADOS Y TOTALES",                 muestra:"Ayuno de 8 horas",       precio:2009   },
+      { nombre:"ACIDOS BILIARES TOTALES",                                muestra:"Ayuno de 8 horas",       precio:1720   },
+      { nombre:"ACIDOS GRASOS LIBRES NO ESTERIFICADOS",                  muestra:"Ayuno de 12 horas",      precio:149    },
+      { nombre:"ADENOSIN DESAMINASA",                                    muestra:"Sin indicaciones",       precio:599    },
+      { nombre:"ADHESIVIDAD DE PLAQUETAS",                               muestra:"Ayuno de 12 horas",      precio:631    },
+      { nombre:"ALBUMINA",                                               muestra:"Ayuno de 8 horas",       precio:25     },
+      { nombre:"ALBUMINA EN ORINA",                                      muestra:"Orina reciente",         precio:60     },
+      { nombre:"ALCOHOL EN SANGRE (ETANOL)",                             muestra:"Sin indicaciones",       precio:245    },
+      { nombre:"ALDOLASA",                                               muestra:"Ayuno de 8 horas",       precio:200    },
+      { nombre:"ALDOSTERONA SERICA",                                     muestra:"Ayuno de 8 horas",       precio:260    },
+      { nombre:"ALFA-1-ANTI-TRIPSINA",                                   muestra:"Ayuno de 4 horas",       precio:479    },
+      { nombre:"ALFAFETOPROTEINAS (AFP)",                                muestra:"Ayuno de 4 horas",       precio:139    },
+      { nombre:"ALUMINIO (Al)",                                          muestra:"Sin antiácidos 3 días",  precio:499    },
+      { nombre:"AMIBA EN FRESCO",                                        muestra:"Heces recientes",        precio:30     },
+      { nombre:"AMILASA EN SUERO",                                       muestra:"Ayuno de 8 horas",       precio:58     },
+      { nombre:"AMONIO",                                                 muestra:"Ayuno de 4 horas",       precio:215    },
+      { nombre:"ANDROSTENEDIONA",                                        muestra:"Ayuno de 8 horas",       precio:233    },
+      { nombre:"ANFETAMINAS EN ORINA",                                   muestra:"Orina reciente",         precio:60     },
+      { nombre:"ANION GAP",                                              muestra:"Ayuno de 8 horas",       precio:150    },
+      { nombre:"ANTI VIRUS HEPATITIS D (ANTI-HDV)",                      muestra:"Ayuno de 4 horas",       precio:499    },
+      { nombre:"ANTICOAGULANTE LÚPICO",                                  muestra:"Ayuno de 4 horas",       precio:410    },
+      { nombre:"ANTICUERPOS ANTI A SALINOS",                             muestra:"Ayuno de 4 horas",       precio:1119   },
+      { nombre:"ANTICUERPOS ANTI ADRENALES",                             muestra:"Ayuno de 4 horas",       precio:999    },
+      { nombre:"ANTICUERPOS ANTI B SALINOS",                             muestra:"Ayuno de 4 horas",       precio:1119   },
+      { nombre:"ANTICUERPOS ANTI CELULAS PARIETALES (APCA)",             muestra:"Sin indicaciones",       precio:463    },
+      { nombre:"ANTICUERPOS ANTI CENTROMERO",                            muestra:"Ayuno de 4 horas",       precio:389    },
+      { nombre:"ANTICUERPOS ANTI CHLAMYDIA TRACHOMATIS IgM",             muestra:"Ayuno de 4 horas",       precio:270    },
+      { nombre:"ANTICUERPOS ANTI ESPERMATOZOIDES",                       muestra:"Sin indicaciones",       precio:248    },
+      { nombre:"ANTICUERPOS ANTI GLIADINA IgA e IgG",                   muestra:"Ayuno de 4 horas",       precio:493    },
+      { nombre:"ANTICUERPOS ANTI HELICOBACTER PYLORI IgG",               muestra:"Sin indicaciones",       precio:220    },
+      { nombre:"ANTICUERPOS ANTI HELICOBACTER PYLORI IgM",               muestra:"Sin indicaciones",       precio:220    },
+      { nombre:"ANTICUERPOS ANTI HEPATITIS C",                           muestra:"Ayuno de 4 horas",       precio:99     },
+      { nombre:"ANTICUERPOS ANTI HEPATITIS C CUANTIFICADO",              muestra:"Ayuno de 8 horas",       precio:175    },
+      { nombre:"ANTICUERPOS ANTI HERPES I (IgG)",                        muestra:"Ayuno de 4 horas",       precio:185    },
+      { nombre:"ANTICUERPOS ANTI HERPES I (IgM)",                        muestra:"Ayuno de 4 horas",       precio:185    },
+      { nombre:"ANTICUERPOS ANTI HERPES II (IgG)",                       muestra:"Ayuno de 4 horas",       precio:185    },
+      { nombre:"ANTICUERPOS ANTI HERPES II (IgM)",                       muestra:"Ayuno de 4 horas",       precio:185    },
+      { nombre:"ANTICUERPOS ANTI HIV 1+2 (3RA GENERACION)",              muestra:"Ayuno de 4 horas",       precio:200    },
+      { nombre:"ANTICUERPOS ANTI HTLV I/II",                             muestra:"Ayuno de 4 horas",       precio:601    },
+      { nombre:"ANTICUERPOS ANTI INSULINA IgG",                          muestra:"Ayuno de 4 horas",       precio:448    },
+      { nombre:"ANTICUERPOS ANTI JO-1 IgG POLIMIOSITIS",                 muestra:"Ayuno de 4 horas",       precio:435    },
+      { nombre:"ANTICUERPOS ANTI LEPTOSPIRA IgG E IgM",                  muestra:"Ayuno de 4 horas",       precio:547    },
+      { nombre:"ANTICUERPOS ANTI MUSCULO LISO",                          muestra:"Ayuno de 4 horas",       precio:289    },
+      { nombre:"ANTICUERPOS ANTI PAROTIDITIS IgG E IgM",                 muestra:"Ayuno de 4 horas",       precio:1150   },
+      { nombre:"ANTICUERPOS ANTI PÉPTIDOS CÍCLICO CITRULINADO (anti-CCP)",muestra:"Sin indicaciones",      precio:450    },
+      { nombre:"ANTICUERPOS ANTI PEROXIDASA TIROIDEA",                   muestra:"Ayuno de 8 horas",       precio:150    },
+      { nombre:"ANTICUERPOS ANTI PLAQUETAS",                             muestra:"Ayuno de 4 horas",       precio:1481   },
+      { nombre:"ANTICUERPOS ANTI RIBONUCLEOPROTEINA (RNP)",              muestra:"Ayuno de 4 horas",       precio:275    },
+      { nombre:"ANTICUERPOS ANTI SCL 70 (ESCLERODERMA)",                 muestra:"Ayuno de 4 horas",       precio:275    },
+      { nombre:"ANTICUERPOS ANTI SMITH",                                 muestra:"Ayuno de 4 horas",       precio:255    },
+      { nombre:"ANTICUERPOS ANTI TIROGLOBULINA",                         muestra:"Ayuno de 4 horas",       precio:150    },
+      { nombre:"ANTICUERPOS ANTI TOXOCARA CANIS IgG",                    muestra:"Ayuno de 4 horas",       precio:199    },
+      { nombre:"ANTICUERPOS ANTI-CARDIOLIPINAS IgG Y IgM",               muestra:"Ayuno de 8 horas",       precio:475    },
+      { nombre:"ANTICUERPOS ANTI-MYCOPLASMA PNEUMONIAE IgG",             muestra:"Ayuno de 8 horas",       precio:415    },
+      { nombre:"ANTICUERPOS ANTI-RO (SSA)",                              muestra:"Ayuno de 4 horas",       precio:275    },
+      { nombre:"ANTIESTREPTOLISINAS (ASO o ASTO)",                       muestra:"Ayuno de 4 horas",       precio:52     },
+      { nombre:"ANTIGENO CA 72.4 (ESTOMAGO)",                            muestra:"Ayuno de 4 horas",       precio:499    },
+      { nombre:"ANTIGENO CA 125 (OVARIO)",                               muestra:"Ayuno de 4 horas",       precio:147    },
+      { nombre:"ANTIGENO CA 15.3 (GLANDULA MAMARIA)",                    muestra:"Ayuno de 4 horas",       precio:199    },
+      { nombre:"ANTIGENO CA 19.9 (PANCREAS Y COLON)",                    muestra:"Ayuno de 4 horas",       precio:147    },
+      { nombre:"ANTIGENO CA 27.29",                                      muestra:"Ayuno de 4 horas",       precio:599    },
+      { nombre:"ANTIGENO CARCINOEMBRIONARIO (CEA)",                      muestra:"Ayuno de 4 horas",       precio:99     },
+      { nombre:"ANTIGENO DE INFLUENZA A Y B",                            muestra:"Sin indicaciones",       precio:350    },
+      { nombre:"ANTIGENO DE SUPERFICIE HEPATITIS B (HBsAg)",             muestra:"Ayuno de 4 horas",       precio:149    },
+      { nombre:"ANTIGENO E DE HEPATITIS B (HBEAG)",                      muestra:"Ayuno de 4 horas",       precio:241    },
+      { nombre:"ANTÍGENO HELICOBACTER PYLORI (HECES)",                   muestra:"Heces recientes",        precio:245    },
+      { nombre:"ANTIGENO HLA-B27",                                       muestra:"Ayuno de 4 horas",       precio:1196   },
+      { nombre:"ANTIGENO PROSTATICO ESPECIFICO TOTAL (PSA)",             muestra:"Sin indicaciones",       precio:105    },
+      { nombre:"ANTIGENO PROSTATICO ESPECIFICO Y FRACCION LIBRE",        muestra:"Ayuno de 4 horas",       precio:185    },
+      { nombre:"ANTIGENO SARS-CoV-2 (NASAL)",                            muestra:"Sin indicaciones",       precio:173    },
+      { nombre:"ANTITROMBINA III",                                       muestra:"Ayuno de 4 horas",       precio:495    },
+      { nombre:"APOLIPOPROTEINA A1",                                     muestra:"Ayuno de 10 horas",      precio:220    },
+      { nombre:"APOLIPOPROTEINA B",                                      muestra:"Ayuno de 10 horas",      precio:220    },
+      { nombre:"APOLIPOPROTEINAS A1 Y B",                                muestra:"Ayuno de 10 horas",      precio:347    },
+      { nombre:"AZUCARES REDUCTORES",                                    muestra:"Heces recientes",        precio:48     },
+      { nombre:"BACILOSCOPIA (BAAR) 1 MUESTRA",                          muestra:"Expectoración",          precio:80     },
+      { nombre:"BACILOSCOPIA (BAAR) 2 MUESTRAS",                         muestra:"Expectoración",          precio:160    },
+      { nombre:"BACILOSCOPIA (BAAR) 3 MUESTRAS",                         muestra:"Expectoración",          precio:160    },
+      { nombre:"BACILOSCOPIA (BAAR) 5 MUESTRAS",                         muestra:"Expectoración",          precio:400    },
+      { nombre:"BARBITURICOS EN ORINA",                                  muestra:"Orina reciente",         precio:75     },
+      { nombre:"BENZODIAZEPINA EN ORINA",                                muestra:"Orina reciente",         precio:68     },
+      { nombre:"BETA 2 MICROGLOBULINA",                                  muestra:"Ayuno de 4 horas",       precio:299    },
+      { nombre:"BICARBONATO EN SANGRE",                                  muestra:"Ayuno de 4 horas",       precio:307    },
+      { nombre:"BILIRRUBINAS TOTALES (BT, BD, BI)",                      muestra:"Ayuno de 8 horas",       precio:53     },
+      { nombre:"BILIRRUBINAS TOTALES (TBIL)",                            muestra:"Ayuno de 8 horas",       precio:25     },
+      { nombre:"BIOMETRIA HEMATICA COMPLETA (BHC)",                      muestra:"Ayuno de 4 horas",       precio:39     },
+      { nombre:"BUSQUEDA DE CRISTALES EN ORINA",                         muestra:"Orina reciente",         precio:53     },
+      { nombre:"BUSQUEDA DE HEMATOZOARIOS",                              muestra:"Sin indicaciones",       precio:53     },
+      { nombre:"CALCIO (Ca)",                                            muestra:"Ayuno de 6 horas",       precio:30     },
+      { nombre:"CALCIO IONICO",                                          muestra:"Ayuno de 4 horas",       precio:249    },
+      { nombre:"CALCITONINA",                                            muestra:"Ayuno de 8 horas",       precio:189    },
+      { nombre:"CALPROTECTINA EN HECES (CUANTITATIVA)",                  muestra:"Heces recientes",        precio:1899   },
+      { nombre:"CANABINOIDES EN ORINA (MARIHUANA)",                      muestra:"Orina reciente",         precio:60     },
+      { nombre:"CAPACIDAD DE FIJACIÓN DE HIERRO Y HIERRO SERICO",        muestra:"Ayuno de 8 horas",       precio:147    },
+      { nombre:"CAPACIDAD DE FIJACION TOTAL DE HIERRO",                  muestra:"Ayuno de 8 horas",       precio:107    },
+      { nombre:"CARBOXIHEMOGLOBINA",                                     muestra:"Ayuno de 4 horas",       precio:359    },
+      { nombre:"CARGA VIRAL HEPATITIS C CUANTITATIVA",                   muestra:"Sin indicaciones",       precio:1890   },
+      { nombre:"CARIOTIPO EN SANGRE PERIFERICA",                         muestra:"Sin indicaciones",       precio:4589   },
+      { nombre:"CAROTENOS",                                              muestra:"Ayuno de 8 horas",       precio:340    },
+      { nombre:"CELULAS CD3, CD4, CD8",                                  muestra:"Ayuno de 4 horas",       precio:1173   },
+      { nombre:"CELULAS L.E.",                                           muestra:"Ayuno de 4 horas",       precio:53     },
+      { nombre:"CELULAS NK",                                             muestra:"Ayuno de 4 horas",       precio:781    },
+      { nombre:"CERULOPLASMINA",                                         muestra:"Sin indicaciones",       precio:299    },
+      { nombre:"CHEQUEO GENERAL (3)",                                    muestra:"Ayuno de 12 horas",      precio:175    },
+      { nombre:"CHEQUEO GENERAL (6)",                                    muestra:"Ayuno de 12 horas",      precio:189    },
+      { nombre:"CHEQUEO GENERAL (12)",                                   muestra:"Ayuno de 12 horas",      precio:340    },
+      { nombre:"CHEQUEO GENERAL (35)",                                   muestra:"Ayuno de 12 horas",      precio:808    },
+      { nombre:"CHEQUEO GENERAL (50)",                                   muestra:"Ayuno de 12 horas",      precio:1040   },
+      { nombre:"CICLOSPORINA",                                           muestra:"1 hr antes de próxima dosis", precio:578 },
+      { nombre:"CISTATINA C",                                            muestra:"Ayuno de 4 horas",       precio:307    },
+      { nombre:"CITOLOGIA EXFOLIATIVA (PAPANICOLAOU)",                   muestra:"Abstinencia 3 días",     precio:215    },
+      { nombre:"CLORO (Cl)",                                             muestra:"Ayuno de 6 horas",       precio:30     },
+      { nombre:"CLOSTRIDIUM DIFFICILE (TOXINA A Y B)",                   muestra:"Heces recientes",        precio:698    },
+      { nombre:"COCAINA EN ORINA",                                       muestra:"Orina reciente",         precio:53     },
+      { nombre:"COLESTEROL DE ALTA DENSIDAD (HDL)",                      muestra:"Ayuno de 12 horas",      precio:95     },
+      { nombre:"COLESTEROL DE ALTA Y BAJA DENSIDAD",                     muestra:"Ayuno de 12 horas",      precio:175    },
+      { nombre:"COLESTEROL DE BAJA DENSIDAD (LDL)",                      muestra:"Ayuno de 12 horas",      precio:75     },
+      { nombre:"COLESTEROL DE MUY BAJA DENSIDAD (VLDL)",                 muestra:"Ayuno de 12 horas",      precio:75     },
+      { nombre:"COLESTEROL TOTAL",                                       muestra:"Ayuno de 12 horas",      precio:30     },
+      { nombre:"COLINESTERASA",                                          muestra:"Ayuno de 4 horas",       precio:58     },
+      { nombre:"COMPLEMENTO C3",                                         muestra:"Ayuno de 4 horas",       precio:155    },
+      { nombre:"COMPLEMENTO C4",                                         muestra:"Ayuno de 4 horas",       precio:155    },
+      { nombre:"COMPLEMENTO HEMOLÍTICO AL 50% (CH50)",                   muestra:"Ayuno de 4 horas",       precio:238    },
+      { nombre:"COOMBS DIRECTO",                                         muestra:"Ayuno de 8 horas",       precio:85     },
+      { nombre:"COOMBS INDIRECTO",                                       muestra:"Ayuno de 8 horas",       precio:85     },
+      { nombre:"COPROLOGICO GENERAL",                                    muestra:"Heces recientes",        precio:59     },
+      { nombre:"COPROPARASITOSCOPICO (1 MUESTRA)",                       muestra:"Heces recientes",        precio:33     },
+      { nombre:"COPROPARASITOSCOPICO (2 MUESTRAS)",                      muestra:"Heces recientes",        precio:63     },
+      { nombre:"COPROPARASITOSCOPICO (3 MUESTRAS)",                      muestra:"Heces recientes",        precio:93     },
+      { nombre:"CORTISOL SERICO (AM)",                                   muestra:"Ayuno 4 hrs, antes 10am",precio:102    },
+      { nombre:"CORTISOL SERICO (PM)",                                   muestra:"Ayuno 4 hrs, 8-10pm",    precio:102    },
+      { nombre:"CREATINFOSFOQUINASA (CPK) (CK)",                         muestra:"Ayuno de 8 horas",       precio:45     },
+      { nombre:"CREATINFOSFOQUINASA FRACCION MB (CPK-MB)",               muestra:"Ayuno de 4 horas",       precio:85     },
+      { nombre:"CREATININA EN ORINA",                                    muestra:"Orina reciente",         precio:30     },
+      { nombre:"CULTIVO DE EXPECTORACIÓN",                               muestra:"Ayuno de 4 horas",       precio:180    },
+      { nombre:"CULTIVO DE HECES (COPROCULTIVO)",                        muestra:"Heces recientes",        precio:175    },
+      { nombre:"CULTIVO DE HONGOS (MICOLOGICO)",                         muestra:"Sin antibióticos",       precio:287    },
+      { nombre:"CULTIVO DE OIDO",                                        muestra:"Sin antibióticos 48 hrs",precio:199    },
+      { nombre:"CULTIVO DE ORINA (UROCULTIVO)",                          muestra:"Orina medio chorro",     precio:195    },
+      { nombre:"CULTIVO DE SANGRE (HEMOCULTIVO)",                        muestra:"Sin antibióticos",       precio:667    },
+      { nombre:"CULTIVO DE SECRECION",                                   muestra:"Sin antibióticos 7 días",precio:275    },
+      { nombre:"CULTIVO DE SEMEN",                                       muestra:"Semen reciente",         precio:199    },
+      { nombre:"CULTIVO DE TEJIDO",                                      muestra:"Sin antibióticos 48 hrs",precio:249    },
+      { nombre:"CULTIVO EXUDADO FARINGEO",                               muestra:"Ayuno 8 hrs, sin aseo",  precio:175    },
+      { nombre:"CULTIVO EXUDADO VAGINAL",                                muestra:"Abstinencia 3 días",     precio:199    },
+      { nombre:"CULTIVO NASAL",                                          muestra:"Sin aseo nasal 3 días",  precio:199    },
+      { nombre:"CURVA TOLERANCIA GLUCOSA 1HR",                           muestra:"Ayuno de 8 horas",       precio:56     },
+      { nombre:"CURVA TOLERANCIA GLUCOSA 2HRS",                          muestra:"Ayuno de 8 horas",       precio:89     },
+      { nombre:"CURVA TOLERANCIA GLUCOSA 3HRS",                          muestra:"Ayuno de 8 horas",       precio:119    },
+      { nombre:"DEHIDROEPIANDROSTERONA (DHEA)",                          muestra:"Ayuno de 4 horas",       precio:340    },
+      { nombre:"DEHIDROEPIANDROSTERONA SULFATO (DHEASO4)",               muestra:"Ayuno de 4 horas",       precio:149    },
+      { nombre:"DENGUE DUO (AC. IgG e IgM Y ANTIGENO NS1)",              muestra:"Ayuno de 4 horas",       precio:265    },
+      { nombre:"DEPURACION DE CREATININA",                               muestra:"Orina 24 hrs + suero",   precio:53     },
+      { nombre:"DESHIDROGENASA LACTICA (DHL)",                           muestra:"Ayuno de 8 horas",       precio:33     },
+      { nombre:"DIHIDROTESTOSTERONA (DHT)",                              muestra:"Ayuno de 4 horas",       precio:499    },
+      { nombre:"DIMERO D",                                               muestra:"Ayuno de 4 horas",       precio:230    },
+      { nombre:"ELECTROFORESIS DE HEMOGLOBINA (Hb)",                     muestra:"Ayuno de 8 horas",       precio:649    },
+      { nombre:"ELECTROFORESIS DE LIPOPROTEINAS",                        muestra:"Ayuno de 12 horas",      precio:239    },
+      { nombre:"ELECTROFORESIS DE PROTEINAS",                            muestra:"Ayuno de 8 horas",       precio:239    },
+      { nombre:"ELECTROLITOS (ES3) (Na, K, Cl)",                         muestra:"Ayuno de 4 horas",       precio:89     },
+      { nombre:"ELECTROLITOS (ES6) (Na, K, Cl, Ca, P, Mg)",              muestra:"Ayuno de 4 horas",       precio:175    },
+      { nombre:"ERITROPOYETINA (EPO)",                                   muestra:"Ayuno de 4 horas",       precio:393    },
+      { nombre:"ESPERMATOBIOSCOPIA/SEMINOGRAMA",                         muestra:"4 días abstinencia",      precio:159    },
+      { nombre:"ESTRADIOL (E2)",                                         muestra:"Ayuno de 4 horas",       precio:80     },
+      { nombre:"EXAMEN GENERAL DE ORINA (EGO)",                         muestra:"Ayuno de 8 horas",       precio:42     },
+      { nombre:"FACTOR REUMATOIDE (FR)",                                 muestra:"Ayuno de 4 horas",       precio:47     },
+      { nombre:"FACTOR REUMATOIDE CUANTITATIVO",                         muestra:"Ayuno de 4 horas",       precio:125    },
+      { nombre:"FACTOR VON WILLEBRAND (FVW)",                            muestra:"Ayuno de 4 horas",       precio:1999   },
+      { nombre:"FACTOR VIII DE LA COAGULACION",                          muestra:"Ayuno de 4 horas",       precio:796    },
+      { nombre:"FENOBARBITAL",                                           muestra:"Ayuno de 8 horas",       precio:247    },
+      { nombre:"FERRITINA",                                              muestra:"Ayuno de 8 horas",       precio:105    },
+      { nombre:"FIBRINOGENO",                                            muestra:"Ayuno de 8 horas",       precio:120    },
+      { nombre:"FOSFATASA ALCALINA (ALP)",                               muestra:"Ayuno de 8 horas",       precio:30     },
+      { nombre:"FOSFATASA ALCALINA OSEA (OSTASA)",                       muestra:"Ayuno de 4 horas",       precio:750    },
+      { nombre:"FOSFORO (P)",                                            muestra:"Ayuno de 4 horas",       precio:30     },
+      { nombre:"FORMULA BLANCA",                                         muestra:"Ayuno de 8 horas",       precio:53     },
+      { nombre:"FORMULA PLAQUETARIA",                                    muestra:"Ayuno de 4 horas",       precio:47     },
+      { nombre:"FORMULA ROJA",                                           muestra:"Ayuno de 8 horas",       precio:53     },
+      { nombre:"FRUCTOSAMINA",                                           muestra:"Ayuno de 4 horas",       precio:349    },
+      { nombre:"GAMAGLUTAMILTRANSPEPTIDASA (GGT)",                       muestra:"Ayuno de 12 horas",      precio:25     },
+      { nombre:"GASTRINA",                                               muestra:"Ayuno de 4 horas",       precio:189    },
+      { nombre:"GLOBULINA TRANSPORTADORA DE HORMONA SEXUAL (SHBG)",      muestra:"Ayuno de 6 horas",       precio:279    },
+      { nombre:"GLUCAGON",                                               muestra:"Sin indicaciones",       precio:199    },
+      { nombre:"GLUCOSA BASAL",                                          muestra:"Ayuno de 8 horas",       precio:25     },
+      { nombre:"GLUCOSA EN ORINA",                                       muestra:"Orina reciente",         precio:25     },
+      { nombre:"GLUCOSA POSPRANDIAL",                                    muestra:"Ayuno de 8 horas",       precio:50     },
+      { nombre:"GRUPO SANGUINEO y RH",                                   muestra:"No se requiere ayuno",   precio:30     },
+      { nombre:"HEMOGLOBINA GLICOSILADA (HbA1c)",                        muestra:"Sin consumir grasas 2h", precio:135    },
+      { nombre:"HIERRO (Fe)",                                            muestra:"Ayuno de 8 horas",       precio:85     },
+      { nombre:"HOMOCISTEINA",                                           muestra:"Sin indicaciones",       precio:527    },
+      { nombre:"HORMONA ADENOCORTICOTROPICA (ACTH)",                     muestra:"Ayuno de 4 horas",       precio:320    },
+      { nombre:"HORMONA ANTI-MULLERIANA (AMH)",                          muestra:"Ayuno de 4 horas",       precio:1053   },
+      { nombre:"HORMONA DE CRECIMIENTO (HGH)",                           muestra:"Ayuno de 4 horas",       precio:182    },
+      { nombre:"HORMONA ESTIMULANTE DE TIROIDES (TSH)",                  muestra:"Ayuno de 4 horas",       precio:65     },
+      { nombre:"HORMONA FOLICULO ESTIMULANTE (FSH)",                     muestra:"Ayuno de 4 horas",       precio:80     },
+      { nombre:"HORMONA LUTEINIZANTE (LH)",                              muestra:"Ayuno de 4 horas",       precio:80     },
+      { nombre:"INMUNOGLOBULINA A (IGA)",                                muestra:"Ayuno de 8 horas",       precio:130    },
+      { nombre:"INMUNOGLOBULINA E (IGE)",                                muestra:"Ayuno de 8 horas",       precio:110    },
+      { nombre:"INMUNOGLOBULINA G (IGG)",                                muestra:"Ayuno de 8 horas",       precio:130    },
+      { nombre:"INMUNOGLOBULINA M (IGM)",                                muestra:"Ayuno de 8 horas",       precio:130    },
+      { nombre:"INSULINA BASAL",                                         muestra:"Ayuno de 8 horas",       precio:99     },
+      { nombre:"LEPTINA",                                                muestra:"Sin indicaciones",       precio:549    },
+      { nombre:"LIPASA SERICA",                                          muestra:"Ayuno de 8 horas",       precio:50     },
+      { nombre:"LIPIDOS TOTALES",                                        muestra:"Ayuno de 12 horas",      precio:99     },
+      { nombre:"LITIO (Li)",                                             muestra:"Ayuno de 4 horas",       precio:147    },
+      { nombre:"MACROPROLACTINA",                                        muestra:"Ayuno de 8 horas",       precio:973    },
+      { nombre:"MAGNESIO (Mg)",                                          muestra:"Ayuno de 6 horas",       precio:30     },
+      { nombre:"MARCADORES DE HEPATITIS A, B Y C",                       muestra:"Sin indicaciones",       precio:1640   },
+      { nombre:"MICROALBUMINURIA DE UNA MICCION",                        muestra:"Orina reciente",         precio:120    },
+      { nombre:"NITROGENO UREICO (BUN)",                                 muestra:"Ayuno de 4 horas",       precio:25     },
+      { nombre:"OPIACEOS",                                               muestra:"Sin indicaciones",       precio:60     },
+      { nombre:"OSTEOCALCINA",                                           muestra:"Sin indicaciones",       precio:340    },
+      { nombre:"PANEL DE DROGAS EN SANGRE 10 DET (ANTIDOPING)",          muestra:"Sin indicaciones",       precio:2149   },
+      { nombre:"PARATOHORMONA (PTH)",                                    muestra:"Ayuno de 12 horas",      precio:310    },
+      { nombre:"PCR CARGA VIRAL VIH-1",                                  muestra:"Sin indicaciones",       precio:1950   },
+      { nombre:"PCR CONFIRMATORIO DE HEPATITIS C",                       muestra:"Ayuno de 4 horas",       precio:2472   },
+      { nombre:"PEPTIDO C",                                              muestra:"Ayuno de 12 horas",      precio:165    },
+      { nombre:"PEPTIDO NATRIURETICO (BNP)",                             muestra:"Ayuno de 4 horas",       precio:499    },
+      { nombre:"PERFIL AC. ANTI FOSFOLIPIDOS",                           muestra:"Ayuno de 6 horas",       precio:1399   },
+      { nombre:"PERFIL CARDIACO",                                        muestra:"Ayuno de 4 horas",       precio:455    },
+      { nombre:"PERFIL CARDIACO BASICO",                                 muestra:"Ayuno de 4 horas",       precio:133    },
+      { nombre:"PERFIL CINETICA DE HIERRO",                              muestra:"Ayuno de 8 horas",       precio:299    },
+      { nombre:"PERFIL DE COAGULACION (TP, TPT, TC, TS)",               muestra:"Ayuno de 8 horas",       precio:199    },
+      { nombre:"PERFIL DE LIPIDOS",                                      muestra:"Ayuno de 12 horas",      precio:100    },
+      { nombre:"PERFIL DE LIPIDOS COMPLETO",                             muestra:"Ayuno de 12 horas",      precio:513    },
+      { nombre:"PERFIL ETS BASICO",                                      muestra:"Ayuno de 4 horas",       precio:493    },
+      { nombre:"PERFIL ETS COMPLETO",                                    muestra:"Ayuno de 4 horas",       precio:1067   },
+      { nombre:"PERFIL ETS SIMPLE",                                      muestra:"Ayuno de 4 horas",       precio:349    },
+      { nombre:"PERFIL HEPATICO (PFH)",                                  muestra:"Ayuno de 12 horas",      precio:150    },
+      { nombre:"PERFIL HEPATICO CON TP",                                 muestra:"Ayuno de 8 horas",       precio:199    },
+      { nombre:"PERFIL HERPES I Y II",                                   muestra:"Sin indicaciones",       precio:653    },
+      { nombre:"PERFIL HIPOFISIARIO",                                    muestra:"Ayuno de 12 horas",      precio:700    },
+      { nombre:"PERFIL HOMA (RESISTENCIA A LA INSULINA)",                muestra:"Ayuno de 8 horas",       precio:160    },
+      { nombre:"PERFIL HORMONAL (3)",                                    muestra:"Ayuno de 4 horas",       precio:213    },
+      { nombre:"PERFIL HORMONAL (OVARICO)",                              muestra:"Ayuno de 4 horas",       precio:315    },
+      { nombre:"PERFIL HORMONAL FEMENINO COMPLETO 12 PARAMETROS",        muestra:"Ayuno de 4 horas",       precio:600    },
+      { nombre:"PERFIL HORMONAL MASCULINO",                              muestra:"Sin indicaciones",       precio:373    },
+      { nombre:"PERFIL METABOLICO",                                      muestra:"Ayuno de 8 horas",       precio:352    },
+      { nombre:"PERFIL PRENATAL",                                        muestra:"Ayuno de 8 horas",       precio:300    },
+      { nombre:"PERFIL PRENUPCIAL (HIV, VDRL, GPO RH)",                  muestra:"Ayuno de 4 horas",       precio:172    },
+      { nombre:"PERFIL PREOPERATORIO I",                                 muestra:"Ayuno de 8 horas",       precio:345    },
+      { nombre:"PERFIL RENAL",                                           muestra:"Ayuno de 8 horas",       precio:332    },
+      { nombre:"PERFIL REUMATICO (FR,ASTO,AU,PCR,VSG)",                  muestra:"Ayuno de 8 horas",       precio:210    },
+      { nombre:"PERFIL REUMATICO PLUS (FR,ASTO,PCR,ESR,AU,CCP)",         muestra:"Ayuno de 8 horas",       precio:600    },
+      { nombre:"PERFIL ROMA",                                            muestra:"Ayuno de 8 horas",       precio:799    },
+      { nombre:"PERFIL STORCH",                                          muestra:"Ayuno de 8 horas",       precio:1250   },
+      { nombre:"PERFIL TESTOSTERONA BIODISPONIBLE",                      muestra:"Ayuno de 4 horas",       precio:379    },
+      { nombre:"PERFIL TIROIDEO BASICO (3 DET: TSH, T3, T4)",            muestra:"Ayuno de 8 horas",       precio:140    },
+      { nombre:"PERFIL TIROIDEO COMPLETO (5 DET)",                       muestra:"Ayuno de 8 horas",       precio:199    },
+      { nombre:"PERFIL TIROIDEO PLUS (7 DET)",                           muestra:"Ayuno de 8 horas",       precio:305    },
+      { nombre:"PERFIL TORCH",                                           muestra:"Sin indicaciones",       precio:1667   },
+      { nombre:"PLOMO (Pb) EN SANGRE",                                   muestra:"Sin indicaciones",       precio:355    },
+      { nombre:"POTASIO (K)",                                            muestra:"Ayuno de 6 horas",       precio:30     },
+      { nombre:"PPD INTRADERMOREACCION",                                 muestra:"Cita previa",            precio:400    },
+      { nombre:"PROCALCITONINA",                                         muestra:"Ayuno de 4 horas",       precio:255    },
+      { nombre:"PROGESTERONA",                                           muestra:"Ayuno de 4 horas",       precio:80     },
+      { nombre:"PROLACTINA (PRL)",                                       muestra:"Ayuno de 4 horas",       precio:80     },
+      { nombre:"PROTEINA C REACTIVA CUANTIFICADA (PCR-C)",               muestra:"Ayuno de 4 horas",       precio:58     },
+      { nombre:"PROTEINA C REACTIVA ULTRASENCIBLE (PCR-U)",              muestra:"Ayuno de 4 horas",       precio:99     },
+      { nombre:"PROTEINA DEL EPIDIDIMO HUMANO (HE4)",                    muestra:"Ayuno de 4 horas",       precio:650    },
+      { nombre:"PROTEINAS TOTALES (RELACION A/G)",                       muestra:"Ayuno de 8 horas",       precio:53     },
+      { nombre:"PRUEBA CONFIRMATORIA DE VIH-1 (WESTERN BLOT)",           muestra:"Ayuno de 4 horas",       precio:1799   },
+      { nombre:"QUIMICA SANGUINEA III (QS3)",                            muestra:"Ayuno de 8 horas",       precio:60     },
+      { nombre:"QUIMICA SANGUINEA IV (QS4)",                             muestra:"Ayuno de 8 horas",       precio:75     },
+      { nombre:"QUIMICA SANGUINEA VI (QS6)",                             muestra:"Ayuno de 12 horas",      precio:125    },
+      { nombre:"QUIMICA SANGUINEA VIII (QS8)",                           muestra:"Ayuno de 12 horas",      precio:120    },
+      { nombre:"QUIMICA SANGUINEA XII (QS12)",                           muestra:"Ayuno de 12 horas",      precio:159    },
+      { nombre:"QUIMICA SANGUINEA XX (QS20)",                            muestra:"Ayuno de 12 horas",      precio:249    },
+      { nombre:"QUIMICA SANGUINEA XXVII (QS27)",                         muestra:"Ayuno de 12 horas",      precio:276    },
+      { nombre:"QUIMICA SANGUINEA XXXV (QS35)",                          muestra:"Ayuno de 12 horas",      precio:320    },
+      { nombre:"QUIMICA SANGUINEA XLV (QS45)",                          muestra:"Ayuno de 12 horas",      precio:435    },
+      { nombre:"QUIMICA SANGUINEA L (QS50)",                             muestra:"Ayuno de 12 horas",      precio:459    },
+      { nombre:"REACCIONES FEBRILES",                                    muestra:"Ayuno de 8 horas",       precio:47     },
+      { nombre:"RENINA",                                                 muestra:"Ayuno de 4 horas",       precio:299    },
+      { nombre:"RETICULOCITOS",                                          muestra:"Sin indicaciones",       precio:49     },
+      { nombre:"ROTAVIRUS",                                              muestra:"Heces recientes",        precio:187    },
+      { nombre:"SANGRE OCULTA EN HECES",                                 muestra:"Heces recientes",        precio:40     },
+      { nombre:"SARS-CoV PCR (COVID 19)",                                muestra:"Sin indicaciones",       precio:1250   },
+      { nombre:"SODIO (Na)",                                             muestra:"Ayuno de 6 horas",       precio:30     },
+      { nombre:"SOMATOMEDINA C (IgF-I)",                                 muestra:"Ayuno de 8 horas",       precio:549    },
+      { nombre:"SUBUNIDAD BETA (B-hCG) CUALITATIVA (PRUEBA EMBARAZO)",   muestra:"Sin indicaciones",       precio:40     },
+      { nombre:"SUBUNIDAD BETA (B-hCG) CUANTITATIVA",                   muestra:"Ayuno de 4 horas",       precio:107    },
+      { nombre:"TAMIZ BASICO 25 PARAMETROS",                             muestra:"Papel filtro",           precio:549    },
+      { nombre:"TESTOSTERONA LIBRE",                                     muestra:"Ayuno de 4 horas",       precio:145    },
+      { nombre:"TESTOSTERONA TOTAL",                                     muestra:"Ayuno de 4 horas",       precio:90     },
+      { nombre:"TIEMPO DE COAGULACIÓN (TC)",                             muestra:"Sin indicaciones",       precio:42     },
+      { nombre:"TIEMPO DE PROTROMBINA (TP)",                             muestra:"Ayuno de 4 horas",       precio:53     },
+      { nombre:"TIEMPO DE SANGRADO (TS)",                                muestra:"Sin indicaciones",       precio:30     },
+      { nombre:"TIEMPO PARCIAL DE TROMBOPLASTINA (TPT)",                 muestra:"Ayuno de 4 horas",       precio:53     },
+      { nombre:"TIROGLOBULINA",                                          muestra:"Ayuno de 4 horas",       precio:195    },
+      { nombre:"TIROXINA LIBRE (T4 LIBRE)",                              muestra:"Ayuno de 4 horas",       precio:65     },
+      { nombre:"TIROXINA TOTAL (T4 TOTAL)",                              muestra:"Ayuno de 4 horas",       precio:65     },
+      { nombre:"TRANSAMINASA G. OXALACETICA TGO/AST",                    muestra:"Ayuno de 12 horas",      precio:25     },
+      { nombre:"TRANSAMINASA G. PIRUVICA TGP/ALT",                       muestra:"Ayuno de 12 horas",      precio:25     },
+      { nombre:"TRANSFERRINA",                                           muestra:"Ayuno de 8 horas",       precio:113    },
+      { nombre:"TRIGLICERIDOS",                                          muestra:"Ayuno de 12 horas",      precio:25     },
+      { nombre:"TROPONINA I",                                            muestra:"Ayuno de 4 horas",       precio:249    },
+      { nombre:"TROPONINA T",                                            muestra:"Sin indicaciones",       precio:699    },
+      { nombre:"UREA (BUN)",                                             muestra:"Ayuno de 12 horas",      precio:30     },
+      { nombre:"VDRL",                                                   muestra:"Ayuno de 4 horas",       precio:47     },
+      { nombre:"VELOCIDAD DE SEDIMENTACION GLOBULAR (VSG)",              muestra:"Ayuno de 4 horas",       precio:27     },
+      { nombre:"VITAMINA A (RETINOL)",                                   muestra:"Sin indicaciones",       precio:967    },
+      { nombre:"VITAMINA B12",                                           muestra:"Ayuno de 8 horas",       precio:185    },
+      { nombre:"VITAMINA C (ACIDO ASCORBICO)",                           muestra:"Ayuno de 8 horas",       precio:849    },
+      { nombre:"VITAMINA D(OH) 25(D2+D3) TOTAL",                         muestra:"Ayuno de 4 horas",       precio:215    },
+      { nombre:"VITAMINA D 1,25 DIHIDROXICOLECALCIFEROL (CALCITRIOL)",   muestra:"Ayuno de 4 horas",       precio:1467   },
+      { nombre:"VITAMINA E (ALFA-TOCOFEROL)",                            muestra:"Ayuno de 4 horas",       precio:1049   },
+      { nombre:"VITAMINA K",                                             muestra:"Ayuno de 8 horas",       precio:2604   },
+      { nombre:"ZINC (Zn) EN SANGRE",                                    muestra:"Ayuno de 4 horas",       precio:439    },
+    ];
+
+    let srvSesion = null;
+    let srvCarrito = [];
+
+    function srvFmt(n) {
+      return '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2});
+    }
+
+    function srvLogin() {
+      const user  = document.getElementById('srv-user').value.trim().toLowerCase();
+      const pass  = document.getElementById('srv-pass').value;
+      const error = document.getElementById('srv-error');
+      const cuenta = SRV_USUARIOS[user];
+      if (cuenta && cuenta.pass === pass) {
+        srvSesion = { user, nombre: cuenta.nombre };
+        error.style.display = 'none';
+        document.getElementById('srv-lock').style.display    = 'none';
+        document.getElementById('srv-content').style.display = 'block';
+        document.getElementById('srv-sesion-nombre').textContent = cuenta.nombre;
+        srvCarrito = [];
+        srvRenderLista();
+        srvRenderCarrito();
+      } else {
+        ['srv-user','srv-pass'].forEach(id => {
+          const el = document.getElementById(id);
+          el.style.borderColor = '#e53935';
+          setTimeout(()=>{ el.style.borderColor='#c5daea'; }, 1200);
+        });
+        error.style.display = 'block';
+        document.getElementById('srv-pass').value = '';
+      }
+    }
+
+    function srvLogout() {
+      srvSesion = null;
+      srvCarrito = [];
+      document.getElementById('srv-lock').style.display    = 'flex';
+      document.getElementById('srv-content').style.display = 'none';
+      document.getElementById('srv-user').value = '';
+      document.getElementById('srv-pass').value = '';
+      ['srv-nombre','srv-edad','srv-fechanac','srv-medico','srv-hora'].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) el.value='';
+      });
+      const sexo = document.getElementById('srv-sexo');
+      if (sexo) sexo.value='';
+    }
+
+    function srvRenderLista(filtro='') {
+      const lista = document.getElementById('srv-lista');
+      const lower = filtro.toLowerCase();
+      const fil = SRV_ESTUDIOS.filter(e => e.nombre.toLowerCase().includes(lower));
+      if (!fil.length) {
+        lista.innerHTML = '<div style="padding:2rem;color:#aaa;text-align:center;font-size:.9rem;">Sin resultados.</div>';
+        return;
+      }
+      lista.innerHTML = fil.map(e => {
+        const idx = SRV_ESTUDIOS.indexOf(e);
+        const en  = srvCarrito.includes(idx);
+        return `
+          <div onclick="srvToggle(${idx})"
+               style="display:flex;justify-content:space-between;align-items:center;
+                      padding:.85rem 1.1rem;border-bottom:1px solid #e4edf5;
+                      cursor:pointer;transition:background .12s;
+                      background:${en?'#e8f4fd':'transparent'};"
+               onmouseover="this.style.background='${en?'#dceefb':'#f0f7fb'}'"
+               onmouseout="this.style.background='${en?'#e8f4fd':'transparent'}'">
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:700;color:var(--azul);font-size:.93rem;
+                          white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                ${e.nombre}
+              </div>
+              <div style="font-size:.75rem;color:#999;margin-top:2px;">${e.muestra}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.6rem;margin-left:.8rem;flex-shrink:0;">
+              <span style="font-weight:800;color:var(--azul);font-size:.95rem;">${srvFmt(e.precio)}</span>
+              <button onclick="event.stopPropagation();srvToggle(${idx})"
+                      style="width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;
+                             font-size:1.2rem;display:flex;align-items:center;justify-content:center;
+                             transition:background .15s,transform .1s;flex-shrink:0;
+                             background:${en?'#4caf50':'var(--azul)'};color:#fff;">
+                ${en?'✓':'+'}
+              </button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function srvFiltrar() {
+      srvRenderLista(document.getElementById('srv-search').value);
+    }
+
+    function srvToggle(idx) {
+      const pos = srvCarrito.indexOf(idx);
+      if (pos === -1) srvCarrito.push(idx);
+      else srvCarrito.splice(pos,1);
+      srvRenderLista(document.getElementById('srv-search').value);
+      srvRenderCarrito();
+    }
+
+    function srvQuitarItem(idx) {
+      srvCarrito = srvCarrito.filter(x => x !== idx);
+      srvRenderLista(document.getElementById('srv-search').value);
+      srvRenderCarrito();
+    }
+
+    function srvLimpiarCarrito() {
+      srvCarrito = [];
+      srvRenderLista(document.getElementById('srv-search').value);
+      srvRenderCarrito();
+    }
+
+    function srvRenderCarrito() {
+      const vacio  = document.getElementById('srv-carrito-vacio');
+      const items  = document.getElementById('srv-carrito-items');
+      const total  = document.getElementById('srv-carrito-total');
+      const monto  = document.getElementById('srv-total-monto');
+      const cant   = document.getElementById('srv-total-cant');
+      if (!srvCarrito.length) {
+        if(vacio) vacio.style.display = 'block';
+        if(items) items.innerHTML = '';
+        if(total) total.style.display = 'none';
+        return;
+      }
+      if(vacio) vacio.style.display = 'none';
+      if(total) total.style.display = 'block';
+      const sum = srvCarrito.reduce((s,i) => s + SRV_ESTUDIOS[i].precio, 0);
+      if(monto) monto.textContent = srvFmt(sum);
+      if(cant)  cant.textContent = srvCarrito.length + ' estudio' + (srvCarrito.length!==1?'s':'') + ' seleccionado' + (srvCarrito.length!==1?'s':'');
+      if(items) items.innerHTML = srvCarrito.map(i => `
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:.7rem 1.2rem;border-bottom:1px solid #eef2f6;gap:.5rem;">
+          <span style="font-size:.85rem;color:#333;flex:1;line-height:1.3;">${SRV_ESTUDIOS[i].nombre}</span>
+          <span style="font-weight:700;color:var(--azul);font-size:.88rem;white-space:nowrap;">${srvFmt(SRV_ESTUDIOS[i].precio)}</span>
+          <button onclick="srvQuitarItem(${i})"
+                  style="background:#ffeaea;color:#e53935;border:none;border-radius:50%;
+                         width:30px;height:30px;cursor:pointer;font-size:.9rem;
+                         display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            ✕
+          </button>
+        </div>`).join('');
+    }
+
+    function srvProcesar() {
+      const nombre  = document.getElementById('srv-nombre').value.trim();
+      const edad    = document.getElementById('srv-edad').value.trim();
+      const fechanac= document.getElementById('srv-fechanac').value;
+      const medico  = document.getElementById('srv-medico').value.trim();
+      const sexo    = document.getElementById('srv-sexo').value;
+      const hora    = document.getElementById('srv-hora').value;
+      const campos = [
+        [nombre,   'Nombre del paciente'],
+        [edad,     'Edad'],
+        [fechanac, 'Fecha de nacimiento'],
+        [medico,   'Nombre del médico'],
+        [sexo,     'Sexo'],
+        [hora,     'Hora de toma'],
+      ];
+      for (const [val, label] of campos) {
+        if (!val) { alert(`⚠️ Por favor completa el campo: ${label}`); return; }
+      }
+      if (!srvCarrito.length) {
+        alert('⚠️ Agrega al menos un estudio al carrito antes de procesar la orden.');
+        return;
+      }
+      const total = srvCarrito.reduce((s,i) => s + SRV_ESTUDIOS[i].precio, 0);
+      const listaEstudios = srvCarrito
+        .map((i,n) => `  ${n+1}. ${SRV_ESTUDIOS[i].nombre} — ${srvFmt(SRV_ESTUDIOS[i].precio)}`)
+        .join('\n');
+      let fechaStr = fechanac;
+      try { const [y,m,d] = fechanac.split('-'); fechaStr = `${d}/${m}/${y}`; } catch(_){}
+      let horaStr = hora;
+      try { const [hh,mm] = hora.split(':'); const hNum = parseInt(hh); horaStr = `${hNum > 12 ? hNum-12 : hNum}:${mm} ${hNum>=12?'PM':'AM'}`; } catch(_){}
+      const mensaje =
+`🔬 *SOLICITUD DE RECOLECCIÓN — LABORATORIO DSL*
+
+👤 *Usuario:* ${srvSesion.nombre}
+📋 *Quiero solicitar recolección*
+
+━━━━━━━━━━━━━━━━━━━━━
+*DATOS DEL PACIENTE*
+━━━━━━━━━━━━━━━━━━━━━
+• Nombre: ${nombre}
+• Edad: ${edad} años
+• Fecha de nacimiento: ${fechaStr}
+• Sexo: ${sexo}
+• Médico tratante: ${medico}
+• Hora de toma: ${horaStr}
+
+━━━━━━━━━━━━━━━━━━━━━
+*ESTUDIOS SOLICITADOS*
+━━━━━━━━━━━━━━━━━━━━━
+${listaEstudios}
+
+━━━━━━━━━━━━━━━━━━━━━
+💰 *TOTAL ESTIMADO: ${srvFmt(total)}*
+━━━━━━━━━━━━━━━━━━━━━
+
+_Precios de referencia SIN IVA. Sujetos a confirmación._`;
+      const numero = '523325896236';
+      const url    = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const srvU = document.getElementById('srv-user');
+      const srvP = document.getElementById('srv-pass');
+      if (srvU) srvU.addEventListener('keydown', e => { if(e.key==='Enter') srvLogin(); });
+      if (srvP) srvP.addEventListener('keydown', e => { if(e.key==='Enter') srvLogin(); });
+    });
   </script>
 </body>
 </html>
-
