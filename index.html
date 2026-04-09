@@ -261,28 +261,54 @@
     .footer-redes { display: flex; gap: 1.5rem; align-items: center; }
     .footer-redes a { color: var(--blanco); display: flex; align-items: center; gap: 0.5rem; }
 
-    /* ===== SERVICIO: grilla datos paciente responsive ===== */
+    /* ===== SERVICIO: grilla datos paciente — MOBILE FIRST ===== */
     .srv-datos-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      grid-template-columns: 1fr;   /* 1 columna en móvil */
+      gap: 0.9rem;
     }
-    .srv-datos-grid .full { grid-column: 1 / -1; }
+    .srv-datos-grid .full { grid-column: 1; }
+    /* 2 columnas solo en pantallas grandes */
+    @media (min-width: 700px) {
+      .srv-datos-grid { grid-template-columns: 1fr 1fr; }
+      .srv-datos-grid .full { grid-column: 1 / -1; }
+    }
     .srv-input-label {
-      font-size: .82rem; font-weight: 700; color: #666;
+      font-size: .82rem; font-weight: 700; color: #555;
       text-transform: uppercase; letter-spacing: .5px;
-      display: block; margin-bottom: .35rem;
+      display: block; margin-bottom: .4rem;
     }
     .srv-input {
       display: block; width: 100%;
-      padding: 12px 16px; border-radius: 12px;
-      border: 1.5px solid #d0dce8; background: #f7fafc;
+      padding: 13px 16px; border-radius: 12px;
+      border: 1.5px solid #c5daea; background: #f7fafc;
       font-size: 1rem; outline: none; font-family: inherit;
       transition: border-color .2s;
-      /* Área táctil mínima en móvil */
-      min-height: 44px;
+      min-height: 48px;
+      -webkit-appearance: none; appearance: none;
     }
     .srv-input:focus { border-color: var(--azul); }
+    /* Select fix para iOS */
+    select.srv-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+    /* ===== SERVICIO: layout principal — MOBILE FIRST ===== */
+    #srv-layout {
+      display: grid;
+      grid-template-columns: 1fr;   /* 1 columna en móvil */
+      gap: 1.2rem;
+      align-items: start;
+    }
+    /* Carrito oculto en móvil por defecto */
+    #srv-carrito-wrap { display: none; }
+    /* Botón procesar visible en móvil por defecto */
+    #srv-procesar-movil { display: block; }
+
+    /* En pantallas grandes: 2 columnas, carrito visible, botón móvil oculto */
+    @media (min-width: 861px) {
+      #srv-layout { grid-template-columns: 1fr 360px; gap: 2rem; }
+      #srv-carrito-wrap { display: block; }
+      #srv-procesar-movil { display: none; }
+    }
 
     /* Botón procesar WhatsApp (reutilizable) */
     .btn-procesar-wa {
@@ -391,17 +417,7 @@
 
       /* ── SERVICIO MÓVIL ── */
       #srv-lock-inner { padding: 2rem 1.2rem !important; border-radius: 20px !important; }
-      /* Datos del paciente: 1 columna en móvil */
-      .srv-datos-grid { grid-template-columns: 1fr; }
-      .srv-datos-grid .full { grid-column: 1; }
-      /* Layout pasa a 1 columna */
-      #srv-layout { grid-template-columns: 1fr !important; }
-      /* Carrito lateral oculto en móvil */
-      #srv-carrito-wrap { display: none !important; }
-      /* Botón procesar visible en móvil */
-      #srv-procesar-movil { display: block !important; }
-      /* Lista de estudios más alta en móvil */
-      #srv-lista { max-height: 45vh !important; }
+      #srv-lista { max-height: 50vh; }
     }
 
     /* Móvil pequeño */
@@ -415,7 +431,7 @@
       .header-eyebrow { display: none; }
       .proceso-cards { grid-template-columns: 1fr; }
       .contacto-titulo { font-size: 1.6rem; }
-      #vista-servicio .vista-inner { padding: 1.5rem 0.8rem 5rem; }
+      #vista-servicio .vista-inner { padding: 1.2rem 0.75rem 6rem; }
     }
 
     @media (max-width: 360px) {
@@ -431,7 +447,6 @@
     @media (min-width: 861px) {
       #carrito-fab { display: none !important; }
       #carrito-panel-movil, #carrito-overlay { display: none !important; }
-      #srv-procesar-movil { display: none !important; }
     }
   </style>
 </head>
@@ -636,7 +651,7 @@
           </div>
 
           <!-- Layout 2 columnas (desktop) / 1 columna (móvil) -->
-          <div id="srv-layout" style="display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start;">
+          <div id="srv-layout">
 
             <!-- ── COLUMNA IZQUIERDA ── -->
             <div>
@@ -700,8 +715,8 @@
                             -webkit-overflow-scrolling:touch;">
                 </div>
 
-                <!-- Botón procesar SOLO EN MÓVIL -->
-                <div id="srv-procesar-movil" style="display:none;margin-top:1.2rem;">
+                <!-- Botón procesar — visible en móvil, oculto en desktop por CSS -->
+                <div id="srv-procesar-movil" style="margin-top:1.2rem;">
                   <button class="btn-procesar-wa" onclick="srvProcesar()">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22"><path d="M20.52 3.48A11.78 11.78 0 0012 0C5.373 0 0 5.373 0 12a11.9 11.9 0 001.68 6L0 24l6-1.68A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12a11.78 11.78 0 00-3.48-8.52zM12 21.75a9.63 9.63 0 01-5.156-1.52l-.37-.222-3.5 1 1-3.407-.242-.37A9.56 9.56 0 012.25 12 9.75 9.75 0 1121.75 12 9.7 9.7 0 0112 21.75zm5.14-7.46c-.27-.13-1.6-.79-1.84-.88s-.44-.13-.62.13-.71.88-.87 1.06-.32.2-.6.07a7.44 7.44 0 01-2.19-1.36 8.3 8.3 0 01-1.54-1.9c-.16-.27 0-.42.12-.56.13-.13.29-.32.44-.48a1.75 1.75 0 00.26-.43.39.39 0 000-.48c-.13-.13-.62-1.5-.85-2.06s-.44-.47-.61-.47-.42 0-.64 0a1.38 1.38 0 00-.5.24 2.06 2.06 0 00-.74.72 3.18 3.18 0 00-1 2.4 4.88 4.88 0 001.4 3.47 9.58 9.58 0 004.82 3.11 4.62 4.62 0 002.24.12 2.4 2.4 0 001.53-1.4 2.68 2.68 0 00.19-1.28c-.06-.12-.27-.18-.56-.31z"/></svg>
                     Procesar Orden por WhatsApp
@@ -942,18 +957,8 @@
       document.getElementById('cot-pass').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
       document.getElementById('cot-user').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
 
-      // RESPONSIVE SERVICIO
-      const mq = window.matchMedia('(max-width:860px)');
-      const ajustarServicio = () => {
-        const layout  = document.getElementById('srv-layout');
-        const carrito = document.getElementById('srv-carrito-wrap');
-        const btnMov  = document.getElementById('srv-procesar-movil');
-        if (layout)  layout.style.gridTemplateColumns  = mq.matches ? '1fr' : '1fr 360px';
-        if (carrito) carrito.style.display             = mq.matches ? 'none' : 'block';
-        if (btnMov)  btnMov.style.display              = mq.matches ? 'block' : 'none';
-      };
-      ajustarServicio();
-      mq.addEventListener('change', ajustarServicio);
+      // RESPONSIVE SERVICIO — manejado por CSS, no JS
+      // (el layout se adapta automáticamente vía media queries)
     });
 
     /* ===== COTIZACIONES ===== */
