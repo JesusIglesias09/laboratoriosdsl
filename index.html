@@ -1578,36 +1578,37 @@ text-align: left;
     }
 
     function srvRenderLista(filtro = '') {
-      const lista = document.getElementById('srv-lista');
-      const lower = filtro.toLowerCase();
-      const fil   = SRV_ESTUDIOS.filter(e => e.nombre.toLowerCase().includes(lower));
-      if (!fil.length) { lista.innerHTML = '<div style="padding:2rem;color:#aaa;text-align:center;font-size:.9rem;">Sin resultados.</div>'; return; }
-      lista.innerHTML = fil.map(e => {
-        const idx = SRV_ESTUDIOS.indexOf(e), en = srvCarrito.includes(idx);
-        return `<div onclick="srvToggle(${idx})"
-                     style="display:flex;justify-content:space-between;align-items:center;
-                            padding:.85rem 1.1rem;border-bottom:1px solid #e4edf5;
-                            cursor:pointer;transition:background .12s;
-                            background:${en ? '#e8f4fd' : 'transparent'};"
-                     onmouseover="this.style.background='${en ? '#dceefb' : '#f0f7fb'}'"
-                     onmouseout="this.style.background='${en ? '#e8f4fd' : 'transparent'}'">
-          <div style="flex:1;min-width:0;">
-            <div style="font-weight:700;color:var(--azul);font-size:.93rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${e.nombre}</div>
-            <div style="font-size:.75rem;color:#999;margin-top:2px;">${e.muestra}</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:.6rem;margin-left:.8rem;flex-shrink:0;">
-            <span style="font-weight:800;color:var(--azul);font-size:.95rem;">${srvFmt(e.precio)}</span>
-            <button onclick="event.stopPropagation();srvToggle(${idx})"
-                    style="width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;
-                           font-size:1.2rem;display:flex;align-items:center;justify-content:center;
-                           transition:background .15s;flex-shrink:0;
-                           background:${en ? '#4caf50' : 'var(--azul)'};color:#fff;">
-              ${en ? '✓' : '+'}
-            </button>
-          </div>
-        </div>`;
-      }).join('');
-    }
+  const lista = document.getElementById('srv-lista');
+  const lower = filtro.toLowerCase();
+  const fil   = SRV_ESTUDIOS.filter(e => e.nombre.toLowerCase().includes(lower));
+  if (!fil.length) { lista.innerHTML = '<div style="padding:2rem;color:#aaa;text-align:center;font-size:.9rem;">Sin resultados.</div>'; return; }
+  lista.innerHTML = fil.map(e => {
+    const idx = SRV_ESTUDIOS.indexOf(e), en = srvCarrito.includes(idx);
+    return `<div onclick="srvToggle(${idx})"
+                 style="display:flex;justify-content:space-between;align-items:center;
+                        padding:.85rem 1.1rem;border-bottom:1px solid #e4edf5;
+                        cursor:pointer;transition:background .12s;gap:.6rem;
+                        background:${en ? '#e8f4fd' : 'transparent'};"
+                 onmouseover="this.style.background='${en ? '#dceefb' : '#f0f7fb'}'"
+                 onmouseout="this.style.background='${en ? '#e8f4fd' : 'transparent'}'">
+      <div style="flex:1;min-width:0;overflow:hidden;text-align:left;">
+        <div style="font-weight:700;color:var(--azul);font-size:.93rem;
+                    white-space:normal;word-break:break-word;line-height:1.3;">${e.nombre}</div>
+        <div style="font-size:.75rem;color:#999;margin-top:2px;">${e.muestra}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0;">
+        <span style="font-weight:800;color:var(--azul);font-size:.9rem;">${srvFmt(e.precio)}</span>
+        <button onclick="event.stopPropagation();srvToggle(${idx})"
+                style="width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;
+                       font-size:1.1rem;display:flex;align-items:center;justify-content:center;
+                       flex-shrink:0;transition:background .15s;
+                       background:${en ? '#4caf50' : 'var(--azul)'};color:#fff;">
+          ${en ? '✓' : '+'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
 
     function srvFiltrar() { srvRenderLista(document.getElementById('srv-search').value); }
 
