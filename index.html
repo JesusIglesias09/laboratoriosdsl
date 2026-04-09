@@ -266,7 +266,9 @@
       display: grid;
       grid-template-columns: 1fr;   /* 1 columna en móvil */
       gap: 0.9rem;
+text-align: left; 
     }
+.srv-datos-grid > div { min-width: 0; overflow: hidden; }
     .srv-datos-grid .full { grid-column: 1; }
     /* 2 columnas solo en pantallas grandes */
     @media (min-width: 700px) {
@@ -277,6 +279,7 @@
       font-size: .82rem; font-weight: 700; color: #555;
       text-transform: uppercase; letter-spacing: .5px;
       display: block; margin-bottom: .4rem;
+text-align: left;
     }
     .srv-input {
       display: block; width: 100%;
@@ -286,6 +289,7 @@
       transition: border-color .2s;
       min-height: 48px;
       -webkit-appearance: none; appearance: none;
+text-align: left;
     }
     .srv-input:focus { border-color: var(--azul); }
     /* Select fix para iOS */
