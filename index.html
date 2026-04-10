@@ -235,7 +235,7 @@
     .btn-limpiar:hover { border-color: #e53935; color: #e53935; }
     .cot-nota { margin-top: 1.5rem; padding: 1rem 1.5rem; background: #fff8e1; border-radius: 14px; border-left: 4px solid var(--naranja); font-size: 0.9rem; color: #7a5500; text-align: left; grid-column: 1/-1; }
 
-    /* FAB MÓVIL */
+    /* FAB MÓVIL — COTIZACIONES */
     #carrito-fab { position: fixed; bottom: 60px; left: 20px; background: var(--azul); color: var(--blanco); border: none; border-radius: 50px; padding: 12px 20px; font-size: 1rem; font-weight: 800; font-family: inherit; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,51,0.35); z-index: 1001; align-items: center; gap: 8px; transition: transform 0.2s, background 0.2s; display: none; }
     #carrito-fab:hover { background: var(--azul-claro); transform: scale(1.05); }
     #fab-count { background: var(--naranja); color: var(--blanco); border-radius: 50%; width: 22px; height: 22px; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center; }
@@ -245,6 +245,40 @@
     #carrito-panel-movil.open { transform: translateY(0); }
     .panel-header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.4rem; background: var(--azul); color: var(--blanco); border-radius: 24px 24px 0 0; font-weight: 800; font-size: 1rem; position: sticky; top: 0; }
     .panel-header button { background: rgba(255,255,255,0.2); border: none; color: var(--blanco); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+
+    /* ===== FAB MÓVIL — SERVICIO ===== */
+    #srv-carrito-fab {
+      position: fixed; bottom: 60px; left: 20px;
+      background: var(--azul); color: var(--blanco);
+      border: none; border-radius: 50px; padding: 12px 20px;
+      font-size: 1rem; font-weight: 800; font-family: inherit;
+      cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,51,0.35);
+      z-index: 1001; align-items: center; gap: 8px;
+      transition: transform 0.2s, background 0.2s; display: none;
+    }
+    #srv-carrito-fab:hover { background: var(--azul-claro); transform: scale(1.05); }
+    #srv-fab-count {
+      background: var(--naranja); color: var(--blanco);
+      border-radius: 50%; width: 22px; height: 22px;
+      font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center;
+    }
+    #srv-carrito-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 1099;
+    }
+    #srv-carrito-overlay.active { display: block; }
+    #srv-carrito-panel-movil {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--blanco); border-radius: 24px 24px 0 0;
+      box-shadow: 0 -8px 30px rgba(0,0,0,0.2);
+      z-index: 1100; max-height: 85vh; overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.32,0.72,0,1);
+    }
+    #srv-carrito-panel-movil.open { transform: translateY(0); }
+    #srv-panel-items { max-height: 340px; overflow-y: auto; }
+    #srv-panel-items::-webkit-scrollbar { width: 5px; }
+    #srv-panel-items::-webkit-scrollbar-thumb { background: #c5daea; border-radius: 3px; }
 
     /* MODAL */
     #img-modal { display: none; position: fixed; z-index: 2000; inset: 0; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
@@ -264,13 +298,12 @@
     /* ===== SERVICIO: grilla datos paciente — MOBILE FIRST ===== */
     .srv-datos-grid {
       display: grid;
-      grid-template-columns: 1fr;   /* 1 columna en móvil */
+      grid-template-columns: 1fr;
       gap: 0.9rem;
-text-align: left; 
+      text-align: left;
     }
-.srv-datos-grid > div { min-width: 0; overflow: hidden; }
+    .srv-datos-grid > div { min-width: 0; overflow: hidden; }
     .srv-datos-grid .full { grid-column: 1; }
-    /* 2 columnas solo en pantallas grandes */
     @media (min-width: 700px) {
       .srv-datos-grid { grid-template-columns: 1fr 1fr; }
       .srv-datos-grid .full { grid-column: 1 / -1; }
@@ -278,8 +311,7 @@ text-align: left;
     .srv-input-label {
       font-size: .82rem; font-weight: 700; color: #555;
       text-transform: uppercase; letter-spacing: .5px;
-      display: block; margin-bottom: .4rem;
-text-align: left;
+      display: block; margin-bottom: .4rem; text-align: left;
     }
     .srv-input {
       display: block; width: 100%;
@@ -288,33 +320,27 @@ text-align: left;
       font-size: 1rem; outline: none; font-family: inherit;
       transition: border-color .2s;
       min-height: 48px;
-      -webkit-appearance: none; appearance: none;
-text-align: left;
+      -webkit-appearance: none; appearance: none; text-align: left;
     }
     .srv-input:focus { border-color: var(--azul); }
-    /* Select fix para iOS */
     select.srv-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
 
     /* ===== SERVICIO: layout principal — MOBILE FIRST ===== */
     #srv-layout {
       display: grid;
-      grid-template-columns: 1fr;   /* 1 columna en móvil */
+      grid-template-columns: 1fr;
       gap: 1.2rem;
       align-items: start;
     }
-    /* Carrito oculto en móvil por defecto */
     #srv-carrito-wrap { display: none; }
-    /* Botón procesar visible en móvil por defecto */
     #srv-procesar-movil { display: block; }
 
-    /* En pantallas grandes: 2 columnas, carrito visible, botón móvil oculto */
     @media (min-width: 861px) {
       #srv-layout { grid-template-columns: 1fr 360px; gap: 2rem; }
       #srv-carrito-wrap { display: block; }
       #srv-procesar-movil { display: none; }
     }
 
-    /* Botón procesar WhatsApp (reutilizable) */
     .btn-procesar-wa {
       width: 100%; padding: 15px;
       background: linear-gradient(135deg,#25D366,#1da851);
@@ -361,7 +387,6 @@ text-align: left;
       .section-title { font-size: 1.6rem; margin-bottom: 1rem; }
       .section-description { font-size: 1rem; padding: 1.5rem 1.2rem; border-radius: 18px; margin-bottom: 1.5rem; }
 
-      /* Hero */
       .header-content { padding: 2rem 1.2rem 5rem; }
       .header-eyebrow { font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 1.2rem; }
       .header-title { font-size: clamp(2rem, 10vw, 3.5rem); }
@@ -371,17 +396,14 @@ text-align: left;
       .header-cta-wrap .search-button { width: 100%; max-width: 300px; }
       .scroll-indicator { display: none; }
 
-      /* Quiénes somos */
       .qs-inner { gap: 1.2rem; }
       .qs-inner img { max-width: 240px; }
       .qs-texto { flex: 1 1 100%; font-size: 1rem; padding: 1.5rem 1.2rem; border-radius: 16px; }
 
-      /* Galería */
       .card-gallery { grid-template-columns: repeat(2,1fr); gap: 1rem; padding: 1rem 0; }
       .card-item img { height: 130px; }
       .card-caption { font-size: 0.88rem; padding: 0.7rem; }
 
-      /* Domicilio */
       .domicilio-linea img { height: 220px; border-radius: 18px; }
       .domicilio-card { padding: 1.5rem 1.2rem; border-radius: 18px; }
       .domicilio-card p { font-size: 0.98rem; }
@@ -392,21 +414,18 @@ text-align: left;
       .proceso-card p { font-size: 0.88rem; }
       .cta-domicilio a { font-size: 1rem; padding: 1.1rem 1.5rem; border-radius: 50px; }
 
-      /* Sucursales */
       .descripcion { font-size: 0.98rem; padding: 1.2rem 1rem; }
       .mapa h3 { font-size: 0.95rem; }
       .mapa iframe { height: 240px; }
       .horario-box h3 { font-size: 1rem; }
       .horario-box p { font-size: 0.88rem; }
 
-      /* Contacto */
       .contacto-inner { padding: 2rem 1.2rem; border-radius: 20px; }
       .contacto-eyebrow { font-size: 0.9rem; }
       .contacto-titulo { font-size: 2rem; }
       .input-pill { padding: 12px 16px; font-size: 0.95rem; }
       .btn-enviar { width: 100%; padding: 14px 28px; font-size: 1rem; }
 
-      /* Cotizaciones */
       #cot-lock { padding: 2rem 1.2rem; border-radius: 20px; }
       #cot-lock h3 { font-size: 1.2rem; }
       .cot-layout { grid-template-columns: 1fr; }
@@ -419,17 +438,16 @@ text-align: left;
       .estudio-add { width: 34px; height: 34px; font-size: 1.2rem; }
       .btn-quitar { width: 30px; height: 30px; font-size: 1rem; }
 
-      /* ── SERVICIO MÓVIL ── */
       #srv-lock-inner { padding: 2rem 1.2rem !important; border-radius: 20px !important; }
       #srv-lista { max-height: 50vh; }
     }
 
-    /* Móvil pequeño */
     @media (max-width: 480px) {
       .card-gallery { grid-template-columns: 1fr; }
       .whatsapp-float { width: 56px; height: 56px; padding: 0; border-radius: 50%; justify-content: center; bottom: 56px; right: 14px; }
       .whatsapp-float .whatsapp-text { display: none; }
       #carrito-fab { left: 12px; bottom: 56px; padding: 10px 16px; font-size: 0.9rem; }
+      #srv-carrito-fab { left: 12px; bottom: 56px; padding: 10px 16px; font-size: 0.9rem; }
       .footer-inner > div:last-child { display: none; }
       .header-title { font-size: clamp(1.8rem, 9vw, 2.8rem); }
       .header-eyebrow { display: none; }
@@ -451,6 +469,8 @@ text-align: left;
     @media (min-width: 861px) {
       #carrito-fab { display: none !important; }
       #carrito-panel-movil, #carrito-overlay { display: none !important; }
+      #srv-carrito-fab { display: none !important; }
+      #srv-carrito-panel-movil, #srv-carrito-overlay { display: none !important; }
     }
   </style>
 </head>
@@ -612,7 +632,6 @@ text-align: left;
                      style="padding:13px 18px;border-radius:50px;border:2px solid #c5daea;
                             background:#fff;font-size:1rem;outline:none;font-family:inherit;
                             transition:border-color .2s;width:100%;min-height:48px;">
-              <!-- Contraseña con ojo -->
               <div class="pass-field-wrap">
                 <input id="srv-pass" type="password" placeholder="Contraseña">
                 <button type="button" class="eye-btn" onclick="togglePass('srv-pass',this)" aria-label="Mostrar contraseña">
@@ -781,7 +800,6 @@ text-align: left;
             <input type="text" id="cot-user" placeholder="Usuario" autocomplete="off"
                    style="border-radius:50px;border:2px solid #c5daea;padding:12px 16px;font-size:1rem;
                           outline:none;font-family:inherit;transition:border-color 0.2s;width:100%;min-height:48px;">
-            <!-- Contraseña con ojo -->
             <div class="pass-field-wrap">
               <input id="cot-pass" type="password" placeholder="Contraseña" autocomplete="off">
               <button type="button" class="eye-btn" onclick="togglePass('cot-pass',this)" aria-label="Mostrar contraseña">
@@ -825,7 +843,7 @@ text-align: left;
 
   </div><!-- /#app -->
 
-  <!-- FAB MÓVIL -->
+  <!-- ===== FAB MÓVIL — COTIZACIONES ===== -->
   <button id="carrito-fab" onclick="abrirPanelMovil()" aria-label="Ver carrito">🧾 <span id="fab-count">0</span></button>
   <div id="carrito-overlay" onclick="cerrarPanelMovil()"></div>
   <div id="carrito-panel-movil">
@@ -839,6 +857,39 @@ text-align: left;
       <div class="total-linea"><span>Total</span><span id="panel-total-precio">$0.00</span></div>
       <div class="total-cantidad" id="panel-cantidad"></div>
       <button class="btn-limpiar" onclick="limpiarCarrito()">🗑 Limpiar todo</button>
+    </div>
+  </div>
+
+  <!-- ===== FAB MÓVIL — SERVICIO ===== -->
+  <button id="srv-carrito-fab" onclick="srvAbrirPanel()" aria-label="Ver carrito de servicio">🧾 <span id="srv-fab-count">0</span></button>
+  <div id="srv-carrito-overlay" onclick="srvCerrarPanel()"></div>
+  <div id="srv-carrito-panel-movil">
+    <div class="panel-header">
+      <span>🧾 Estudios seleccionados</span>
+      <button onclick="srvCerrarPanel()">✕</button>
+    </div>
+    <div id="srv-panel-vacio" class="carrito-vacio">Aún no has agregado ningún estudio.</div>
+    <div id="srv-panel-items"></div>
+    <div id="srv-panel-total" style="display:none;padding:1rem 1.3rem;border-top:2px solid #eef2f6;background:#f8fbfe;">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-weight:900;color:var(--azul);font-size:1.15rem;">
+        <span>Total</span><span id="srv-panel-monto">$0.00</span>
+      </div>
+      <div id="srv-panel-cant" style="font-size:.8rem;color:#888;font-weight:600;margin-top:3px;text-align:right;"></div>
+      <button onclick="srvLimpiarCarrito()"
+              style="margin-top:.8rem;width:100%;padding:8px;background:transparent;border:1.5px solid #ddd;
+                     color:#888;border-radius:50px;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s;"
+              onmouseover="this.style.borderColor='#e53935';this.style.color='#e53935'"
+              onmouseout="this.style.borderColor='#ddd';this.style.color='#888'">🗑 Limpiar todo</button>
+    </div>
+    <!-- Botón procesar dentro del panel móvil -->
+    <div style="padding:1rem 1.3rem;border-top:2px solid #eef2f6;">
+      <button class="btn-procesar-wa" onclick="srvCerrarPanel();srvProcesar();">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22"><path d="M20.52 3.48A11.78 11.78 0 0012 0C5.373 0 0 5.373 0 12a11.9 11.9 0 001.68 6L0 24l6-1.68A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12a11.78 11.78 0 00-3.48-8.52zM12 21.75a9.63 9.63 0 01-5.156-1.52l-.37-.222-3.5 1 1-3.407-.242-.37A9.56 9.56 0 012.25 12 9.75 9.75 0 1121.75 12 9.7 9.7 0 0112 21.75zm5.14-7.46c-.27-.13-1.6-.79-1.84-.88s-.44-.13-.62.13-.71.88-.87 1.06-.32.2-.6.07a7.44 7.44 0 01-2.19-1.36 8.3 8.3 0 01-1.54-1.9c-.16-.27 0-.42.12-.56.13-.13.29-.32.44-.48a1.75 1.75 0 00.26-.43.39.39 0 000-.48c-.13-.13-.62-1.5-.85-2.06s-.44-.47-.61-.47-.42 0-.64 0a1.38 1.38 0 00-.5.24 2.06 2.06 0 00-.74.72 3.18 3.18 0 00-1 2.4 4.88 4.88 0 001.4 3.47 9.58 9.58 0 004.82 3.11 4.62 4.62 0 002.24.12 2.4 2.4 0 001.53-1.4 2.68 2.68 0 00.19-1.28c-.06-.12-.27-.18-.56-.31z"/></svg>
+        Procesar Orden por WhatsApp
+      </button>
+      <p style="font-size:.76rem;color:#aaa;text-align:center;margin-top:.6rem;line-height:1.4;">
+        Se abrirá WhatsApp con todos los datos listos para enviar.
+      </p>
     </div>
   </div>
 
@@ -873,7 +924,6 @@ text-align: left;
       const input = document.getElementById(inputId);
       const isPass = input.type === 'password';
       input.type = isPass ? 'text' : 'password';
-      // Cambiar icono: ojo abierto / ojo tachado
       btn.innerHTML = isPass
         ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
              <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
@@ -903,6 +953,9 @@ text-align: left;
         if ((a.getAttribute('onclick') || '').includes("'" + id + "'")) a.classList.add('active-link');
       });
       document.getElementById('navMenu').classList.remove('active');
+      // Ocultar FABs cuando se cambia de vista
+      srvActualizarFab();
+      actualizarFabCot();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -961,8 +1014,10 @@ text-align: left;
       document.getElementById('cot-pass').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
       document.getElementById('cot-user').addEventListener('keydown', e => { if (e.key === 'Enter') desbloquearCotizaciones(); });
 
-      // RESPONSIVE SERVICIO — manejado por CSS, no JS
-      // (el layout se adapta automáticamente vía media queries)
+      const srvU = document.getElementById('srv-user');
+      const srvP = document.getElementById('srv-pass');
+      if (srvU) srvU.addEventListener('keydown', e => { if (e.key === 'Enter') srvLogin(); });
+      if (srvP) srvP.addEventListener('keydown', e => { if (e.key === 'Enter') srvLogin(); });
     });
 
     /* ===== COTIZACIONES ===== */
@@ -1033,6 +1088,16 @@ text-align: left;
     let estudios = [], carrito = [];
     function fmt(n) { return n === 0 ? 'Consultar' : '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 
+    function actualizarFabCot() {
+      const fab = document.getElementById('carrito-fab');
+      const fc  = document.getElementById('fab-count');
+      const enServicio = document.getElementById('vista-cotizaciones').classList.contains('activa');
+      if (fab) {
+        fab.style.display = (carrito.length && enServicio) ? 'flex' : 'none';
+        if (fc) fc.textContent = carrito.length;
+      }
+    }
+
     function renderLista(filtro='') {
       const lista = document.getElementById('cot-lista');
       if (!estudios.length) { lista.innerHTML = '<div class="sin-resultados">📋 La lista de esta sucursal aún no está disponible.</div>'; return; }
@@ -1055,10 +1120,8 @@ text-align: left;
             ct=document.getElementById('carrito-total'), cp=document.getElementById('carrito-total-precio'),
             cc=document.getElementById('carrito-cantidad'), pi=document.getElementById('panel-items'),
             pv=document.getElementById('panel-vacio'), pt=document.getElementById('panel-total'),
-            pp=document.getElementById('panel-total-precio'), pc=document.getElementById('panel-cantidad'),
-            fab=document.getElementById('carrito-fab'), fc=document.getElementById('fab-count');
-      if (fab) fab.style.display = carrito.length ? 'flex' : 'none';
-      if (fc)  fc.textContent = carrito.length;
+            pp=document.getElementById('panel-total-precio'), pc=document.getElementById('panel-cantidad');
+      actualizarFabCot();
       const html = carrito.map(i => `<div class="carrito-item"><span class="carrito-item-nombre">${estudios[i].nombre}</span><span class="carrito-item-precio">${fmt(estudios[i].precio)}</span><button class="btn-quitar" onclick="quitarEstudio(${i})">✕</button></div>`).join('');
       const total = carrito.reduce((s,i) => s + estudios[i].precio, 0);
       const cant  = `${carrito.length} estudio${carrito.length!==1?'s':''} seleccionado${carrito.length!==1?'s':''}`;
@@ -1111,6 +1174,7 @@ text-align: left;
       document.getElementById('cot-pass').value = '';
       estudios = []; carrito = [];
       cerrarPanelMovil();
+      actualizarFabCot();
     }
 
     /* ===== SERVICIO ===== */
@@ -1541,6 +1605,29 @@ text-align: left;
     let srvSesion = null, srvCarrito = [];
     function srvFmt(n) { return '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 
+    /* ── FAB y panel móvil del Servicio ── */
+    function srvActualizarFab() {
+      const fab = document.getElementById('srv-carrito-fab');
+      const fc  = document.getElementById('srv-fab-count');
+      const enServicio = document.getElementById('vista-servicio').classList.contains('activa');
+      if (fab) {
+        fab.style.display = (srvCarrito.length && enServicio && srvSesion) ? 'flex' : 'none';
+        if (fc) fc.textContent = srvCarrito.length;
+      }
+    }
+
+    function srvAbrirPanel() {
+      document.getElementById('srv-carrito-panel-movil').classList.add('open');
+      document.getElementById('srv-carrito-overlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function srvCerrarPanel() {
+      document.getElementById('srv-carrito-panel-movil').classList.remove('open');
+      document.getElementById('srv-carrito-overlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
     function srvLogin() {
       const user  = document.getElementById('srv-user').value.trim().toLowerCase();
       const pass  = document.getElementById('srv-pass').value;
@@ -1575,40 +1662,42 @@ text-align: left;
         const el = document.getElementById(id); if (el) el.value = '';
       });
       const sexo = document.getElementById('srv-sexo'); if (sexo) sexo.value = '';
+      srvCerrarPanel();
+      srvActualizarFab();
     }
 
     function srvRenderLista(filtro = '') {
-  const lista = document.getElementById('srv-lista');
-  const lower = filtro.toLowerCase();
-  const fil   = SRV_ESTUDIOS.filter(e => e.nombre.toLowerCase().includes(lower));
-  if (!fil.length) { lista.innerHTML = '<div style="padding:2rem;color:#aaa;text-align:center;font-size:.9rem;">Sin resultados.</div>'; return; }
-  lista.innerHTML = fil.map(e => {
-    const idx = SRV_ESTUDIOS.indexOf(e), en = srvCarrito.includes(idx);
-    return `<div onclick="srvToggle(${idx})"
-                 style="display:flex;justify-content:space-between;align-items:center;
-                        padding:.85rem 1.1rem;border-bottom:1px solid #e4edf5;
-                        cursor:pointer;transition:background .12s;gap:.6rem;
-                        background:${en ? '#e8f4fd' : 'transparent'};"
-                 onmouseover="this.style.background='${en ? '#dceefb' : '#f0f7fb'}'"
-                 onmouseout="this.style.background='${en ? '#e8f4fd' : 'transparent'}'">
-      <div style="flex:1;min-width:0;overflow:hidden;text-align:left;">
-        <div style="font-weight:700;color:var(--azul);font-size:.93rem;
-                    white-space:normal;word-break:break-word;line-height:1.3;">${e.nombre}</div>
-        <div style="font-size:.75rem;color:#999;margin-top:2px;">${e.muestra}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0;">
-        <span style="font-weight:800;color:var(--azul);font-size:.9rem;">${srvFmt(e.precio)}</span>
-        <button onclick="event.stopPropagation();srvToggle(${idx})"
-                style="width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;
-                       font-size:1.1rem;display:flex;align-items:center;justify-content:center;
-                       flex-shrink:0;transition:background .15s;
-                       background:${en ? '#4caf50' : 'var(--azul)'};color:#fff;">
-          ${en ? '✓' : '+'}
-        </button>
-      </div>
-    </div>`;
-  }).join('');
-}
+      const lista = document.getElementById('srv-lista');
+      const lower = filtro.toLowerCase();
+      const fil   = SRV_ESTUDIOS.filter(e => e.nombre.toLowerCase().includes(lower));
+      if (!fil.length) { lista.innerHTML = '<div style="padding:2rem;color:#aaa;text-align:center;font-size:.9rem;">Sin resultados.</div>'; return; }
+      lista.innerHTML = fil.map(e => {
+        const idx = SRV_ESTUDIOS.indexOf(e), en = srvCarrito.includes(idx);
+        return `<div onclick="srvToggle(${idx})"
+                     style="display:flex;justify-content:space-between;align-items:center;
+                            padding:.85rem 1.1rem;border-bottom:1px solid #e4edf5;
+                            cursor:pointer;transition:background .12s;gap:.6rem;
+                            background:${en ? '#e8f4fd' : 'transparent'};"
+                     onmouseover="this.style.background='${en ? '#dceefb' : '#f0f7fb'}'"
+                     onmouseout="this.style.background='${en ? '#e8f4fd' : 'transparent'}'">
+          <div style="flex:1;min-width:0;overflow:hidden;text-align:left;">
+            <div style="font-weight:700;color:var(--azul);font-size:.93rem;
+                        white-space:normal;word-break:break-word;line-height:1.3;">${e.nombre}</div>
+            <div style="font-size:.75rem;color:#999;margin-top:2px;">${e.muestra}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0;">
+            <span style="font-weight:800;color:var(--azul);font-size:.9rem;">${srvFmt(e.precio)}</span>
+            <button onclick="event.stopPropagation();srvToggle(${idx})"
+                    style="width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;
+                           font-size:1.1rem;display:flex;align-items:center;justify-content:center;
+                           flex-shrink:0;transition:background .15s;
+                           background:${en ? '#4caf50' : 'var(--azul)'};color:#fff;">
+              ${en ? '✓' : '+'}
+            </button>
+          </div>
+        </div>`;
+      }).join('');
+    }
 
     function srvFiltrar() { srvRenderLista(document.getElementById('srv-search').value); }
 
@@ -1629,26 +1718,40 @@ text-align: left;
       srvCarrito = [];
       srvRenderLista(document.getElementById('srv-search').value);
       srvRenderCarrito();
+      srvCerrarPanel();
     }
 
     function srvRenderCarrito() {
+      /* ── Desktop ── */
       const vacio = document.getElementById('srv-carrito-vacio');
       const items = document.getElementById('srv-carrito-items');
       const total = document.getElementById('srv-carrito-total');
       const monto = document.getElementById('srv-total-monto');
       const cant  = document.getElementById('srv-total-cant');
+
+      /* ── Móvil (panel) ── */
+      const pVacio = document.getElementById('srv-panel-vacio');
+      const pItems = document.getElementById('srv-panel-items');
+      const pTotal = document.getElementById('srv-panel-total');
+      const pMonto = document.getElementById('srv-panel-monto');
+      const pCant  = document.getElementById('srv-panel-cant');
+
+      srvActualizarFab();
+
       if (!srvCarrito.length) {
         if (vacio) vacio.style.display = 'block';
         if (items) items.innerHTML = '';
         if (total) total.style.display = 'none';
+        if (pVacio) pVacio.style.display = 'block';
+        if (pItems) pItems.innerHTML = '';
+        if (pTotal) pTotal.style.display = 'none';
         return;
       }
-      if (vacio) vacio.style.display = 'none';
-      if (total) total.style.display = 'block';
+
       const sum = srvCarrito.reduce((s, i) => s + SRV_ESTUDIOS[i].precio, 0);
-      if (monto) monto.textContent = srvFmt(sum);
-      if (cant)  cant.textContent  = srvCarrito.length + ' estudio' + (srvCarrito.length !== 1 ? 's' : '') + ' seleccionado' + (srvCarrito.length !== 1 ? 's' : '');
-      if (items) items.innerHTML = srvCarrito.map(i => `
+      const cantTxt = srvCarrito.length + ' estudio' + (srvCarrito.length !== 1 ? 's' : '') + ' seleccionado' + (srvCarrito.length !== 1 ? 's' : '');
+
+      const htmlItems = srvCarrito.map(i => `
         <div style="display:flex;justify-content:space-between;align-items:center;padding:.7rem 1.2rem;border-bottom:1px solid #eef2f6;gap:.5rem;">
           <span style="font-size:.85rem;color:#333;flex:1;line-height:1.3;">${SRV_ESTUDIOS[i].nombre}</span>
           <span style="font-weight:700;color:var(--azul);font-size:.88rem;white-space:nowrap;">${srvFmt(SRV_ESTUDIOS[i].precio)}</span>
@@ -1657,6 +1760,20 @@ text-align: left;
                          width:28px;height:28px;cursor:pointer;font-size:.9rem;
                          display:flex;align-items:center;justify-content:center;flex-shrink:0;">✕</button>
         </div>`).join('');
+
+      /* Desktop */
+      if (vacio) vacio.style.display = 'none';
+      if (total) total.style.display = 'block';
+      if (items) items.innerHTML = htmlItems;
+      if (monto) monto.textContent = srvFmt(sum);
+      if (cant)  cant.textContent  = cantTxt;
+
+      /* Móvil */
+      if (pVacio) pVacio.style.display = 'none';
+      if (pTotal) pTotal.style.display = 'block';
+      if (pItems) pItems.innerHTML = htmlItems;
+      if (pMonto) pMonto.textContent = srvFmt(sum);
+      if (pCant)  pCant.textContent  = cantTxt;
     }
 
     function srvProcesar() {
@@ -1703,13 +1820,6 @@ ${listaEstudios}
 _Precios de referencia SIN IVA. Sujetos a confirmación._`;
       window.open(`https://wa.me/523325896236?text=${encodeURIComponent(mensaje)}`, '_blank', 'noopener,noreferrer');
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const srvU = document.getElementById('srv-user');
-      const srvP = document.getElementById('srv-pass');
-      if (srvU) srvU.addEventListener('keydown', e => { if (e.key === 'Enter') srvLogin(); });
-      if (srvP) srvP.addEventListener('keydown', e => { if (e.key === 'Enter') srvLogin(); });
-    });
   </script>
 </body>
 </html>
